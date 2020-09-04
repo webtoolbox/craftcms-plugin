@@ -1,0 +1,59 @@
+{
+    "name": "websitetoolbox/websitetoolboxforum",
+    "description": "Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "websitetoolboxforum"
+    ],
+    "support": {
+        "docs": "https://www.websitetoolbox.com/documentation1",
+        "issues": "https://www.websitetoolbox.com/documentation1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Website Toolbox",
+            "homepage": "http://websitetoolbox.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0"
+    },
+    "require-dev": {
+      "craftcms/cms": "^3.2.0",
+      "codeception/codeception": "^3.0",
+      "vlucas/phpdotenv": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "websitetoolbox\\websitetoolboxforum\\": "src/"
+        }
+    },
+    "extra": {
+         "hasCpSettings": true,
+        "name": "Website Toolbox Forum",
+        "handle": "websitetoolboxforum",
+        "developer": "Website Toolbox",
+        "hasCpSection": false,
+        "developerUrl": "http://websitetoolbox.com",
+        "documentationUrl": "https://www.websitetoolbox.com/documentation1",
+        "changelogUrl": "https://www.websitetoolbox.com/documentation1",
+        "class": "websitetoolbox\\websitetoolboxforum\\Websitetoolboxforum",
+        "components": {
+            "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
+        }
+    },
+     "minimum-stability": "dev",
+  "prefer-stable": true,
+    "repositories": [
+    {
+      "type": "path",
+      "url": "c://xampp3/htdocs/websitetoolboxforum"
+    }
+  ]
+}

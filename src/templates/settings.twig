@@ -1,0 +1,80 @@
+{#
+/**
+ * Website Toolbox Forum plugin for Craft CMS 3.x
+ *
+ * Website Toolbox Forum Settings.twig
+ *
+ * @author    Website Toolbox
+ * @copyright Copyright (c) 2019 Website Toolbox
+ * @link      https://websitetoolbox.com/
+ * @package   Website Toolbox Forum
+ * @since     3.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("websitetoolbox\\websitetoolboxforum\\assetbundles\\websitetoolboxforum\\websitetoolboxforumAsset") %}
+
+{% macro configWarning(setting, file="websitetoolboxforum") -%}
+    {%- set configArray = craft.app.config.getConfigFromFile(file) -%}
+    {%- if configArray[setting] is defined -%}
+        {{- "This is being overridden by the `#{setting}` setting in the `config/#{file}.php` file."|t("websitetoolboxforum")|raw }}
+    {%- else -%}
+        {{ false }}
+    {%- endif -%}
+{%- endmacro %}
+{% from _self import configWarning %}
+
+    {{ forms.textField({
+        "label": "Website Login Url"|t("websitetoolboxforum"),
+        "id": "loginUrl",
+        "name": "loginUrl",
+        "value": settings.loginUrl,
+        }) 
+    }}
+    {{ forms.textField({
+        "label": "Website Logout Url"|t("websitetoolboxforum"),
+        "id": "logOutUrl",
+        "name": "logOutUrl",
+        "value": settings.logOutUrl,
+       }) 
+    }}
+    {{ forms.textField({
+        "label": "Website User Registration Url"|t("websitetoolboxforum"),
+        "id": "userRegistrationUrl",
+        "name": "userRegistrationUrl",
+        "value": settings.userRegistrationUrl,
+        }) 
+    }}
+    {{ forms.textField({
+        "label": "Website Forum Output Url"|t("websitetoolboxforum"),
+        "id": "forumOutputUrl",
+        "name": "forumOutputUrl",
+        "value": settings.forumOutputUrl,
+       }) 
+    }}
+    {{ forms.textField({
+        "label": "Forum Username"|t("websitetoolboxforum"),
+        "id": "forumUsername",
+        "name": "forumUsername",
+        "value": settings.forumUsername,
+       }) 
+    }}
+   
+    {{ forms.textField({
+        "label": "Forum Password"|t("websitetoolboxforum"),
+        "id": "forumPassword",
+        "name": "forumPassword",
+        "value": settings.forumPassword,
+        }) 
+    }}
+    {{ forms.checkboxField({
+    		label: "Embedded"|t('app'),
+    		id: 'forumEmbedded',
+    		name: 'forumEmbedded',
+    		checked: settings.forumEmbedded,
+		}) 
+	}}
+
+
