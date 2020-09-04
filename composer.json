@@ -35,7 +35,7 @@
         }
     },
     "extra": {
-         "hasCpSettings": true,
+        "hasCpSettings": true,
         "name": "Website Toolbox Forum",
         "handle": "websitetoolboxforum",
         "developer": "Website Toolbox",
@@ -48,7 +48,7 @@
             "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
         }
     },
-     "minimum-stability": "dev",
+  "minimum-stability": "dev",
   "prefer-stable": true,
     "repositories": [
     {
