@@ -26,7 +26,7 @@ use craft\events\ModelEvent;
 use craft\services\Users;
 use craft\web\View;
 use craft\services\Config;
-define('WT_SETTINGS_URL', 'https://beta.websitetoolbox.com/tool/members/mb/settings');
+define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
 /**
  * Class Websitetoolboxforum
  *
