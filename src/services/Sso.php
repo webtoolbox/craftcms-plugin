@@ -1,13 +1,11 @@
 <?php
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
- *
- * Single Sign On Cloud plugin for CraftCMS
+ * Single Sign On Cloud Based plugin for CraftCMS
  *
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2019 Website Toolbox
  */
-
 namespace websitetoolbox\websitetoolboxforum\services;
 use websitetoolbox\websitetoolboxforum\models\Settings;
 use websitetoolbox\websitetoolboxforum\Websitetoolboxforum;
@@ -27,10 +25,10 @@ class Sso extends Component
     
      function afterLogin(){  
        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
-        if($token){ 
+       if($token){ 
              $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey');
              $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
-            if($forumApiKey){ 
+             if($forumApiKey){ 
                 $myUserQuery = \craft\elements\User::find();
                 $userEmail = Craft::$app->getUser()->getIdentity()->email;
                 $userId= Craft::$app->getUser()->getIdentity()->id;
@@ -155,13 +153,12 @@ class Sso extends Component
       setcookie('loginRemember', '', time() - 3600, "/");
       unset($_COOKIE['loginRemember']);
    }
-   function renderJsScriptEmbedded($r){   
+   function renderJsScriptEmbedded($forumUrl){   
 
         $js = <<<JS
           (  
-           function renderEmbeddedHtmlWithAuthtoken(\$r)
-          { alert($r);
-            var embedUrl = "//beta.websitetoolbox.com/js/mb/embed.js";
+           function renderEmbeddedHtmlWithAuthtoken(\$forumUrl)
+          {  
             var wtbWrap = document.createElement('div');
             wtbWrap.id = "wtEmbedCode";
             var embedScript = document.createElement('script');
@@ -169,9 +166,9 @@ class Sso extends Component
             embedScript.type = 'text/javascript';
             var wtbToken = getCookie();
             if(typeof wtbToken != 'undefined' && wtbToken){
-              embedUrl += "?authtoken="+wtbToken;
+              $forumUrl += "?authtoken="+wtbToken;
             }
-            embedScript.src = embedUrl;alert(embedScript);
+            embedScript.src = $forumUrl;
             wtbWrap.appendChild(embedScript);
             document.getElementById('embedForum').appendChild(embedScript);
 
