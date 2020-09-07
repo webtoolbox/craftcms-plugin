@@ -1,7 +1,6 @@
 <?php
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
- *
  * Single Sign On Cloud Based plugin for CraftCMS
  *
  * @link      https://websitetoolbox.com/
