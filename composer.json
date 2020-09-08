@@ -49,11 +49,6 @@
         }
     },
      "minimum-stability": "dev",
-  "prefer-stable": true,
-    "repositories": [
-    {
-      "type": "path",
-      "url": "c://xampp3/htdocs/websitetoolboxforum"
-    }
-  ]
+  "prefer-stable": true
+    
 }
