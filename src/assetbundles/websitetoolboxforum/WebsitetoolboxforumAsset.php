@@ -2,7 +2,7 @@
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
  *
- * Single Sign On Cloud Based plugin for CraftCMS
+ * Single Sign On plugin for CraftCMS
  *
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2019 websitetoolbox
@@ -14,7 +14,7 @@ use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
 /**
- * @author    Website Toolbox
+ * @author    websitetoolbox
  * @package   Websitetoolboxforum
  * @since     3.0.0
  */

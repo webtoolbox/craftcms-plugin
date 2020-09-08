@@ -1,17 +1,22 @@
 <?php
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
- * Single Sign On Cloud Based plugin for CraftCMS
+ *
+ * Single Sign On Cloud plugin for CraftCMS
  *
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2019 Website Toolbox
  */
 
 namespace websitetoolbox\websitetoolboxforum\models;
+
 use websitetoolbox\websitetoolboxforum\Websitetoolboxforum;
+
 use craft\base\Model;
 use craft\behaviors\EnvAttributeParserBehavior;
+
 use yii\behaviors\AttributeTypecastBehavior;
+
 /**
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
@@ -23,21 +28,27 @@ class Settings extends Model
     // =========================================================================
 
     /**
-     * @var string Websitetoolbox Forum Username
+     * @var string Websitetoolbox Forums jsConnect Client ID
      */
     public $forumUsername = '';
 
     /**
-     * @var string Websitetoolbox Forum Password
+     * @var string Websitetoolbox Forums jsConnect Secret
      */
-    public $forumPassword = ''; 
+    public $forumPassword = '';
+
+    /**
+     * @var string The hash algorithm to be ued when signing requests
+     */
     public $forumEmbedded         = '';
     public $loginUrl              = '';
     public $logOutUrl             = '';
-    public $userRegistrationUrl   = '';   
+    public $userRegistrationUrl   = '';
+   
     public $forumApiKey           = '';
     public $forumOutputUrl        = '';
-    public $forumUrl              = '';   
+    public $forumUrl              = '';
+    
  
     // Public Methods
     // =========================================================================
