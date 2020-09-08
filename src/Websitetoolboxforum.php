@@ -1,13 +1,11 @@
 <?php
 /**
  * Websitetoolboxforum plugin for Craft CMS 3.x
- *
- * Single Sign On plugin for WebsitetoolboxForums/jsConnect and CraftCMS
+ * Single Sign On Cloud Based plugin for CraftCMS
  *
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2019 websitetoolbox
  */
-
 namespace websitetoolbox\websitetoolboxforum;
 use websitetoolbox\websitetoolboxforum\services\Sso as SsoService;
 use websitetoolbox\websitetoolboxforum\models\Settings;
@@ -30,7 +28,7 @@ define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settin
 /**
  * Class Websitetoolboxforum
  *
- * @author    websitetoolbox
+ * @author    Website Toolbox
  * @package   Websitetoolboxforum
  * @since     3.0.0
  *
@@ -62,13 +60,6 @@ class Websitetoolboxforum extends Plugin
  
     // Public Methods
     // =========================================================================
-
-    /**
-     * @inheritdoc
-     */
-         public $controllerMap = [
-        'default' => DefaultController::class,
-    ];
     public function init()
     { 
         parent::init();  
@@ -77,10 +68,6 @@ class Websitetoolboxforum extends Plugin
         $this->setComponents([
             'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
         ]);
-
-
-     
-
         self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_BEFORE_SAVE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {
@@ -99,7 +86,7 @@ class Websitetoolboxforum extends Plugin
                     Websitetoolboxforum::getInstance()->sso->resetCookieOnLogout();
             });
           }
-        if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
+         if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
             Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
                 $forumType = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
                 $view = Craft::$app->getView();
