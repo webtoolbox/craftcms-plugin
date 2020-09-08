@@ -37,16 +37,7 @@ class Sso extends Component
                 $userName= Craft::$app->getUser()->getIdentity()->username;
                 $RequestUrl = $forumUrl."/register/setauthtoken";
                 $postData = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
-                $ch = curl_init();
-                curl_setopt($ch,CURLOPT_URL,$RequestUrl);
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-                curl_setopt($ch,CURLOPT_POSTFIELDS,json_encode($postData));
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-                'Content-Type: application/json','Accept: application/json'));      
-                curl_setopt($ch, CURLOPT_HEADER, 0);
-                $response = curl_exec($ch);
-                $result = json_decode($response, true); 
+                $result = Websitetoolboxforum::getInstance()->sso->sendRequest($postData,$RequestUrl,'json'); 
                 setcookie("forumLogoutToken", $result['authtoken'], time() + 3600,"/");
                 setcookie("forumLoginUserid", $result['userid'], time() + 3600,"/");
             }
@@ -66,16 +57,7 @@ class Sso extends Component
            $postData['name'] .=  " ".$_POST['lastName'];
         }        
         $RequestUrl = $forumUrl . "/register/create_account/";
-        $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL,$RequestUrl);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($ch,CURLOPT_POSTFIELDS,json_encode($postData));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-        'Content-Type: application/json','Accept: application/json'));      
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $response = curl_exec($ch); 
-        $result = json_decode($response, true);
+        $result = Websitetoolboxforum::getInstance()->sso->sendRequest($postData,$RequestUrl,'json'); 
     }
     function afterUpdateUser(){
       $emailToVerify  = $_SESSION['userEmailBeforeUpdate'];
@@ -129,16 +111,7 @@ class Sso extends Component
         $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
         $postData         = array('type'=>'json','apikey' => $forumApiKey,'massaction' => 'decline_mem','usernames' => $userName);
         $RequestUrl =  $forumUrl."/register";
-        $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL,$RequestUrl);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($ch,CURLOPT_POSTFIELDS,json_encode($postData));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-        'Content-Type: application/json','Accept: application/json'));      
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $response = curl_exec($ch); 
-        $result = json_decode($response, true);
+        $result = Websitetoolboxforum::getInstance()->sso->sendRequest($postData,$RequestUrl,'json'); 
     }
     function afterLogOut(){  
       if(isset($_COOKIE['forumLogoutToken'])){
@@ -155,27 +128,43 @@ class Sso extends Component
       setcookie('loginRemember', '', time() - 3600, "/");
       unset($_COOKIE['loginRemember']);
    }
-   function renderJsScriptEmbedded($r){   
+   function sendRequest($requestData,$requestUrl,$postType){
+      $ch = curl_init();
+      curl_setopt($ch,CURLOPT_URL,$requestUrl);
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+      if($postType == 'json'){
+        curl_setopt($ch,CURLOPT_POSTFIELDS,json_encode($requestData));
+      }else{
+        curl_setopt($ch,CURLOPT_POSTFIELDS,http_build_query($requestData));
+      }
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+      'Content-Type: application/json','Accept: application/json'));      
+      curl_setopt($ch, CURLOPT_HEADER, 0);
+      $response = curl_exec($ch); 
+      $result = json_decode($response, true); 
+      return $result;
+   }
+   function renderJsScriptEmbedded($forumUrl){   
 
         $js = <<<JS
-          (  
-           function renderEmbeddedHtmlWithAuthtoken(\$r)
-          { alert($r);
-            var embedUrl = "//beta.websitetoolbox.com/js/mb/embed.js";
-            var wtbWrap = document.createElement('div');
-            wtbWrap.id = "wtEmbedCode";
-            var embedScript = document.createElement('script');
-            embedScript.id = "embedded_forum";
-            embedScript.type = 'text/javascript';
-            var wtbToken = getCookie();
-            if(typeof wtbToken != 'undefined' && wtbToken){
-              embedUrl += "?authtoken="+wtbToken;
-            }
-            embedScript.src = embedUrl;alert(embedScript);
-            wtbWrap.appendChild(embedScript);
-            document.getElementById('embedForum').appendChild(embedScript);
+  (  
+   function renderEmbeddedHtmlWithAuthtoken()
+  {  var embedUrl  = "{$forumUrl}";    
+    var wtbWrap = document.createElement('div');
+    wtbWrap.id = "wtEmbedCode";
+    var embedScript = document.createElement('script');
+    embedScript.id = "embedded_forum";
+    embedScript.type = 'text/javascript';
+    var wtbToken = getCookie();
+    if(typeof wtbToken != 'undefined' && wtbToken){
+      embedUrl += "/js/mb/embed.js?authtoken="+wtbToken;
+    } 
+    embedScript.src = embedUrl; 
+    wtbWrap.appendChild(embedScript); 
+    document.getElementById('embedForum').appendChild(embedScript);
 
-          })();
+  })();
 JS;
       return $js ;
     }

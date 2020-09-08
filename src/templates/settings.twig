@@ -25,7 +25,28 @@
     {%- endif -%}
 {%- endmacro %}
 {% from _self import configWarning %}
-
+    {{ forms.textField({
+        "label": "Forum Username"|t("websitetoolboxforum"),
+        "id": "forumUsername",
+        "name": "forumUsername",
+        "value": settings.forumUsername,
+       }) 
+    }}
+   
+    {{ forms.textField({
+        "label": "Forum Password"|t("websitetoolboxforum"),
+        "id": "forumPassword",
+        "name": "forumPassword",
+        "value": settings.forumPassword,
+        }) 
+    }}
+    {{ forms.checkboxField({
+            label: "Embedded"|t('app'),
+            id: 'forumEmbedded',
+            name: 'forumEmbedded',
+            checked: settings.forumEmbedded,
+        }) 
+    }}
     {{ forms.textField({
         "label": "Website Login Url"|t("websitetoolboxforum"),
         "id": "loginUrl",
@@ -54,27 +75,6 @@
         "value": settings.forumOutputUrl,
        }) 
     }}
-    {{ forms.textField({
-        "label": "Forum Username"|t("websitetoolboxforum"),
-        "id": "forumUsername",
-        "name": "forumUsername",
-        "value": settings.forumUsername,
-       }) 
-    }}
-   
-    {{ forms.textField({
-        "label": "Forum Password"|t("websitetoolboxforum"),
-        "id": "forumPassword",
-        "name": "forumPassword",
-        "value": settings.forumPassword,
-        }) 
-    }}
-    {{ forms.checkboxField({
-    		label: "Embedded"|t('app'),
-    		id: 'forumEmbedded',
-    		name: 'forumEmbedded',
-    		checked: settings.forumEmbedded,
-		}) 
-	}}
+    
 
 

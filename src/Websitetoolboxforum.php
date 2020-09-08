@@ -170,15 +170,9 @@ class Websitetoolboxforum extends Plugin
         $userName = $_POST['settings']['forumUsername'];
         $userPassword = $_POST['settings']['forumPassword'];
         $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
-        $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL,WT_SETTINGS_URL);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($ch,CURLOPT_POSTFIELDS,http_build_query($postData));
-        $response = curl_exec($ch); 
-        $result = json_decode($response, true);  
-         
-        if(empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){  
+        $result = $this->sso->sendRequest($postData,WT_SETTINGS_URL,'query');
+       
+        if(empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){    
            $affectedRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
            [ 'path'=> 'plugins.websitetoolboxforum.settings.forumUrl','value' => '"'.$result['forumAddress'].'"'],false)->execute();
         }elseif(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"] != $result['forumAddress']){  
@@ -188,7 +182,7 @@ class Websitetoolboxforum extends Plugin
         if(empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumApiKey"])){
             $affectedRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
            [ 'path'=> 'plugins.websitetoolboxforum.settings.forumApiKey','value' => '"'.$result['forumApiKey'].'"'],false)->execute();
-        }
+        } 
        $forumData = array('type'=>'json',
        'action' => 'modifySSOURLs',
        'forumUsername' => $userName,
@@ -197,17 +191,7 @@ class Websitetoolboxforum extends Plugin
        'login_page_url'=>Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.loginUrl'),
        'logout_page_url' => Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.logOutUrl'),
        'registration_url' => Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.userRegistrationUrl')); 
-
-        $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL,WT_SETTINGS_URL);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($ch,CURLOPT_POSTFIELDS,http_build_query($forumData));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-        'Content-Type: application/json','Accept: application/json'));      
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $response = curl_exec($ch); 
-        $result = json_decode($response, true); 
-        $this->sso->afterLogin();
+       $this->sso->sendRequest($forumData,WT_SETTINGS_URL,'query');
+       $this->sso->afterLogin();
      }
 }
