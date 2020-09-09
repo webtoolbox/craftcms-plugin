@@ -130,8 +130,7 @@ class Sso extends Component
       unset($_COOKIE['forumLoginUserid']);
       setcookie('loginRemember', '', time() - 3600, "/");
       unset($_COOKIE['loginRemember']);
-   }
-   
+   }   
    function renderJsScriptEmbedded($forumUrl){   
         $js = <<<JS
   (  
@@ -179,6 +178,5 @@ JS;
         })();
 JS;
         return $js ;
-    }
-   
+    }   
 }
