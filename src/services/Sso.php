@@ -54,17 +54,17 @@ class Sso extends Component
         $result = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');          
     }
     function afterUpdateUser(){
-      $emailToVerify  = $_SESSION['userEmailBeforeUpdate'];
-      $userId     = Websitetoolboxforum::getInstance()->sso->getUserid($emailToVerify);
-      $userName = $_POST['username'];
-      $externalUserid = $_POST['userId'];
-      $email = $_POST['email'];;
-      $userDetails = array("type"=>"json","email" => $email,
-              "username" => $userName,
-              "externalUserid" => $externalUserid,
-              "name" => $userName);
-      $url =  WT_API_URL ."/users/$userId";
-      $response = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
+        $emailToVerify  = $_SESSION['userEmailBeforeUpdate'];
+        $userId     = Websitetoolboxforum::getInstance()->sso->getUserid($emailToVerify);
+        $userName = $_POST['username'];
+        $externalUserid = $_POST['userId'];
+        $email = $_POST['email'];;
+        $userDetails = array("type"=>"json","email" => $email,
+                "username" => $userName,
+                "externalUserid" => $externalUserid,
+                "name" => $userName);
+        $url =  WT_API_URL ."/users/$userId";
+        $response = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
     }
     function getUserid($userEmail){         
          if ($userEmail) {
@@ -117,19 +117,19 @@ class Sso extends Component
         $result = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
     }
     function afterLogOut(){  
-      if(isset($_COOKIE['forumLogoutToken'])){
-        $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-        echo '<img src='.$forumUrl.'"/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';  
-        Websitetoolboxforum::getInstance()->sso->resetCookieOnLogout();  
-      }
+        if(isset($_COOKIE['forumLogoutToken'])){
+          $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
+          echo '<img src='.$forumUrl.'"/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';  
+          Websitetoolboxforum::getInstance()->sso->resetCookieOnLogout();  
+        }
     }
     function resetCookieOnLogout(){
-      setcookie('forumLogoutToken', 0, time() - 3600, "/");
-      unset($_COOKIE['forumLogoutToken']);
-      setcookie('forumLoginUserid', '', time() - 3600, "/");
-      unset($_COOKIE['forumLoginUserid']);
-      setcookie('loginRemember', '', time() - 3600, "/");
-      unset($_COOKIE['loginRemember']);
+        setcookie('forumLogoutToken', 0, time() - 3600, "/");
+        unset($_COOKIE['forumLogoutToken']);
+        setcookie('forumLoginUserid', '', time() - 3600, "/");
+        unset($_COOKIE['forumLoginUserid']);
+        setcookie('loginRemember', '', time() - 3600, "/");
+        unset($_COOKIE['loginRemember']);
    }   
    function renderJsScriptEmbedded($forumUrl){   
         $js = <<<JS
