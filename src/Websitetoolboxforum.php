@@ -25,11 +25,9 @@ use craft\services\Config;
 define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
 /**
  * Class Websitetoolboxforum
- *
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
  * @since     3.0.0
- *
  * @property  SsoService $sso
  */
 class Websitetoolboxforum extends Plugin
