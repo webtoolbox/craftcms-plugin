@@ -1,21 +1,16 @@
 {#
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
- *
  * Website Toolbox Forum Settings.twig
- *
  * @author    Website Toolbox
- * @copyright Copyright (c) 2019 Website Toolbox
+ * @copyright Copyright (c) 2020 Website Toolbox
  * @link      https://websitetoolbox.com/
  * @package   Website Toolbox Forum
  * @since     3.0.0
  */
 #}
-
 {% import "_includes/forms" as forms %}
-
 {% do view.registerAssetBundle("websitetoolbox\\websitetoolboxforum\\assetbundles\\websitetoolboxforum\\websitetoolboxforumAsset") %}
-
 {% macro configWarning(setting, file="websitetoolboxforum") -%}
     {%- set configArray = craft.app.config.getConfigFromFile(file) -%}
     {%- if configArray[setting] is defined -%}

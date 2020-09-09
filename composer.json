@@ -18,7 +18,7 @@
     "authors": [
         {
             "name": "Website Toolbox",
-            "homepage": "http://websitetoolbox.com"
+            "homepage": "https://websitetoolbox.com"
         }
     ],
     "require": {
@@ -48,7 +48,12 @@
             "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
         }
     },
-  "minimum-stability": "dev",
-  "prefer-stable": true
-    
+     "minimum-stability": "dev",
+  "prefer-stable": true,
+    "repositories": [
+    {
+      "type": "path",
+      "url": "c://xampp3/htdocs/websitetoolboxforum"
+    }
+  ]
 }

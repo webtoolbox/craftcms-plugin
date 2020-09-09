@@ -2,10 +2,10 @@
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
  *
- * Single Sign On plugin for CraftCMS
+ * Single Sign On Cloud Based plugin for CraftCMS
  *
  * @link      https://websitetoolbox.com/
- * @copyright Copyright (c) 2019 websitetoolbox
+ * @copyright Copyright (c) 2020 Website Toolbox
  */
 
 namespace websitetoolbox\websitetoolboxforum\assetbundles\websitetoolboxforum;
@@ -14,7 +14,7 @@ use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
 /**
- * @author    websitetoolbox
+ * @author    Website Toolbox
  * @package   Websitetoolboxforum
  * @since     3.0.0
  */
@@ -22,23 +22,18 @@ class WebsitetoolboxforumAsset extends AssetBundle
 {
     // Public Methods
     // =========================================================================
-
-    /**
-     * @inheritdoc
+    /**     * @inheritdoc
      */
-
     public function init()
     {
         $this->sourcePath = "@websitetoolbox/websitetoolboxforum/assetbundles/websitetoolboxforum/dist";
-         $this->depends = [
+        $this->depends = [
             CpAsset::class,
-        ];
-         
+        ];         
         $this->js = [
             'js/Websitetoolboxforum.js',
               
         ];
-        
         parent::init();
     }
 }

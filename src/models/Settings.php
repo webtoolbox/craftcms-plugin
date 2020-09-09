@@ -1,22 +1,15 @@
 <?php
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
- *
- * Single Sign On Cloud plugin for CraftCMS
- *
+ * Single Sign On Cloud Based plugin for CraftCMS
  * @link      https://websitetoolbox.com/
- * @copyright Copyright (c) 2019 Website Toolbox
+ * @copyright Copyright (c) 2020 Website Toolbox
  */
-
 namespace websitetoolbox\websitetoolboxforum\models;
-
 use websitetoolbox\websitetoolboxforum\Websitetoolboxforum;
-
 use craft\base\Model;
 use craft\behaviors\EnvAttributeParserBehavior;
-
 use yii\behaviors\AttributeTypecastBehavior;
-
 /**
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
@@ -26,33 +19,17 @@ class Settings extends Model
 {
     // Public Properties
     // =========================================================================
-
-    /**
-     * @var string Websitetoolbox Forums jsConnect Client ID
-     */
     public $forumUsername = '';
-
-    /**
-     * @var string Websitetoolbox Forums jsConnect Secret
-     */
     public $forumPassword = '';
-
-    /**
-     * @var string The hash algorithm to be ued when signing requests
-     */
     public $forumEmbedded         = '';
     public $loginUrl              = '';
     public $logOutUrl             = '';
     public $userRegistrationUrl   = '';
-   
     public $forumApiKey           = '';
     public $forumOutputUrl        = '';
     public $forumUrl              = '';
-    
- 
     // Public Methods
     // =========================================================================
-
     /**
      * @inheritdoc
      */
@@ -64,10 +41,6 @@ class Settings extends Model
             
         ];
     }
-
-    /**
-     * @inheritdoc
-     */
     public function behaviors()
     {
         // Keep any parent behaviors
@@ -96,7 +69,6 @@ class Settings extends Model
                 ],
             ];
         }
-
         return $behaviors;
     }
 }
