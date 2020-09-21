@@ -19,8 +19,8 @@ class Settings extends Model
 {
     // Public Properties
     // =========================================================================
-    public $forumUsername = '';
-    public $forumPassword = '';
+    public $forumUsername         = '';
+    public $forumPassword         = '';
     public $forumEmbedded         = '';
     public $loginUrl              = '';
     public $logOutUrl             = '';
@@ -35,8 +35,7 @@ class Settings extends Model
     {
         return [
             [['forumUsername', 'forumPassword','forumEmbedded','loginUrl','logOutUrl','userRegistrationUrl','forumOutputUrl'], 'string'],
-            [['forumUsername', 'forumPassword','forumEmbedded','loginUrl','logOutUrl','userRegistrationUrl','forumOutputUrl'], 'default', 'value' => ''],
-            
+            [['forumUsername', 'forumPassword','forumEmbedded','loginUrl','logOutUrl','userRegistrationUrl','forumOutputUrl'], 'default', 'value' => ''],          
         ];
     }
     public function behaviors()

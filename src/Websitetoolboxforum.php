@@ -1,18 +1,14 @@
 <?php
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
- *
  * Single Sign On Cloud Based plugin for CraftCMS
- *
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
  */
-
 namespace websitetoolbox\websitetoolboxforum;
 use websitetoolbox\websitetoolboxforum\services\Sso as SsoService;
 use websitetoolbox\websitetoolboxforum\models\Settings;
 use websitetoolbox\websitetoolboxforum\assetbundles\Websitetoolboxforum\WebsitetoolboxforumAsset;
- 
 use Craft;
 use craft\base\Plugin;
 use craft\web\twig\variables\CraftVariable;
@@ -49,7 +45,6 @@ class Websitetoolboxforum extends Plugin
     { 
         parent::init();  
         self::$plugin = $this;
-        
         $this->setComponents([
             'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
         ]);
@@ -115,8 +110,7 @@ class Websitetoolboxforum extends Plugin
             __METHOD__
         );          
     }
-    protected function createSettingsModel()
-    {
+    protected function createSettingsModel(){
         return new Settings();
     }
     protected function settingsHtml(): string{
@@ -126,7 +120,7 @@ class Websitetoolboxforum extends Plugin
             return Craft::$app->view->renderTemplate(
                 'websitetoolboxforum/settings-forum',
                 [
-                    'settings' => $this->getSettings(),
+                    'settings'  => $this->getSettings(),
                     'hashTypes' => $hashTypes,
                 ]
             );
@@ -134,7 +128,7 @@ class Websitetoolboxforum extends Plugin
             return Craft::$app->view->renderTemplate(
                 'websitetoolboxforum/settings',
                 [
-                    'settings' => $this->getSettings(),
+                    'settings'  => $this->getSettings(),
                     'hashTypes' => $hashTypes,
                 ]
             );
@@ -147,15 +141,14 @@ class Websitetoolboxforum extends Plugin
             ->redirect(UrlHelper::url('settings/plugins/websitetoolboxforum?page=2'))
             ->send();
         }else{
-            $userName = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"];
-            $userPassword = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumPassword"];
-            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
-            $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'query');  
-            $deleteForumUrlRows = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumUrl'])->execute();
-            $deleteForumApiKeyRows = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumApiKey'])->execute();   
-            $affectedForumUrlRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
+            $userName                = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"];
+            $userPassword            = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumPassword"];
+            $postData                = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
+            $result                  = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'query');  
+            $deleteForumUrlRows      = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumUrl'])->execute();
+            $deleteForumApiKeyRows   = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumApiKey'])->execute();   
+            $affectedForumUrlRows    = Craft::$app->getDb()->createCommand()->insert('projectconfig',
             [ 'path'=> 'plugins.websitetoolboxforum.settings.forumUrl','value' => '"'.$result->forumAddress.'"'],false)->execute(); 
-
             $affectedForumApiKeyRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
             [ 'path'=> 'plugins.websitetoolboxforum.settings.forumApiKey','value' => '"'.$result->forumApiKey.'"'],false)->execute();
         }
