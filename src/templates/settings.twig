@@ -19,20 +19,22 @@
         {{ false }}
     {%- endif -%}
 {%- endmacro %}
-{% from _self import configWarning %}
+<div> <h2>Forums by Website Toolbox</h2><br><b>Please log in to your Website Toolbox account.</b><p>Not a Website Toolbox Forum owner? <a href="https://www.websitetoolbox.com/craftCMS" target="_blank">Create a Forum Now!</a></p><p>Please <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" target="_blank">Contact Customer Support</a> if you need help getting set up.</p><div>
+ {% from _self import configWarning %}  
     {{ forms.textField({
-        "label": "Forum Username"|t("websitetoolboxforum"),
+        "label": "Website Toolbox Username"|t("websitetoolboxforum"),
         "id": "forumUsername",
         "name": "forumUsername",
         "value": settings.forumUsername,
+        "required": true
        }) 
-    }}
-   
-    {{ forms.textField({
-        "label": "Forum Password"|t("websitetoolboxforum"),
+    }}   
+    {{ forms.passwordField({
+        "label": "Website Toolbox Password"|t("websitetoolboxforum"),
         "id": "forumPassword",
         "name": "forumPassword",
         "value": settings.forumPassword,
+        "required": true
         }) 
     }}
     {{ forms.checkboxField({
@@ -40,36 +42,7 @@
             id: 'forumEmbedded',
             name: 'forumEmbedded',
             checked: settings.forumEmbedded,
-        }) 
-    }}
-    {{ forms.textField({
-        "label": "Website Login Url"|t("websitetoolboxforum"),
-        "id": "loginUrl",
-        "name": "loginUrl",
-        "value": settings.loginUrl,
-        }) 
-    }}
-    {{ forms.textField({
-        "label": "Website Logout Url"|t("websitetoolboxforum"),
-        "id": "logOutUrl",
-        "name": "logOutUrl",
-        "value": settings.logOutUrl,
-       }) 
-    }}
-    {{ forms.textField({
-        "label": "Website User Registration Url"|t("websitetoolboxforum"),
-        "id": "userRegistrationUrl",
-        "name": "userRegistrationUrl",
-        "value": settings.userRegistrationUrl,
-        }) 
-    }}
-    {{ forms.textField({
-        "label": "Website Forum Output Url"|t("websitetoolboxforum"),
-        "id": "forumOutputUrl",
-        "name": "forumOutputUrl",
-        "value": settings.forumOutputUrl,
-       }) 
-    }}
-    
 
-
+        }) 
+    }}
+ <div>Enable this option to have your forum embedded in a page of your website.Disable this option to have your forum load in a full-sized window. You can use the Layout section in your Website Toolbox account to <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank">customize your forum layout to match your website</a> or <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" target="_blank">contact Website Toolbox support to customize it for you</a><br /><br /><b>You can change website page url settings <a href="?page=2">here</a>:</b></div>

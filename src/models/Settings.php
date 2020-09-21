@@ -25,9 +25,7 @@ class Settings extends Model
     public $loginUrl              = '';
     public $logOutUrl             = '';
     public $userRegistrationUrl   = '';
-    public $forumApiKey           = '';
     public $forumOutputUrl        = '';
-    public $forumUrl              = '';
     // Public Methods
     // =========================================================================
     /**
@@ -36,8 +34,8 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['forumUsername', 'forumPassword','forumEmbedded','loginUrl','logOutUrl','userRegistrationUrl','forumOutputUrl','forumUrl','forumApiKey'], 'string'],
-            [['forumUsername', 'forumPassword','forumEmbedded','loginUrl','logOutUrl','userRegistrationUrl','forumOutputUrl','forumUrl','forumApiKey'], 'default', 'value' => ''],
+            [['forumUsername', 'forumPassword','forumEmbedded','loginUrl','logOutUrl','userRegistrationUrl','forumOutputUrl'], 'string'],
+            [['forumUsername', 'forumPassword','forumEmbedded','loginUrl','logOutUrl','userRegistrationUrl','forumOutputUrl'], 'default', 'value' => ''],
             
         ];
     }
@@ -62,10 +60,6 @@ class Settings extends Model
                     'logOutUrl',
                     'userRegistrationUrl',
                     'forumOutputUrl',
-                    'forumUrl',
-                    'forumApiKey',
-                    'forumUrl',
-                    'forumApiKey'
                 ],
             ];
         }

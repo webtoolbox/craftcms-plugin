@@ -1,14 +1,18 @@
 <?php
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
+ *
  * Single Sign On Cloud Based plugin for CraftCMS
+ *
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
  */
+
 namespace websitetoolbox\websitetoolboxforum\assetbundles\websitetoolboxforum;
 use Craft;
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
+
 /**
  * @author    Website Toolbox
  * @package   Websitetoolboxforum

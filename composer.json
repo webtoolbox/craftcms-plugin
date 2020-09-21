@@ -35,17 +35,25 @@
         }
     },
     "extra": {
-        "hasCpSettings": true,
+         "hasCpSettings": true,
         "name": "Website Toolbox Forum",
         "handle": "websitetoolboxforum",
         "developer": "Website Toolbox",
         "hasCpSection": false,
-        "developerUrl": "https://websitetoolbox.com",
+        "developerUrl": "http://websitetoolbox.com",
         "documentationUrl": "https://www.websitetoolbox.com/documentation1",
         "changelogUrl": "https://www.websitetoolbox.com/documentation1",
         "class": "websitetoolbox\\websitetoolboxforum\\Websitetoolboxforum",
         "components": {
             "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
         }
+    },
+     "minimum-stability": "dev",
+  "prefer-stable": true,
+    "repositories": [
+    {
+      "type": "path",
+      "url": "c://xampp3/htdocs/websitetoolboxforum"
     }
+  ]
 }

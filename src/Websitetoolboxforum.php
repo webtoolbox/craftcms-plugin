@@ -1,14 +1,18 @@
 <?php
 /**
  * Website Toolbox Forum plugin for Craft CMS 3.x
+ *
  * Single Sign On Cloud Based plugin for CraftCMS
+ *
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
  */
+
 namespace websitetoolbox\websitetoolboxforum;
 use websitetoolbox\websitetoolboxforum\services\Sso as SsoService;
 use websitetoolbox\websitetoolboxforum\models\Settings;
 use websitetoolbox\websitetoolboxforum\assetbundles\Websitetoolboxforum\WebsitetoolboxforumAsset;
+ 
 use Craft;
 use craft\base\Plugin;
 use craft\web\twig\variables\CraftVariable;
@@ -22,12 +26,15 @@ use craft\events\ModelEvent;
 use craft\services\Users;
 use craft\web\View;
 use craft\services\Config;
-define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
+use yii\web\Response;
+define('WT_SETTINGS_URL', 'https://beta.websitetoolbox.com/tool/members/mb/settings');
 /**
  * Class Websitetoolboxforum
+ *
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
  * @since     3.0.0
+ *
  * @property  SsoService $sso
  */
 class Websitetoolboxforum extends Plugin
@@ -115,40 +122,43 @@ class Websitetoolboxforum extends Plugin
     protected function settingsHtml(): string{
         $hashTypes = hash_algos();
         $hashTypes = array_combine($hashTypes, $hashTypes);
-        return Craft::$app->view->renderTemplate(
-            'websitetoolboxforum/settings',
-            [
-                'settings' => $this->getSettings(),
-                'hashTypes' => $hashTypes,
-            ]
-        );
-    }
-    public function afterSaveSettings(){   
-        $userName = $_POST['settings']['forumUsername'];
-        $userPassword = $_POST['settings']['forumPassword'];
-        $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
-        $result = $this->sso->sendRequest($postData,WT_SETTINGS_URL,'query');       
-        if(empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){    
-             $affectedRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
-             [ 'path'=> 'plugins.websitetoolboxforum.settings.forumUrl','value' => '"'.$result['forumAddress'].'"'],false)->execute();
-        }elseif(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"] != $result['forumAddress']){  
-             $affectedRows = Craft::$app->getDb()->createCommand()->update('projectconfig', 
-             ['plugins.websitetoolboxforum.settings.forumUrl' => $result['forumAddress']], 'path == plugins.websitetoolboxforum.settings.forumUrl')->execute();;
+        if(isset($_GET['page'])&& ($_GET['page'] == '2')){
+            return Craft::$app->view->renderTemplate(
+                'websitetoolboxforum/settings-forum',
+                [
+                    'settings' => $this->getSettings(),
+                    'hashTypes' => $hashTypes,
+                ]
+            );
+        }else{
+            return Craft::$app->view->renderTemplate(
+                'websitetoolboxforum/settings',
+                [
+                    'settings' => $this->getSettings(),
+                    'hashTypes' => $hashTypes,
+                ]
+            );
         }
-        if(empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumApiKey"])){
-              $affectedRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
-             [ 'path'=> 'plugins.websitetoolboxforum.settings.forumApiKey','value' => '"'.$result['forumApiKey'].'"'],false)->execute();
-        } 
-        $forumData = array('type'=>'json',
-            'action' => 'modifySSOURLs',
-            'forumUsername' => $userName,
-            'forumApikey'=>$result['forumApiKey'],
-            'embed_page_url'=>Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumOutputUrl'),
-            'login_page_url'=>Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.loginUrl'),
-            'logout_page_url' => Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.logOutUrl'),
-            'registration_url' => Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.userRegistrationUrl')
-        ); 
-        $this->sso->sendRequest($forumData,WT_SETTINGS_URL,'query');
-        $this->sso->afterLogin();
+    }
+    public function afterSaveSettings(){ 
+        if(!isset($_REQUEST['page'])){
+            parent::afterSaveSettings();
+            Craft::$app->response
+            ->redirect(UrlHelper::url('settings/plugins/websitetoolboxforum?page=2'))
+            ->send();
+        }else{
+            $userName = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"];
+            $userPassword = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumPassword"];
+            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
+            $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'query');  
+            $deleteForumUrlRows = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumUrl'])->execute();
+            $deleteForumApiKeyRows = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumApiKey'])->execute();   
+            $affectedForumUrlRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
+            [ 'path'=> 'plugins.websitetoolboxforum.settings.forumUrl','value' => '"'.$result->forumAddress.'"'],false)->execute(); 
+
+            $affectedForumApiKeyRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
+            [ 'path'=> 'plugins.websitetoolboxforum.settings.forumApiKey','value' => '"'.$result->forumApiKey.'"'],false)->execute();
+        }
      }
 }
+ 

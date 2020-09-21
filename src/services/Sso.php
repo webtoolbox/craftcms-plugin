@@ -12,7 +12,7 @@ use Craft;
 use craft\base\Component;
 use craft\web\View;
 use craft\services\Config;
-define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
+define('WT_API_URL', 'https://api.websitetoolbox.com/dev/api');
 /**
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
@@ -21,50 +21,51 @@ define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
 class Sso extends Component
 {    
      function afterLogin(){  
-         $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
-          if($token){ 
-               $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey');
-               $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
-              if($forumApiKey){ 
-                  $myUserQuery = \craft\elements\User::find();
-                  $userEmail = Craft::$app->getUser()->getIdentity()->email;
-                  $userId= Craft::$app->getUser()->getIdentity()->id;
-                  $userName= Craft::$app->getUser()->getIdentity()->username;
-                  $RequestUrl = $forumUrl."/register/setauthtoken";
-                  $postData = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
-                  $result = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
-                  setcookie("forumLogoutToken", $result['authtoken'], time() + 3600,"/");
-                  setcookie("forumLoginUserid", $result['userid'], time() + 3600,"/");
-              }
-          }         
+       $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
+        if($token){ 
+             $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey');
+             $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
+            if($forumApiKey){ 
+                $myUserQuery = \craft\elements\User::find();
+                $userEmail = Craft::$app->getUser()->getIdentity()->email;
+                $userId= Craft::$app->getUser()->getIdentity()->id;
+                $userName= Craft::$app->getUser()->getIdentity()->username;
+                $RequestUrl = $forumUrl."/register/setauthtoken";
+                $postData = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
+                $result = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
+                setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
+                setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
+            }
+        }
+         
      }
      function afterUserCreate($userId){ 
-          $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-          $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false); 
-          $postData = array( 'type'=>'json','apikey'=>$forumApiKey,'member' => $_POST['username'],
-          'externalUserid' => $userId, 
-          'email' => $_POST['email']);
-          if(isset($_POST['firstName'])){
-             $postData['name'] =  $_POST['firstName'];
-          }
-          if(isset($_POST['firstName'])){
-             $postData['name'] .=  " ".$_POST['lastName'];
-          }        
-          $RequestUrl = $forumUrl . "/register/create_account/";
-          $result = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');          
+        $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
+        $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false); 
+        $postData = array( 'type'=>'json','apikey'=>$forumApiKey,'member' => $_POST['username'],
+        'externalUserid' => $userId, 
+        'email' => $_POST['email']);
+        if(isset($_POST['firstName'])){
+           $postData['name'] =  $_POST['firstName'];
+        }
+        if(isset($_POST['firstName'])){
+           $postData['name'] .=  " ".$_POST['lastName'];
+        }        
+        $RequestUrl = $forumUrl . "/register/create_account/";
+        $result = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');          
     }
     function afterUpdateUser(){
-          $emailToVerify  = $_SESSION['userEmailBeforeUpdate'];
-          $userId     = Websitetoolboxforum::getInstance()->sso->getUserid($emailToVerify);
-          $userName = $_POST['username'];
-          $externalUserid = $_POST['userId'];
-          $email = $_POST['email'];;
-          $userDetails = array("type"=>"json","email" => $email,
-                  "username" => $userName,
-                  "externalUserid" => $externalUserid,
-                  "name" => $userName);
-          $url =  WT_API_URL ."/users/$userId";
-          $response = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
+      $emailToVerify  = $_SESSION['userEmailBeforeUpdate'];
+      $userId     = Websitetoolboxforum::getInstance()->sso->getUserid($emailToVerify);
+      $userName = $_POST['username'];
+      $externalUserid = $_POST['userId'];
+      $email = $_POST['email'];;
+      $userDetails = array("type"=>"json","email" => $email,
+              "username" => $userName,
+              "externalUserid" => $externalUserid,
+              "name" => $userName);
+      $url =  WT_API_URL ."/users/$userId";
+      $response = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
     }
     function getUserid($userEmail){         
          if ($userEmail) {
@@ -78,7 +79,7 @@ class Sso extends Component
             }
         }
     }
-    function sendApiRequest($method, $url, $requestData, $postType, $apiKey=''){  
+    function sendApiRequest($method, $url, $requestData, $postType, $apiKey=''){               
         if ($method == "GET") {
             $url = sprintf("%s?%s", $url, http_build_query($requestData));
         }
@@ -109,7 +110,7 @@ class Sso extends Component
         curl_close($curl);
         return json_decode($response);
     }
-    function afterDeleteUser($userName){        
+   function afterDeleteUser($userName){        
         $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false);
         $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
         $postData         = array('type'=>'json','apikey' => $forumApiKey,'massaction' => 'decline_mem','usernames' => $userName);
@@ -117,45 +118,44 @@ class Sso extends Component
         $result = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
     }
     function afterLogOut(){  
-        if(isset($_COOKIE['forumLogoutToken'])){
-          $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-          echo '<img src='.$forumUrl.'"/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';  
-          Websitetoolboxforum::getInstance()->sso->resetCookieOnLogout();  
-        }
+      if(isset($_COOKIE['forumLogoutToken'])){
+        $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
+        echo '<img src='.$forumUrl.'"/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';  
+        Websitetoolboxforum::getInstance()->sso->resetCookieOnLogout();  
+      }
     }
     function resetCookieOnLogout(){
-        setcookie('forumLogoutToken', 0, time() - 3600, "/");
-        unset($_COOKIE['forumLogoutToken']);
-        setcookie('forumLoginUserid', '', time() - 3600, "/");
-        unset($_COOKIE['forumLoginUserid']);
-        setcookie('loginRemember', '', time() - 3600, "/");
-        unset($_COOKIE['loginRemember']);
-   }   
-   function renderJsScriptEmbedded($forumUrl){   
+      setcookie('forumLogoutToken', 0, time() - 3600, "/");
+      unset($_COOKIE['forumLogoutToken']);
+      setcookie('forumLoginUserid', '', time() - 3600, "/");
+      unset($_COOKIE['forumLoginUserid']);
+      setcookie('loginRemember', '', time() - 3600, "/");
+      unset($_COOKIE['loginRemember']);
+   }
+   
+   function renderJsScriptEmbedded($forumUrl){ 
         $js = <<<JS
-  (  
-   function renderEmbeddedHtmlWithAuthtoken()
-  {  var embedUrl  = "{$forumUrl}";    
-    var wtbWrap = document.createElement('div');
-    wtbWrap.id = "wtEmbedCode";
-    var embedScript = document.createElement('script');
-    embedScript.id = "embedded_forum";
-    embedScript.type = 'text/javascript';
-    var wtbToken = getCookie();
-    if(typeof wtbToken != 'undefined' && wtbToken){
-      embedUrl += "/js/mb/embed.js?authtoken="+wtbToken;
-    } 
-    embedScript.src = embedUrl; 
-    wtbWrap.appendChild(embedScript); 
-    document.getElementById('embedForum').appendChild(embedScript);
+      (  
+       function renderEmbeddedHtmlWithAuthtoken()
+      {  var embedUrl  = "{$forumUrl}";    
+        var wtbWrap = document.createElement('div');
+        wtbWrap.id = "wtEmbedCode";
+        var embedScript = document.createElement('script');
+        embedScript.id = "embedded_forum";
+        embedScript.type = 'text/javascript';
+        var wtbToken = getCookie();
+        if(typeof wtbToken != 'undefined' && wtbToken){
+          embedUrl += "/js/mb/embed.js?authtoken="+wtbToken;
+        } 
+        embedScript.src = embedUrl; 
+        wtbWrap.appendChild(embedScript); 
+        document.getElementById('embedForum').appendChild(embedScript);
 
-  })();
+      })();
 JS;
       return $js ;
-    }
-   
-  function renderJsScriptUnEmbedded() 
-    {   
+    }   
+  function renderJsScriptUnEmbedded(){   
         $js = <<<JS
         (  
          function renderEmbeddedUnHtmlWithAuthtoken()
