@@ -12,7 +12,7 @@ use Craft;
 use craft\base\Component;
 use craft\web\View;
 use craft\services\Config;
-define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
+define('WT_API_URL', 'https://api.websitetoolbox.com/dev/api');
 /**
  * @author    Website Toolbox
  * @package   Websitetoolboxforum

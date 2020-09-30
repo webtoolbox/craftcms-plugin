@@ -23,10 +23,7 @@ class Settings extends Model
     public $forumPassword         = '';
     public $forumEmbedded         = 1;
     // Public Methods
-    // =========================================================================
-    /**
-     * @inheritdoc
-     */
+    /**   * @inheritdoc     */
     public function rules(){
         return [
             [['forumUsername', 'forumPassword'], 'string'],                     
@@ -47,7 +44,6 @@ class Settings extends Model
                 'attributes' => [
                     'forumUsername',
                     'forumPassword',
-                    
                 ],
             ];
         }

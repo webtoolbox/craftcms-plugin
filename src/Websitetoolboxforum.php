@@ -24,14 +24,12 @@ use craft\web\View;
 use craft\services\Config;
 use craft\web\Request;
 use yii\web\Response;
-define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
+define('WT_SETTINGS_URL', 'https://beta.websitetoolbox.com/tool/members/mb/settings');
 /**
  * Class Websitetoolboxforum
- *
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
  * @since     3.0.0
- *
  * @property  SsoService $sso
  */
 class Websitetoolboxforum extends Plugin
@@ -41,7 +39,6 @@ class Websitetoolboxforum extends Plugin
     public $schemaVersion = '1.0.0';
     public $connection; 
     // Public Methods
-    // =========================================================================
     public function init()
     { 
         parent::init();
@@ -139,6 +136,6 @@ class Websitetoolboxforum extends Plugin
             $affectedForumApiKeyRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
             [ 'path'=> 'plugins.websitetoolboxforum.settings.forumApiKey','value' => '"'.$result->forumApiKey.'"'],false)->execute();
         }     
-     }
+    }
 }
  

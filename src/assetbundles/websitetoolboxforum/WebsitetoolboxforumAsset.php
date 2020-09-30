@@ -17,12 +17,8 @@ use craft\web\assets\cp\CpAsset;
 class WebsitetoolboxforumAsset extends AssetBundle
 {
     // Public Methods
-    // =========================================================================
-    
-    /**     * @inheritdoc
-     */
-    public function init()
-    {
+    /**     * @inheritdoc     */
+    public function init(){
         parent::init();
         $this->sourcePath   = "@websitetoolbox/websitetoolboxforum/assetbundles/websitetoolboxforum/dist";
         $this->depends      = [CpAsset::class , ];
