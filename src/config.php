@@ -15,13 +15,10 @@
  * you do for 'general.php'
  */
 return [
-    // Websitetoolbox Forums Username
-    'forumUsername' => '',
-    // Websitetoolbox Forums Password
-    'forumPassword' => '',
-    //Embedded Forum or Non-Embedded Forum
-    'forumEmbedded' => '',
-	'loginUrl' => '',
-	'logOutUrl' => '',
-	'userRegistrationUrl' => '',
+        // Websitetoolbox Forums Username
+        'forumUsername' => '',
+        // Websitetoolbox Forums Password
+        'forumPassword' => '',
+        //Embedded Forum or Non-Embedded Forum
+        'forumEmbedded' => '',
 ];

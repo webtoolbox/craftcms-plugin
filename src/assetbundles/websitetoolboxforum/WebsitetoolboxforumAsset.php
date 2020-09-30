@@ -18,18 +18,15 @@ class WebsitetoolboxforumAsset extends AssetBundle
 {
     // Public Methods
     // =========================================================================
+    
     /**     * @inheritdoc
      */
     public function init()
     {
-        $this->sourcePath = "@websitetoolbox/websitetoolboxforum/assetbundles/websitetoolboxforum/dist";
-        $this->depends = [
-            CpAsset::class,
-        ];         
-        $this->js = [
-            'js/Websitetoolboxforum.js',              
-        ];
         parent::init();
+        $this->sourcePath   = "@websitetoolbox/websitetoolboxforum/assetbundles/websitetoolboxforum/dist";
+        $this->depends      = [CpAsset::class , ];
+        $this->js           = ['js/Websitetoolboxforum.js', ];
     }
 }
 

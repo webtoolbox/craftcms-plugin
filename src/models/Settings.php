@@ -21,25 +21,18 @@ class Settings extends Model
     // =========================================================================
     public $forumUsername         = '';
     public $forumPassword         = '';
-    public $forumEmbedded         = '';
-    public $loginUrl              = '';
-    public $logOutUrl             = '';
-    public $userRegistrationUrl   = '';
-    public $forumOutputUrl        = '';
+    public $forumEmbedded         = 1;
     // Public Methods
     // =========================================================================
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules(){
         return [
-            [['forumUsername', 'forumPassword','forumEmbedded','loginUrl','logOutUrl','userRegistrationUrl','forumOutputUrl'], 'string'],
-            [['forumUsername', 'forumPassword','forumEmbedded','loginUrl','logOutUrl','userRegistrationUrl','forumOutputUrl'], 'default', 'value' => ''],          
+            [['forumUsername', 'forumPassword'], 'string'],                     
         ];
     }
-    public function behaviors()
-    {
+    public function behaviors(){
         // Keep any parent behaviors
         $behaviors = parent::behaviors();
         // Add in the AttributeTypecastBehavior
@@ -54,11 +47,7 @@ class Settings extends Model
                 'attributes' => [
                     'forumUsername',
                     'forumPassword',
-                    'forumEmbedded',
-                    'loginUrl',
-                    'logOutUrl',
-                    'userRegistrationUrl',
-                    'forumOutputUrl',
+                    
                 ],
             ];
         }

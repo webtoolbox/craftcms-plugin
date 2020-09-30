@@ -35,7 +35,7 @@
         }
     },
     "extra": {
-         "hasCpSettings": true,
+        "hasCpSettings": true,
         "name": "Website Toolbox Forum",
         "handle": "websitetoolboxforum",
         "developer": "Website Toolbox",
@@ -48,12 +48,6 @@
             "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
         }
     },
-     "minimum-stability": "dev",
-  "prefer-stable": true,
-    "repositories": [
-    {
-      "type": "path",
-      "url": "c://xampp3/htdocs/websitetoolboxforum"
-    }
-  ]
+    "minimum-stability": "dev",
+    "prefer-stable": true,
 }
