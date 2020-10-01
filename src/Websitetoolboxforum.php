@@ -24,7 +24,7 @@ use craft\web\View;
 use craft\services\Config;
 use craft\web\Request;
 use yii\web\Response;
-define('WT_SETTINGS_URL', 'https://beta.websitetoolbox.com/tool/members/mb/settings');
+define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
 /**
  * Class Websitetoolboxforum
  * @author    Website Toolbox

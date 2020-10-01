@@ -49,18 +49,17 @@
         <br />
         <div>
             <span style="width:30%">
-                <b>Embed the forum               :                 
-                </span>
-            </b>
-         {{ forms.checkboxField({
+                <b>Embed the forum               :   </b>              
+            </span>
+            {{ forms.checkboxField({
                 label: "Yes"|t('app'),
                 id: 'forumEmbedded',
                 name: 'forumEmbedded',
                 checked: settings.forumEmbedded,
                 class : "embedded",
                 default:"checked"
-            })
-        }}        
+                })
+            }}        
         </div>
         <div style="margin-left:20%;margin-top:2%">Enable this option to have your forum embedded in a page of your website.        
             <br />Disable this option to have your forum load in a full-sized window. You can use the Layout section in your Website Toolbox account to         
