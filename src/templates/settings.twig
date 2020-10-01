@@ -11,7 +11,6 @@
 #}
 {% import "_includes/forms" as forms %}
 <div>
-    <h2>Forums by Website Toolbox</h2>
     <div>
     {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.request.getQuery('forumSettingOption') == 1)  %}        
         <div>
@@ -45,8 +44,7 @@
                 <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up.            
             </p>
             <br />
-            <b>Website Toolbox Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;            
-            <a href="?forumSettingOption=1" style="text-decoration:underline"> Change</a>
+            <b>Website Toolbox Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="?forumSettingOption=1" style="text-decoration:underline">Change</a>
         </div>
         <br />
         <div>
@@ -70,12 +68,13 @@
             <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" style="text-decoration:underline" target="_blank">contact Website Toolbox support to customize it for you</a>
             <br />
             <br />
-            <b>Be sure to specify your sign up, log in, and log out page addresses in the             
-                <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On" style="text-decoration:underline"> section of Website Toolbox.</a>
-            </b>
         </div>
     {% endif %}    
     </div>
+    <br /><br />
+    <b>Be sure to specify your sign up, log in, and log out page addresses in the             
+        <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On" style="text-decoration:underline"> Single Sign On section </a>of Website Toolbox.
+    </b>
 </div>
 <style>
 #settings-forumEmbedded-field{
