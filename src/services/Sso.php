@@ -33,8 +33,12 @@ class Sso extends Component
                     $RequestUrl   = $forumUrl."/register/setauthtoken";
                     $postData     = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
                     $result       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
-                    setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-                    setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
+                    if($result){
+                        setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
+                        setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
+                    }else{
+                        Craft::$app->getSession()->setError(Craft::t($result->error));
+                    }
               }
           }         
      }
@@ -54,7 +58,7 @@ class Sso extends Component
            $postData['name'] .=  " ".$_POST['lastName'];
         }        
         $RequestUrl           = $forumUrl . "/register/create_account/";
-        $result               = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');          
+        Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');          
     }
     function afterUpdateUser(){
       $emailToVerify  = $_SESSION['userEmailBeforeUpdate'];
@@ -69,16 +73,20 @@ class Sso extends Component
                           "externalUserid" => $externalUserid,
                           "name"           => $userName);
       $url            = WT_API_URL ."/users/$userId";
-      $response       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
+      Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
     }
     function getUserid($userEmail){         
          if ($userEmail) {
             $data     = array(
                            "email" => $userEmail);
             $url      = WT_API_URL . "/users/";
-            $response = Websitetoolboxforum::getInstance()->sso->sendApiRequest('GET', $url, $data,'json','forumApikey');              
-            if ($response->{'data'}[0]->{'userId'}) {
-                 return $response->{'data'}[0]->{'userId'};
+            $response = Websitetoolboxforum::getInstance()->sso->sendApiRequest('GET', $url, $data,'json','forumApikey');        
+            if($response){      
+                if ($response->{'data'}[0]->{'userId'}) {
+                     return $response->{'data'}[0]->{'userId'};
+                }
+            }else{
+                Craft::$app->getSession()->setError(Craft::t($response->error));
             }
         }
     }
@@ -139,47 +147,47 @@ class Sso extends Component
       setcookie('loginRemember', '', time() - 3600, "/");
    }
    function renderJsScriptEmbedded($forumUrl){ 
-        $js = <<<JS
+      $js = <<<JS
       (  
-       function renderEmbeddedHtmlWithAuthtoken()
-      {  var embedUrl  = "{$forumUrl}";    
-        var wtbWrap = document.createElement('div');
-        wtbWrap.id = "wtEmbedCode";
-        var embedScript = document.createElement('script');
-        embedScript.id = "embedded_forum";
-        embedScript.type = 'text/javascript';
-        var wtbToken = getCookie();
-        if(typeof wtbToken != 'undefined' && wtbToken){
-          embedUrl += "/js/mb/embed.js?authtoken="+wtbToken;
-        } 
-        embedScript.src = embedUrl; 
-        wtbWrap.appendChild(embedScript); 
-        document.getElementById('embedForum').appendChild(embedScript);
-
-      })();
+         function renderEmbeddedHtmlWithAuthtoken(){
+              var embedUrl  = "{$forumUrl}";    
+              var wtbWrap = document.createElement('div');
+              wtbWrap.id = "wtEmbedCode";
+              var embedScript = document.createElement('script');
+              embedScript.id = "embedded_forum";
+              embedScript.type = 'text/javascript';
+              var wtbToken = getCookie();
+              if(typeof wtbToken != 'undefined' && wtbToken){
+                  embedUrl += "/js/mb/embed.js?authtoken="+wtbToken;
+              } 
+              embedScript.src = embedUrl; 
+              wtbWrap.appendChild(embedScript); 
+              document.getElementById('embedForum').appendChild(embedScript);
+        }
+      )();
 JS;
       return $js ;
     }   
   function renderJsScriptUnEmbedded(){   
-        $js = <<<JS
-        (  
-         function renderEmbeddedUnHtmlWithAuthtoken()
-        { 
-        var links = document.getElementsByTagName('a');
-        for(var i = 0; i< links.length; i++){
-          var str = links[i].href; 
-          for(var j = 0; j< str.length; j++){
-            var res = str.split("."); 
-            if(res[j] == 'websitetoolbox'){ 
-                var linkToChange = links[i]; 
-                var wtbToken = getCookie(); 
-                if(typeof wtbToken != 'undefined' && wtbToken){
-                    linkToChange.setAttribute("href", linkToChange+"?authtoken="+wtbToken);
-                }
-            }            
-          }
+      $js = <<<JS
+      (  
+          function renderEmbeddedUnHtmlWithAuthtoken(){ 
+              var links = document.getElementsByTagName('a');
+              for(var i = 0; i< links.length; i++){
+                  var str = links[i].href; 
+                  for(var j = 0; j< str.length; j++){
+                  var res = str.split("."); 
+                    if(res[j] == 'websitetoolbox'){ 
+                        var linkToChange = links[i]; 
+                        var wtbToken = getCookie(); 
+                        if(typeof wtbToken != 'undefined' && wtbToken){
+                            linkToChange.setAttribute("href", linkToChange+"?authtoken="+wtbToken);
+                        }
+                    }            
+                  }
+              }
         }
-        })();
+    )();
 JS;
         return $js ;
     }   
