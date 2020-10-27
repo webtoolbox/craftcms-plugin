@@ -18,7 +18,7 @@
     "authors": [
         {
             "name": "Website Toolbox",
-            "homepage": "https://websitetoolbox.com"
+            "homepage": "http://websitetoolbox.com"
         }
     ],
     "require": {
@@ -35,7 +35,7 @@
         }
     },
     "extra": {
-        "hasCpSettings": true,
+         "hasCpSettings": true,
         "name": "Website Toolbox Forum",
         "handle": "websitetoolboxforum",
         "developer": "Website Toolbox",
@@ -47,7 +47,6 @@
         "components": {
             "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
+    }
+  
 }
