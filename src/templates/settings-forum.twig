@@ -1,0 +1,57 @@
+{#
+/**
+ * Website Toolbox Forum plugin for Craft CMS 3.x
+ * Website Toolbox Forum Settings.twig
+ * @author    Website Toolbox
+ * @copyright Copyright (c) 2020 Website Toolbox
+ * @link      https://websitetoolbox.com/
+ * @package   Website Toolbox Forum
+ * @since     3.0.0
+ */
+#} 
+{% import "_includes/forms" as forms %}
+{% do view.registerAssetBundle("websitetoolbox\\websitetoolboxforum\\assetbundles\\websitetoolboxforum\\websitetoolboxforumAsset") %}
+{% macro configWarning(setting, file="websitetoolboxforum") -%}
+    {%- set configArray = craft.app.config.getConfigFromFile(file) -%}
+    {%- if configArray[setting] is defined -%}
+        {{- "This is being overridden by the `#{setting}` setting in the `config/#{file}.php` file."|t("websitetoolboxforum")|raw }}
+    {%- else -%}
+        {{ false }}
+    {%- endif -%}
+{%- endmacro %}
+{% from _self import configWarning %}
+    <div><a onclick="window.history.go(-1); return false;" style="text-decoration:underline">back</a><h2>Website Details </h2>  <b>Please enter your website details here:</b> </div>
+    {{ forms.textField({
+        "label": "Log In Page"|t("websitetoolboxforum"),
+        "id": "loginUrl",
+        "name": "loginUrl",
+        "value": settings.loginUrl,
+        "required": true
+        }) 
+    }}
+    {{ forms.textField({
+        "label": "Logout Page"|t("websitetoolboxforum"),
+        "id": "logOutUrl",
+        "name": "logOutUrl",
+        "value": settings.logOutUrl,
+        "required": true
+       }) 
+    }}
+    {{ forms.textField({
+        "label": "User Sign Up Page"|t("websitetoolboxforum"),
+        "id": "userRegistrationUrl",
+        "name": "userRegistrationUrl",
+        "value": settings.userRegistrationUrl,
+        "required": true
+        }) 
+    }}
+    {% if craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumEmbedded"]  == 1 %} 
+        {{ forms.textField({
+            "label": "Embedded Forum Page "|t("websitetoolboxforum"),
+            "id": "forumOutputUrl",
+            "name": "forumOutputUrl",
+            "value": settings.forumOutputUrl,
+           }) 
+        }}
+        
+    {% endif %}

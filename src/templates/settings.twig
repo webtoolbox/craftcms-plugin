@@ -1,0 +1,101 @@
+{#
+/**
+ * Website Toolbox Forum plugin for Craft CMS 3.x
+ * Website Toolbox Forum Settings.twig
+ * @author    Website Toolbox
+ * @copyright Copyright (c) 2020 Website Toolbox
+ * @link      https://websitetoolbox.com/
+ * @package   Website Toolbox Forum
+ * @since     3.0.0
+ */
+#}
+{% import "_includes/forms" as forms %}
+<div>
+    <div>
+    {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.request.getQuery('forumSettingOption') == 1)  %}        
+        <div>
+            <b>Please log in to your Website Toolbox account.</b>
+            <p>Not a Website Toolbox Forum owner?  
+                <a href="https://www.websitetoolbox.com/craftCMS" target="_blank" style="text-decoration:underline">Create a Forum Now!</a>
+            </p>
+            <p>Please
+                <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up. 
+            </p>
+        </div>
+        {{ forms.textField({
+            "label": "Website Toolbox Username"|t("websitetoolboxforum"),
+            "id": "forumUsername",
+            "name": "forumUsername",
+            "value": settings.forumUsername,
+            "required": true
+           })
+        }}
+        {{ forms.passwordField({
+            "label": "Website Toolbox Password"|t("websitetoolboxforum"),
+            "id": "forumPassword",
+            "name": "forumPassword",
+            "value": settings.forumPassword,
+            "required": true
+           })
+        }}
+    {% else %}           
+        <div>
+            <p>Please                 
+                <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up.            
+            </p>
+            <br />
+            <b>Website Toolbox Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="?forumSettingOption=1" style="text-decoration:underline">Change</a>
+        </div>
+        <br />
+        <div>
+            <span style="width:30%">
+                <b>Embed the forum               :                 
+                </span>
+            </b>
+         {{ forms.checkboxField({
+                label: "Yes"|t('app'),
+                id: 'forumEmbedded',
+                name: 'forumEmbedded',
+                checked: settings.forumEmbedded,
+                class : "embedded",
+                default:"checked"
+            })
+        }} 
+        
+        </div>
+        <div style="margin-left:20%;margin-top:2%">Enable this option to have your forum embedded in a page of your website.        
+            <br />Disable this option to have your forum load in a full-sized window. You can use the Layout section in your Website Toolbox account to         
+            <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank" style="text-decoration:underline">customize your forum layout to match your website</a> or         
+            <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" style="text-decoration:underline" target="_blank">contact Website Toolbox support to customize it for you</a>            
+        </div>
+    {% endif %}    
+    </div>
+         {{ forms.textField({
+            "id": "forumApiKey",
+            "name": "forumApiKey",
+            "value": settings.forumApiKey,
+            class: "classHide"
+           })
+         }} 
+         {{ forms.textField({
+            "id": "forumUrl",
+            "name": "forumUrl",
+            "value": settings.forumUrl,
+            class: "classHide"
+           })
+        }}       
+        <b>Be sure to specify your sign up, log in, and log out page addresses in the             
+            <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On" style="text-decoration:underline"> Single Sign On section </a>of Website Toolbox.
+        </b>
+</div>
+<style>
+#settings-forumEmbedded-field{
+    width: 80% !important;
+    float: right;
+    margin-top:0px;
+}
+.classHide{
+    display:none;
+}
+
+</style>
