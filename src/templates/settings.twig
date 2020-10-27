@@ -49,31 +49,44 @@
         <br />
         <div>
             <span style="width:30%">
-                <b>Embed the forum               :   </b>              
-            </span>
-            {{ forms.checkboxField({
+                <b>Embed the forum               :                 
+                </span>
+            </b>
+         {{ forms.checkboxField({
                 label: "Yes"|t('app'),
                 id: 'forumEmbedded',
                 name: 'forumEmbedded',
                 checked: settings.forumEmbedded,
                 class : "embedded",
                 default:"checked"
-                })
-            }}        
+            })
+        }} 
+        
         </div>
         <div style="margin-left:20%;margin-top:2%">Enable this option to have your forum embedded in a page of your website.        
             <br />Disable this option to have your forum load in a full-sized window. You can use the Layout section in your Website Toolbox account to         
             <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank" style="text-decoration:underline">customize your forum layout to match your website</a> or         
-            <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" style="text-decoration:underline" target="_blank">contact Website Toolbox support to customize it for you</a>
-            <br />
-            <br />
+            <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" style="text-decoration:underline" target="_blank">contact Website Toolbox support to customize it for you</a>            
         </div>
     {% endif %}    
     </div>
-    <br /><br />
-    <b>Be sure to specify your sign up, log in, and log out page addresses in the             
-        <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On" style="text-decoration:underline"> Single Sign On section </a>of Website Toolbox.
-    </b>
+         {{ forms.textField({
+            "id": "forumApiKey",
+            "name": "forumApiKey",
+            "value": settings.forumApiKey,
+            class: "classHide"
+           })
+         }} 
+         {{ forms.textField({
+            "id": "forumUrl",
+            "name": "forumUrl",
+            "value": settings.forumUrl,
+            class: "classHide"
+           })
+        }}       
+        <b>Be sure to specify your sign up, log in, and log out page addresses in the             
+            <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On" style="text-decoration:underline"> Single Sign On section </a>of Website Toolbox.
+        </b>
 </div>
 <style>
 #settings-forumEmbedded-field{
@@ -81,4 +94,8 @@
     float: right;
     margin-top:0px;
 }
+.classHide{
+    display:none;
+}
+
 </style>

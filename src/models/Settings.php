@@ -22,11 +22,14 @@ class Settings extends Model
     public $forumUsername         = '';
     public $forumPassword         = '';
     public $forumEmbedded         = 1;
+    public $forumApiKey           = '';
+    public $forumUrl              = '';  
+  
     // Public Methods
     /**   * @inheritdoc     */
     public function rules(){
         return [
-            [['forumUsername', 'forumPassword'], 'string'],                     
+            [['forumUsername', 'forumPassword','forumApiKey','forumUrl'], 'string'],   
         ];
     }
     public function behaviors(){
@@ -44,6 +47,8 @@ class Settings extends Model
                 'attributes' => [
                     'forumUsername',
                     'forumPassword',
+                    'forumApiKey',
+                    'forumUrl'
                 ],
             ];
         }
