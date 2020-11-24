@@ -27,7 +27,7 @@ To install Website Toolbox Forum, follow these steps:<br />
 
 <b>#Configuring Website Toolbox Forums</b><br />
 	1)	Go to your Website Toolbox forum Settings. Dashboard-> Settings -> Website Toolbox Forum<br />
-	2)	Add Credentials received from Website Toolbox : 
+	2)	Add Credentials received from Website Toolbox : <br />
 			-<b>Website Toolbox Username :</b> Your Website Toolbox forum Username
 			-<b>Website Toolbox Password :</b> Your Website Toolbox forum Password
 			-<b>Forum Embedded: </b>
