@@ -11,12 +11,12 @@ Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/cra
 <br />This plugin requires Craft CMS 3.0.0 or later.<br />
 <b>#Installation</b><br />
 To install Website Toolbox Forum, follow these steps:<br />
-	1.	Install with Composer: <br />
+	<b>1.	Install with Composer: </b><br />
 		# go to the project directory<br />
-	    1) cd /path/to/my-project.test<br />
+	    1) cd /path/to/my-project.test<br /><br />
 		# tell Composer to load the plugin<br />
 		Command to execute to install: <br />
-	    2) composer require websitetoolbox/websitetoolboxforum<br />
+	    2) composer require websitetoolbox/websitetoolboxforum<br /><br />
 		# tell Craft to install the plugin<br />
 	    3) ./craft install/plugin websitetoolbox/websitetoolboxforum <br />
 
