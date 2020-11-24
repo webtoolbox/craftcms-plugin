@@ -2,7 +2,7 @@
 
 Single Sign On plugin for Website Toolbox Forums/jsConnect and CraftCMS
 
-![Screenshot](./docs/img/plugin-logo.png)
+![Screenshot](./src/icon.svg)
 
 Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/craftcms-plugin)
  
