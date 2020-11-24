@@ -9,7 +9,7 @@ Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/cra
  
 Requirements
 This plugin requires Craft CMS 3.0.0 or later.
-#Installation
+<b>#Installation</b>
 To install Website Toolbox Forum, follow these steps:
 	1.	Install with Composer: 
 		# go to the project directory
@@ -23,10 +23,10 @@ To install Website Toolbox Forum, follow these steps:
 	2.	You can also install Website Toolbox Forum via the Plugin Store in the Craft CP.
 		1)	Go to Dashboard-> Plugin Store-> Search For Website Toolbox Forum-> Click Install.
    
-#Website Toolbox Forum Overview
+<b>#Website Toolbox Forum Overview</b>
 	Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required.
 
-#Configuring Website Toolbox Forums
+<b>#Configuring Website Toolbox Forums</b>
 	1)	Go to your Website Toolbox forum Settings. Dashboard-> Settings -> Website Toolbox Forum
 	2)	Add Credentials received from Website Toolbox : 
 		Website Toolbox Username : Your Website Toolbox forum Username
@@ -36,13 +36,13 @@ To install Website Toolbox Forum, follow these steps:
    			- Embedded: Forum will be displayed on a website page as a "forum".
    			- Non-embedded: Will create a menu link but will take you to the forum  
     		page(https://forumname.discussion.community)
-
-<!---IMAGE HERE -->
+    		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO.png">
+ 
 	3)	Click on “Single Sign On Section” link. 
 			-It will redirect to forum settings page. Please add below details from Craft Website.
-    <!---IMAGE HERE -->
+		    <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO-section.png">
 
-#Forum front-end Templates
+<b>#Forum front-end Templates</b>
 	For Embedded Forum:
 		Front-End Template Code for Website Toolbox Forums (Embedded Single Sign On (SSO))
 		Your Website Toolbox  Forum template can look something like this:
@@ -69,6 +69,6 @@ To install Website Toolbox Forum, follow these steps:
 			3) Go to Admin->dashboard->Globals->Select the new global set you created.
 				Add you Menu name you want to display and Url for forum (https://forumname.discussion.community).
 
-# Documentation
+<b>Documentation</b>
 Click here -> [Website Toolbox Forums Documentation](https://websitetoolbox.com/plugins/websitetoolboxforum/documentation)
 Brought to you by [Website Toolbox](https://websitetoolbox.com)
