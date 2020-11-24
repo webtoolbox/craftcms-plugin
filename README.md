@@ -1,3 +1,4 @@
+
 # Website Toolbox Forums plugin for Craft CMS 3.x
 
 Single Sign On plugin for Craft
@@ -7,41 +8,42 @@ Single Sign On plugin for Craft
 Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/craftcms-plugin)
  
  
-<br /><b>#Requirements </b> 
-<br />This plugin requires Craft CMS 3.0.0 or later.<br />
-<b>#Installation</b><br />
-To install Website Toolbox Forum, follow these steps:<br />
-	<b>1.	Install with Composer: </b><br />
-		<pre># go to the project directory<br />
-	    1) cd /path/to/my-project.test<br /><br />
-		# tell Composer to load the plugin<br />
-		Command to execute to install: <br />
-	    2) composer require websitetoolbox/websitetoolboxforum<br /><br />
-		# tell Craft to install the plugin<br />
-	    3) ./craft install/plugin websitetoolbox/websitetoolboxforum <br /><br /></pre>
-	<b> 2.	 via the Plugin Store in the Craft CP.</b><br />
-		1)	Go to Dashboard-> Plugin Store-> Search For Website Toolbox Forum-> Click Install.<br />
-   
-<b>#Website Toolbox Forum Overview</b><br />
-	Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. <br />No database, servers, or coding required.<br /><br />
+#Requirements
+This plugin requires Craft CMS 3.0.0 or later.
+#Installation
+To install Website Toolbox Forum, follow these steps:
+	1.	Install with Composer: 
+		# go to the project directory
+	    1) cd /path/to/my-project.test
+		# tell Composer to load the plugin
+		Command to execute to install: 
+	    2) composer require websitetoolbox/websitetoolboxforum
+		# tell Craft to install the plugin
+	    3) ./craft install/plugin websitetoolbox/websitetoolboxforum 
 
-<b>#Configuring Website Toolbox Forums</b><br />
-	1)	Go to your Website Toolbox forum Settings. Dashboard-> Settings -> Website Toolbox Forum<br />
-	2)	Add Credentials received from Website Toolbox : <br />
-			-Website Toolbox Username : Your Website Toolbox forum Username
-			-<b>Website Toolbox Password :</b> Your Website Toolbox forum Password
-			-<b>Forum Embedded: </b>
-			Select option to embedded/non-embedded forum.
-   			- Embedded: Forum will be displayed on a website page as a "forum".
-   			- Non-embedded: Will create a menu link but will take you to the forum  
-    		page(https://forumname.discussion.community)</pre><br />
+	2.	You can also install Website Toolbox Forum via the Plugin Store in the Craft CP.
+		1)	Go to Dashboard-> Plugin Store-> Search For Website Toolbox Forum-> Click Install.
+   
+#Website Toolbox Forum Overview
+	Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required.
+
+#Configuring Website Toolbox Forums
+	1)	Go to your Website Toolbox forum Settings. Dashboard-> Settings -> Website Toolbox Forum
+	2)	Add Credentials received from Website Toolbox :
+				Website Toolbox Username : Your Website Toolbox forum Username
+				Website Toolbox Password : Your Website Toolbox forum Password
+				Forum Embedded:
+					Select option to embedded/non-embedded forum.
+   					- Embedded: Forum will be displayed on a website page as a "forum".
+   					- Non-embedded: Will create a menu link but will take you to the forum 
+							page(https://forumname.discussion.community)
     		![Screenshot](./docs/img/SSO.png)
  
 	3)	Click on “Single Sign On Section” link. 
 			-It will redirect to forum settings page. Please add below details from Craft Website.
-		    ![Screenshot](./docs/img/SSO-section.png)<br /><br />
+		    ![Screenshot](./docs/img/SSO-section.png)
 
-<b>#Forum front-end Templates</b>
+#Forum front-end Templates
 	For Embedded Forum:
 		Front-End Template Code for Website Toolbox Forums (Embedded Single Sign On (SSO))
 		Your Website Toolbox  Forum template can look something like this:
