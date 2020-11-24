@@ -28,14 +28,14 @@ To install Website Toolbox Forum, follow these steps:<br />
 <b>#Configuring Website Toolbox Forums</b><br />
 	1)	Go to your Website Toolbox forum Settings. Dashboard-> Settings -> Website Toolbox Forum<br />
 	2)	Add Credentials received from Website Toolbox : 
-		<pre><b>Website Toolbox Username :</b> Your Website Toolbox forum Username
-		<b>Website Toolbox Password :</b> Your Website Toolbox forum Password
-		<b>Forum Embedded: </b>
+		-<b>Website Toolbox Username :</b> Your Website Toolbox forum Username
+		-<b>Website Toolbox Password :</b> Your Website Toolbox forum Password
+		-<b>Forum Embedded: </b>
 		Select option to embedded/non-embedded forum.
    			- Embedded: Forum will be displayed on a website page as a "forum".
    			- Non-embedded: Will create a menu link but will take you to the forum  
-    		page(https://forumname.discussion.community)
-    		![Screenshot](./docs/img/SSO.png)</pre>
+    		page(https://forumname.discussion.community)</pre><br />
+    		![Screenshot](./docs/img/SSO.png)
  
 	3)	Click on “Single Sign On Section” link. 
 			-It will redirect to forum settings page. Please add below details from Craft Website.
