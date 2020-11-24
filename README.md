@@ -1,13 +1,13 @@
 # Website Toolbox Forums plugin for Craft CMS 3.x
 
-Single Sign On plugin for Website Toolbox Forums/jsConnect and CraftCMS
+Single Sign On plugin for Craft
 
 ![Screenshot](./src/icon.svg)
 
 Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/craftcms-plugin)
  
  
-Requirements
+<br /><b>#Requirements</b>
 This plugin requires Craft CMS 3.0.0 or later.
 <b>#Installation</b>
 To install Website Toolbox Forum, follow these steps:
@@ -40,7 +40,7 @@ To install Website Toolbox Forum, follow these steps:
  
 	3)	Click on “Single Sign On Section” link. 
 			-It will redirect to forum settings page. Please add below details from Craft Website.
-		    <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO-section.png">
+		    ![Screenshot](./docs/img/SSO-section.png)
 
 <b>#Forum front-end Templates</b>
 	For Embedded Forum:
