@@ -36,7 +36,7 @@ To install Website Toolbox Forum, follow these steps:
    			- Embedded: Forum will be displayed on a website page as a "forum".
    			- Non-embedded: Will create a menu link but will take you to the forum  
     		page(https://forumname.discussion.community)
-    		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO.png">
+    		![Screenshot](./blob/master/docs/img/SSO.png)
  
 	3)	Click on “Single Sign On Section” link. 
 			-It will redirect to forum settings page. Please add below details from Craft Website.
