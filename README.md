@@ -23,10 +23,10 @@ To install Website Toolbox Forum, follow these steps:<br />
 		1)	Go to Dashboard-> Plugin Store-> Search For Website Toolbox Forum-> Click Install.<br />
    
 <b>#Website Toolbox Forum Overview</b>
-	<pre>Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily <br />add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. <br />No database, servers, or coding required.</pre>
+	Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily <br />add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. <br />No database, servers, or coding required.<br /><br />
 
 <b>#Configuring Website Toolbox Forums</b>
-	1)	Go to your Website Toolbox forum Settings. Dashboard-> Settings -> Website Toolbox Forum
+	<pre>1)	Go to your Website Toolbox forum Settings. Dashboard-> Settings -> Website Toolbox Forum
 	2)	Add Credentials received from Website Toolbox : 
 		Website Toolbox Username : Your Website Toolbox forum Username
 		Website Toolbox Password : Your Website Toolbox forum Password
@@ -39,7 +39,7 @@ To install Website Toolbox Forum, follow these steps:<br />
  
 	3)	Click on “Single Sign On Section” link. 
 			-It will redirect to forum settings page. Please add below details from Craft Website.
-		    ![Screenshot](./docs/img/SSO-section.png)
+		    ![Screenshot](./docs/img/SSO-section.png)</pre><br /><br />
 
 <b>#Forum front-end Templates</b>
 	For Embedded Forum:
