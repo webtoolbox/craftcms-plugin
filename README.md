@@ -9,7 +9,7 @@ Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/cra
  
 <br /><b>#Requirements </b> 
 <br />This plugin requires Craft CMS 3.0.0 or later.
-<b>#Installation</b>
+<b>#Installation</b> 
 To install Website Toolbox Forum, follow these steps:
 	1.	Install with Composer: 
 		# go to the project directory
