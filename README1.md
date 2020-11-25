@@ -3,7 +3,7 @@
 Single Sign On plugin for Craft   
 
 ![Screenshot](./src/icon.svg)   
-
+<img src ="https://github.com/webtoolbox/craftcms-plugin/blob/master/src/icon.svg" width="100" height="100"> 
 Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/craftcms-plugin)    
  
 ## Requirements
