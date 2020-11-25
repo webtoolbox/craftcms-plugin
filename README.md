@@ -8,10 +8,10 @@ Single Sign On plugin for Craft
 Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/craftcms-plugin)
  
  
-#Requirements
-This plugin requires Craft CMS 3.0.0 or later.
-#Installation
-To install Website Toolbox Forum, follow these steps:
+#Requirements   
+This plugin requires Craft CMS 3.0.0 or later.  
+#Installation  
+To install Website Toolbox Forum, follow these steps:    
 	1.	Install with Composer: 
 		# go to the project directory
 	    1) cd /path/to/my-project.test
