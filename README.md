@@ -25,7 +25,7 @@ To install Website Toolbox Forum, follow these steps:
 		1)	Go to Dashboard-> Plugin Store-> Search For Website Toolbox Forum-> Click Install.
    
 #Website Toolbox Forum Overview
-	Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required.
+	Your CraftCMS forum doesnâ€™t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required.
 
 #Configuring Website Toolbox Forums
 	1)	Go to your Website Toolbox forum Settings. Dashboard-> Settings -> Website Toolbox Forum
@@ -39,7 +39,7 @@ To install Website Toolbox Forum, follow these steps:
 							page(https://forumname.discussion.community)
     		![Screenshot](./docs/img/SSO.png)
  
-	3)	Click on “Single Sign On Section” link. 
+	3)	Click on â€œSingle Sign On Sectionâ€ link. 
 			-It will redirect to forum settings page. Please add below details from Craft Website.
 		    ![Screenshot](./docs/img/SSO-section.png)
 
@@ -47,9 +47,9 @@ To install Website Toolbox Forum, follow these steps:
 	For Embedded Forum:
 		Front-End Template Code for Website Toolbox Forums (Embedded Single Sign On (SSO))
 		Your Website Toolbox  Forum template can look something like this:
-		Add below code to website’s Forum page.
+		Add below code to websiteâ€™s Forum page.
 		<body><div id="embedForum"></div></body>
-		Exclude <body> tag if it’s already included in template header.
+		Exclude <body> tag if itâ€™s already included in template header.
 
 	For Non-Embedded Forum:
 		Website Toolbox Forums(Un-Embedded Single Sign On (SSO)).
@@ -73,3 +73,4 @@ To install Website Toolbox Forum, follow these steps:
 <b>Documentation</b>
 Click here -> [Website Toolbox Forums Documentation](https://websitetoolbox.com/plugins/websitetoolboxforum/documentation)
 Brought to you by [Website Toolbox](https://websitetoolbox.com)
+"index.php?option=com_users&task=user.logout&' . $userToken . '=1"
