@@ -18,7 +18,7 @@ To install Website Toolbox Forum, follow these steps:
 	      2) composer require websitetoolbox/websitetoolboxforum  
 		    tell Craft to install the plugin  
 	      3) ./craft install/plugin websitetoolbox/websitetoolboxforum                                   
- ### Plugin Store in Craft control panel  
+ ### via Plugin Store in Craft control panel  
         Go to Dashboard-> Plugin Store-> Search For Website Toolbox Forum-> Click Install.
 ## Website Toolbox Forum Overview
   Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, 
