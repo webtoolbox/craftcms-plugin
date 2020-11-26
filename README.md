@@ -66,10 +66,10 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/update-settings.jpg" />				
  
- 3.	Click on “Single Sign On Section” link. 
-	-It will redirect to forum settings page. Please add below details from Craft Website.  
+ 3.	Click on “Single Sign On Section” link.     
 
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO.png" />
+	It will redirect to forum settings page. Please add below details from Craft Website.
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO-section.png" />
 
 ## Forum front-end Templates
@@ -86,22 +86,24 @@ Steps to Create menu item:
 1)	Go to admin > dashboard > settings > fields > new field
 	- Fill the details like name, handle  
 (For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)
-	- Select Field type as "Matrix"  
-<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />
-	- In Configuration section:
-			Add asked details to create menu for forum link:
-			Example:
-			New block type: Link
-			New field:
-			1) 	Name: Menu Name, Field type: Plain Text
-			2) 	Name: Forum Url , Field type: Plain Text
-	Save these 2 fields.
-<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2.png" />
-	2) Go to admin > dashboard > settings > Globals > New Global Set
-		Add Name for global set and in New Global Set->In Field layout add new created field item.
-	3) Go to Admin > dashboard > Globals > Select the new global set you created.
-		Add you Menu name you want to display and Url for forum (https://forumname.discussion.community).
+	- Select Field type as "Matrix" 
+			<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
+	- In Configuration section:  	
+		- Add asked details to create menu for forum link:  
+		Example:  
+		- New block type: Link  
+		- New field:  
+		  Name: Menu Name, Field type: Plain Text  
+		  Name: Forum Url , Field type: Plain Text  
+		Save these 2 fields.
+<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2.png" />  
 
+2)	Go to admin > dashboard > settings > Globals > New Global Set
+		- Add Name for global set and in New Global Set->In Field layout add new created field item.
+	3) Go to Admin > dashboard > Globals > Select the new global set you created.
+		- Add you Menu name you want to display and Url for forum (https://forumname.discussion.community).  
+		
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.png" />  
 
 
  
