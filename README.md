@@ -52,21 +52,24 @@ Settings → Plugins, locate the plugin and hit “Install”.
 ## Configuring Website Toolbox Forums
 1.	Create a Website Toolbox forum <a href="create a Website Toolbox forum">here</a>    
 2.	Go to your Website Toolbox forum Settings. Dashboard > Settings > Website Toolbox Forum    
-	Add Login Credentials received from Website Toolbox :    
-	Website Toolbox Username : Your Website Toolbox forum Username    
-	Website Toolbox Password : Your Website Toolbox forum Password    
+	Add Login Credentials received from Website Toolbox :      
+	- Website Toolbox Username : Your Website Toolbox forum Username      
+	- Website Toolbox Password : Your Website Toolbox forum Password      
 	
-<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/settings.jpg" />
-	Forum Embedded:  
-	Select option to embedded/non-embedded forum.  
-	- Embedded: Forum will be displayed on a website page as a "forum".  
-	- Non-embedded: Will create a menu link but will take you to the forum   
-				page(https://forumname.discussion.community)  
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/settings.jpg" />
+
+	- Forum Embedded:    
+	Select option to embedded/non-embedded forum.      
+	Embedded: Forum will be displayed on a website page as a "forum".      
+	Non-embedded: Will create a menu link but will take you to the forum       
+	page(https://forumname.discussion.community)  
+	
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/update-settings.jpg" />				
  
  3.	Click on “Single Sign On Section” link. 
 	-It will redirect to forum settings page. Please add below details from Craft Website.  
 
+<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO.png" />
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO-section.png" />
 
 ## Forum front-end Templates
