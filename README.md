@@ -82,7 +82,7 @@ Your Website Toolbox  Forum template can look something like this:
 
 ### For Non-Embedded Forum:
 Website Toolbox Forums(Un-Embedded Single Sign On (SSO)).
-Steps to Create menu item:
+Steps to Create menu item to add forum Url:
 1)	Go to admin > dashboard > settings > fields > new field
 	- Fill the details like name, handle  
 (For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)
@@ -93,17 +93,21 @@ Steps to Create menu item:
 		Example:  
 		- New block type: Link  
 		- New field:  
-		  Name: Menu Name, Field type: Plain Text  
-		  Name: Forum Url , Field type: Plain Text  
+		Name: Forum (Name of the menu) , Field type: Plain Text  
+		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />  
+		Name: Forum Url (Menu Url) , Field type: Plain Text
+		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" />  
 		Save these 2 fields.
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2.png" />  
 
 2)	Go to admin > dashboard > settings > Globals > New Global Set
 		- Add Name for global set and in New Global Set->In Field layout add new created field item.
-	3) Go to Admin > dashboard > Globals > Select the new global set you created.
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step4.png" />
+
+3) Go to Admin > dashboard > Globals > Select the new global set you created.
 		- Add you Menu name you want to display and Url for forum (https://forumname.discussion.community).  
 		
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.png" />  
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step4.png" />  
 
 
  
