@@ -2,7 +2,7 @@
 
 ## Single Sign On plugin for Craft   
   
-<p><img src ="https://github.com/webtoolbox/craftcms-plugin/blob/master/src/icon.svg" width="100" height="100"></p>      
+<p><img src ="https://github.com/webtoolbox/craftcms-plugin/blob/master/src/wt_logo_blue.svg" width="1300" height="100"></p>      
 
 ### Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/craftcms-plugin)    
  
