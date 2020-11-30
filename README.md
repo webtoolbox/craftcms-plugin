@@ -62,7 +62,8 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	Select option to embedded/non-embedded forum.      
 	Embedded: Forum will be displayed on a website page as a "forum".      
 	Non-embedded: Will create a menu link but will take you to the forum       
-	page(https://forumname.discussion.community)  
+	page(https://forumname.discussion.community) 
+#### Default it is saved as "Embedded" forum. Later user can change it.  
 	
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/update-settings.jpg" />				
  
