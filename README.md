@@ -66,10 +66,11 @@ Settings → Plugins, locate the plugin and hit “Install”.
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO-section.png" />
 
 ## Forum Front-End Templates
-1)	[Chapter 1](#Chapter1) Non-Embedde Forum 
+1)	[Non-Embedded Forum Template](#non-embdded) 
+2)	Embdded Forum Template
 ### For Non-Embedded Forum:
 Website Toolbox Forums(Un-Embedded Single Sign On (SSO)).
-<div id="Chapter1">### Steps to Create menu item to add forum Url:</div>
+<div id="non-embdded"> ### Steps to Create menu item to add forum Url:</div>
 
 1)	Go to Admin > Dashboard > Settings > Fields > New Field
 	- Fill the details like name, handle  
