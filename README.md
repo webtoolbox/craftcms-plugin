@@ -41,7 +41,7 @@ This plugin requires Craft CMS 3.0.0 or later.
 ### Plugin Store  
  Log into your control panel, hit up the 'Plugin Store', search for this plugin and install.
  
-### Composer:
+### Composer
 Open terminal, go to your Craft project folder and use composer to load this plugin. Once loaded you can install via the Craft Control Panel, go to 
 Settings → Plugins, locate the plugin and hit “Install”.
 
@@ -65,37 +65,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	It will redirect to forum settings page. Please add below details from Craft Website.
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO-section.png" />
 
-## Forum Front-End Templates
-1)	[Non-Embedded Forum Template](#non-embdded) 
-2)	Embdded Forum Template
-### For Non-Embedded Forum:
-Website Toolbox Forums(Un-Embedded Single Sign On (SSO)).
-<div id="non-embdded"> ### Steps to Create menu item to add forum Url:</div>
-
-1)	Go to Admin > Dashboard > Settings > Fields > New Field
-	- Fill the details like name, handle  
-(For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)
-	- Select Field type as "Matrix" 
-			<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
-	- In Configuration section:  	
-		- Add asked details to create menu for forum link:  
-		Example:  
-		- New block type: Link  
-		- New field:  
-		Name: Forum (Name of the menu) , Field type: Plain Text  
-		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />  
-		Name: Forum Url (Menu Url) , Field type: Plain Text
-		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" />  
-		Save these 2 fields.
-
-2)	Go to admin > dashboard > settings > Globals > New Global Set   
-		- Add Name for global set       
-		- In Field layout drag and drop new created field item.       
-		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.png" />
-
-3) 	Go to Admin > dashboard > Globals > Select the new global set you created.      
-		- Add Menu name you want to display and Url for forum (https://forumname.discussion.community).      		
-		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step4.png" />  
+## Forum Front-End Template
 
 ### For Embedded Forum:
 Front-End Template Code for Website Toolbox Forums (Embedded Single Sign On (SSO))
@@ -103,12 +73,48 @@ Your Website Toolbox  Forum template can look something like this:
 	Add below code to website’s Forum page.
 	<body><div id="embedForum"></div></body>
 	Exclude <body> tag if it’s already included in template header.
-	
+
+## Forum Front-End Menu Url:  
+1)	[Non-Embedded Forum Menu Url](#non-embdded) 
+2)	[Embedded Forum Template Menu Url](#non-embdded)   
+
+### For Non-Embedded Forum:
+Website Toolbox Forums(Un-Embedded Single Sign On (SSO)).
+<div id="non-embdded"> 
+
+### Steps to Create menu item to add forum Url:</div>
+
+1)	Go to Admin > Dashboard > Settings > Fields > New Field
+	1.	Fill the details like name, handle  
+(For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)
+	2.	Select Field type as "Matrix" 
+			<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
+	3.	In Configuration section:  	
+		
+		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />  
+		
+		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" />  
+
+
+2)	Go to admin > dashboard > settings > Globals > New Global Set   
+		1.	Add Name for global set       
+		2.	Go to Field layout 
+		3.	Drag and drop new created field item.       
+		
+		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.png" />
+
+3) 	Go to Admin > dashboard > Globals > Select the new global set you created.      
+		1.	Add Menu name you want to display and Url for forum (https://forumname.discussion.community).      		
+		
+		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step4.png" />  
+
+<div id="embdded"> 	
 ### Steps to Create menu item to point embedded forum page:  
 Follow steps 1 & 2 below "Steps to Create menu item to add forum Url".  
 Go to Admin > dashboard > Globals > Select the new global set you created.      
 	- Add Menu name you want to display and Url for forum template page created using above instructions.   
 	i.e. If your template name is "Forum.twig/forum.html". Then template path would be like "/forum".     		
 	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/embeddedforum-step1.png" />   
+</div>
 
    
