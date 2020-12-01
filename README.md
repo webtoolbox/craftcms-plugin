@@ -7,9 +7,9 @@
   and maintenance-free forum to Craft without slowing it down. No database, servers, or coding required.
   
 ### Plugin Features
-* Embedded forum: The forum is seamlessly embedded into the layout of your Craft website.
-* Single sign on: Users are automatically signed in to your forum when they sign in to your Craft website.
-* Registration integration: Forum accounts are automatically created for your existing or new Craft users.
+* Embedded Forum: The forum is seamlessly embedded into the layout of your Craft website.
+* Single Sign On: Users are automatically signed in to your forum when they sign in to your Craft website.
+* Registration Integration: Forum accounts are automatically created for your existing or new Craft users.
 
 ### Key Forum Benefits
 * Instant setup
