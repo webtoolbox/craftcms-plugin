@@ -50,7 +50,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	composer require websitetoolbox/websitetoolboxforum   
 
 ## Configuring Website Toolbox Forum
-1.	<a href="https://www.websitetoolbox.com/">Create a Website Toolbox forum here.</a>    
+1.	<a href="https://www.websitetoolbox.com/">Create a Website Toolbox Forum.</a>    
 2.	Go to your Website Toolbox forum Settings. Dashboard > Settings > Website Toolbox Forum    
 	Add Login Credentials received from Website Toolbox :      
 	
