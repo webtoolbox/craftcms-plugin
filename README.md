@@ -19,7 +19,7 @@
 * Public or Private
 * White label
 
-## Key Forum Features
+### Key Forum Features
 * Make money using ads or subscription fees
 * Facebook integration
 * Instant messaging
@@ -51,16 +51,18 @@ Settings → Plugins, locate the plugin and hit “Install”.
 
 ## Configuring Website Toolbox Forum
 1.	<a href="https://www.websitetoolbox.com/">Create a Website Toolbox Forum.</a>    
-2.	Go to your Website Toolbox forum Settings. Dashboard > Settings > Website Toolbox Forum    
+2.	Go to your Website Toolbox forum Settings. Dashboard > Settings > Website Toolbox Forum.     
 	Add Login Credentials received from Website Toolbox :      
 	
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/settings.jpg" />
-#### Review the plugin settings and click the Save button.       
+<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/settings.jpg" />  
+
+3.	Review the plugin settings and click the Save button.       
 	
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/update-settings.jpg" />				
  
 ## Configuring Website Toolbox SSO Settings
-1.	Click on <a href='https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On'>Single Sign On Section</a> link.       
+1.	Go to your Website Toolbox forum Settings. Dashboard > Settings > Website Toolbox Forum.  
+2.	Click on <a href='https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On'>Single Sign On Section</a> link.       
 
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO.png" />
 	It will redirect to forum settings page. Please add below details from Craft Website.
@@ -70,9 +72,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 
 ### For Embedded Forum:
 <div id ="embedded_template">
-Front-End Template Code for Website Toolbox Forums (Embedded Single Sign On (SSO))
-	
-	Add below code to website’s Forum page.
+	Add below code to website’s Forum template page.
 	<body><div id="embedForum"></div></body>
 	Exclude <body> tag if it’s already included in template header.
 </div>
