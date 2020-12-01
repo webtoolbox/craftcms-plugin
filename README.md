@@ -120,7 +120,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 2.	Go to Admin > dashboard > Globals 
 3.	Select the new global set you created.      
 4.	Add Menu name you want to display.
-5.	Add Url for forum template page created using [above instructions](#embedded_template).   
+5.	Add Url for forum template page created using above [instructions](#embedded_template).   
 	i.e. If your template name is "Forum.twig/forum.html". Then template path would be like "/forum".     		
 	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/embeddedforum-step1.png" />   
 </div>
