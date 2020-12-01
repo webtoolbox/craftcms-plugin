@@ -6,12 +6,12 @@
   Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, 
   and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required.
   
-### PLUGIN FEATURES
-* Embedded forum: The forum is seamlessly embedded into the layout of your WordPress website.
-* Single sign on: Users are automatically signed in to your forum when they sign in to your WordPress website.
-* Registration integration: Forum accounts are automatically created for your existing or new WordPress users.
+### Plugin Features
+* Embedded forum: The forum is seamlessly embedded into the layout of your Craft website.
+* Single sign on: Users are automatically signed in to your forum when they sign in to your Craft website.
+* Registration integration: Forum accounts are automatically created for your existing or new Craft users.
 
-### KEY FORUM BENEFITS
+### Key Forum Benefits
 * Instant setup
 * Phone/Chat/Email support
 * SEO and mobile friendly
@@ -19,7 +19,7 @@
 * Public or Private
 * White label
 
-## KEY FORUM FEATURES
+## Key Forum Features
 * Make money using ads or subscription fees
 * Facebook integration
 * Instant messaging
@@ -36,6 +36,7 @@
 
 ## Requirements
 This plugin requires Craft CMS 3.0.0 or later.   
+
 ## Installation
 	
 ### Plugin Store  
@@ -58,8 +59,8 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/update-settings.jpg" />				
  
-
-3.	Click on <a href='https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On'>Single Sign On Section</a> link.       
+## Configuring Website Toolbox SSO Settings
+1.	Click on <a href='https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On'>Single Sign On Section</a> link.       
 
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO.png" />
 	It will redirect to forum settings page. Please add below details from Craft Website.
@@ -70,7 +71,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 ### For Embedded Forum:
 <div id ="embedded_template">
 Front-End Template Code for Website Toolbox Forums (Embedded Single Sign On (SSO))
-Your Website Toolbox  Forum template can look something like this:
+	
 	Add below code to website’s Forum page.
 	<body><div id="embedForum"></div></body>
 	Exclude <body> tag if it’s already included in template header.
@@ -85,11 +86,10 @@ Your Website Toolbox  Forum template can look something like this:
 <div id="non-embdded"> 
 
 1)	Go to Admin > Dashboard > Settings > Fields > New Field
-	1.	Fill the details like name, handle.  
 (For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)
-	2.	Select Field type as "Matrix".  
+	1.	Select Field type as "Matrix".  
 			<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
-	3.	In Configuration section:  	
+	2.	In Configuration section:  	
 		
 		<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />  
 		
