@@ -71,12 +71,12 @@ Settings → Plugins, locate the plugin and hit “Install”.
 ## Forum Front-End Template
 
 ### For Embedded Forum:
-
-	<div id ="embedded_template">
-		Add below code to website’s Forum template page.
-		<body><div id="embedForum"></div></body>
-		Exclude <body> tag if it’s already included in template header.
-	</div>
+<div id ="embedded_template">
+	
+	Add below code to website’s Forum template page.
+	<body><div id="embedForum"></div></body>
+	Exclude <body> tag if it’s already included in template header.
+</div>
 	
 ### Steps to Create Menu Item For Forum:    
 1)	[Non-Embedded Forum Menu](#non-embdded) 
