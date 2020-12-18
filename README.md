@@ -90,12 +90,13 @@ Settings → Plugins, locate the plugin and hit “Install”.
 2)	Select Field type as "Matrix".  
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
 In Configuration section:  	
-3)	Add details for "Menu Name"   
+3)	Add details for "Menu Name"    
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />    
-4)	Add details for "URL"   
+4)	Add details for "URL"    
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" />  
-5)	Go to admin > dashboard > settings > Globals > New Global Set   
-6)	Add Name for global set.         
+
+5)	Go to admin > dashboard > settings > Globals > New Global Set    
+6)	Add Name for global set.          
 7)	Go to Field layout.    
 8)	Drag and drop new created field item.       
 		
@@ -109,15 +110,16 @@ In Configuration section:
  
 <div id="embdded"> 
 	
-### For embedded forum :  	
+### For embedded forum :  	  
 </div>
-1.	Follow steps 1 & 2 [Steps to Create menu item to add forum Url](#non-embdded).  
-2.	Go to Admin > dashboard > Globals 
-3.	Select the new global set you created.      
-4.	Add Menu name you want to display.
-5.	Add Url for forum template page created using above [instructions](#embedded_template).   
-	i.e. If your template name is "Forum.twig/forum.html". Then template path would be like "/forum".     		
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/embeddedforum-step1.png" />   
+
+1.	Follow steps 1 & 2 [Steps to Create menu item to add forum Url](#non-embdded).   
+2.	Go to Admin > dashboard > Globals   
+3.	Select the new global set you created.        
+4.	Add Menu name you want to display.  
+5.	Add Url for forum template page created using above [instructions](#embedded_template).     
+	i.e. If your template name is "Forum.twig/forum.html". Then template path would be like "/forum".        		
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/embeddedforum-step1.png" />     
 
 
    
