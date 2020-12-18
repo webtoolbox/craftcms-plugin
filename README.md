@@ -87,26 +87,23 @@ Settings → Plugins, locate the plugin and hit “Install”.
 
 1)	Go to Admin > Dashboard > Settings > Fields > New Field  
 (For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)  
-
-		1.	Select Field type as "Matrix".  
+2)	Select Field type as "Matrix".  
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
-		2.	In Configuration section:  	
-		
-<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />  
-		
+In Configuration section:  	
+3)	Add details for "Menu Name"   
+<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />    
+4)	Add details for "URL"   
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" />  
-
-
-2)	Go to admin > dashboard > settings > Globals > New Global Set   
-		1.	Add Name for global set.         
-		2.	Go to Field layout.    
-		3.	Drag and drop new created field item.       
+5)	Go to admin > dashboard > settings > Globals > New Global Set   
+6)	Add Name for global set.         
+7)	Go to Field layout.    
+8)	Drag and drop new created field item.       
 		
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.png" />
 
-3) 	Go to Admin > dashboard > Globals    
-		1.	Select the new global set you created.         
-		2.	Add menu name you want to display and Url for forum (https://forumname.discussion.community).      		
+9)	Go to Admin > dashboard > Globals    
+10)	Select the new global set you created.         
+11)	Add menu name you want to display and Url for forum (https://forumname.discussion.community).      		
 		
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step4.png" />  
  
