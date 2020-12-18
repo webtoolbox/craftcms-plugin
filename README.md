@@ -75,7 +75,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	Exclude the <body> tag if it’s already included in template header.
 </div>
 	
-### Steps to Create Menu Item For Forum:    
+## Steps to Create Menu Item For Forum:    
 1)	[Non-Embedded Forum Menu](#non-embdded) 
 2)	[Embedded Forum Template Menu](#embdded)   
 
