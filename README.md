@@ -7,9 +7,9 @@
   and maintenance-free forum to Craft without slowing it down. No database, servers, or coding required.
   
 ### Plugin Features
-* Embedded Forum: The forum is seamlessly embedded into the layout of your Craft website.
-* Single Sign On: Users are automatically signed in to your forum when they sign in to your Craft website.
-* Registration Integration: Forum accounts are automatically created for your existing or new Craft users.
+* Embedded Forum : The forum is seamlessly embedded into the layout of your Craft website.
+* Single Sign On : Users are automatically signed in to your forum when they sign in to your Craft website.
+* Registration Integration : Forum accounts are automatically created for your existing or new Craft users.
 
 ### Key Forum Benefits
 * Instant setup
@@ -61,11 +61,8 @@ Settings → Plugins, locate the plugin and hit “Install”.
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/update-settings.jpg" />				
  
 ## Configuring Website Toolbox SSO Settings
-1.	Go to your Website Toolbox forum Settings. Dashboard > Settings > Website Toolbox Forum.  
-2.	Click on <a href='https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On'>Single Sign On Section</a> link.       
-
-<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO.png" />
-	It will redirect to forum settings page. Please add below details from Craft Website.
+1.	Visit the <a href='https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On'>Single Sign On Section</a>.       	
+2.	Add your website Log In, Log Out and Sign Up links.
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO-section.png" />
 
 ## Forum Front-End Template
@@ -75,22 +72,23 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	
 	Add below code to website’s Forum template page.
 	<body><div id="embedForum"></div></body>
-	Exclude <body> tag if it’s already included in template header.
+	Exclude the <body> tag if it’s already included in template header.
 </div>
 	
 ### Steps to Create Menu Item For Forum:    
 1)	[Non-Embedded Forum Menu](#non-embdded) 
 2)	[Embedded Forum Template Menu](#embdded)   
 
-### For Non-Embedded Forum:
 
 <div id="non-embdded"> 
+### For Non-Embedded Forum:
+</div>
 
 1)	Go to Admin > Dashboard > Settings > Fields > New Field  
 (For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)  
 
 		1.	Select Field type as "Matrix".  
-			<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
+<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
 		2.	In Configuration section:  	
 		
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />  
@@ -110,8 +108,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 		2.	Add menu name you want to display and Url for forum (https://forumname.discussion.community).      		
 		
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step4.png" />  
-
-</div>
+ 
 
 ### For embedded forum page:  
 <div id="embdded"> 	
