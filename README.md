@@ -81,6 +81,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 
 
 <div id="non-embdded"> 
+
 ### For Non-Embedded Forum:
 </div>
 
@@ -109,10 +110,10 @@ Settings → Plugins, locate the plugin and hit “Install”.
 		
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step4.png" />  
  
-
-### For embedded forum page:  
-<div id="embdded"> 	
-
+<div id="embdded"> 
+	
+### For embedded forum :  	
+</div>
 1.	Follow steps 1 & 2 [Steps to Create menu item to add forum Url](#non-embdded).  
 2.	Go to Admin > dashboard > Globals 
 3.	Select the new global set you created.      
@@ -120,6 +121,6 @@ Settings → Plugins, locate the plugin and hit “Install”.
 5.	Add Url for forum template page created using above [instructions](#embedded_template).   
 	i.e. If your template name is "Forum.twig/forum.html". Then template path would be like "/forum".     		
 	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/embeddedforum-step1.png" />   
-</div>
+
 
    
