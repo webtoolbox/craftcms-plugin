@@ -49,7 +49,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	cd /path/to/project
 	composer require websitetoolbox/websitetoolboxforum   
 
-## Configuring Website Toolbox Forum
+## Configuring Website Toolbox Forum   
 1.	<a href="https://www.websitetoolbox.com/">Create a Website Toolbox Forum.</a>    
 2.	Go to your Website Toolbox forum Settings. Dashboard > Settings > Website Toolbox Forum.     
 	Add Login Credentials received from Website Toolbox :      
@@ -60,14 +60,12 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/update-settings.jpg" />				
  
-## Configuring Website Toolbox SSO Settings
+## Configuring Website Toolbox SSO Settings   
 1.	Visit the <a href='https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On'>Single Sign On Section</a>.       	
 2.	Add your website Log In, Log Out and Sign Up links.
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO-section.png" />
 
-## Forum Front-End Template
-
-### For Embedded Forum:
+### For Embedded Forum Front-End Template   
 <div id ="embedded_template">
 	
 	Add below code to website’s Forum template page.
@@ -75,14 +73,14 @@ Settings → Plugins, locate the plugin and hit “Install”.
 	Exclude the <body> tag if it’s already included in template header.
 </div>
 	
-## Steps to Create Menu Item For Forum:    
+## Steps to Create Menu Item For Forum    
 1)	[Non-Embedded Forum Menu](#non-embdded) 
 2)	[Embedded Forum Template Menu](#embdded)   
 
 
-<div id="non-embdded"> 
-
-### For Non-Embedded Forum:
+<div id="non-embdded">  
+	
+### For Non-Embedded Forum Menu   
 </div>
 
 1)	Go to Admin > Dashboard > Settings > Fields > New Field  
@@ -110,7 +108,7 @@ In Configuration section:
  
 <div id="embdded"> 
 	
-### For embedded forum :  	  
+### For Embedded Forum Template Menu     	  
 </div>
 
 1.	Follow steps 1 & 2 [Steps to Create menu item to add forum Url](#non-embdded).   
