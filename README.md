@@ -87,7 +87,8 @@ Settings → Plugins, locate the plugin and hit “Install”.
 (For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)  
 2)	Select Field type as "Matrix".  
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
-In Configuration section:  	
+In Configuration section :
+
 3)	Add details for "Menu Name"    
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />    
 4)	Add details for "URL"    
