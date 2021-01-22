@@ -171,17 +171,20 @@ class Sso extends Component
        function renderEmbeddedHtmlWithAuthtoken()
       {  var embedUrl  = "{$forumUrl}";   
          var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
-        var wtbWrap = document.createElement('div');
-        wtbWrap.id = "wtEmbedCode";
+        var wtbWrap = document.getElementById('embedForum');
         var embedScript = document.createElement('script');
         embedScript.id = "embedded_forum";
         embedScript.type = 'text/javascript';
         if(typeof cookieForumLogoutToken != 'undefined' && cookieForumLogoutToken != 0){
           embedUrl += "/js/mb/embed.js?authtoken="+cookieForumLogoutToken;
-        } 
+        } else{
+          embedUrl += "/js/mb/embed.js";
+        }
         embedScript.src = embedUrl; 
-        wtbWrap.appendChild(embedScript); 
-        document.getElementById('embedForum').appendChild(embedScript);
+        if(typeof(wtbWrap) != 'undefined' && wtbWrap != null){
+          wtbWrap.appendChild(embedScript); 
+        }
+        
 
       })();
 JS;

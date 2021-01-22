@@ -8,7 +8,6 @@
 namespace websitetoolbox\websitetoolboxforum;
 use websitetoolbox\websitetoolboxforum\services\Sso as SsoService;
 use websitetoolbox\websitetoolboxforum\models\Settings;
-use websitetoolbox\websitetoolboxforum\assetbundles\Websitetoolboxforum\WebsitetoolboxforumAsset;
 use Craft;
 use craft\base\Plugin;
 use craft\web\twig\variables\CraftVariable;
@@ -89,6 +88,7 @@ class Websitetoolboxforum extends Plugin
                  }else{ 
                     $jsRender = Websitetoolboxforum::getInstance()->sso->renderJsScriptUnEmbedded();
                 }
+                
                 $view = Craft::$app->getView();
                 $view ->registerJs($jsRender);
             });
