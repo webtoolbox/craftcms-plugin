@@ -1,4 +1,5 @@
 <p><a href="https://www.websitetoolbox.com/"><img src ="https://github.com/webtoolbox/craftcms-plugin/blob/master/src/wt_logo_blue.svg" width="450" height="100"></a></p> 
+
 # Website Toolbox Forums plugin for Craft CMS 3.x
 
 ## About Website Toolbox Forum  
@@ -83,15 +84,13 @@ Settings → Plugins, locate the plugin and hit “Install”.
 
 ### For Non-Embedded Forum Menu   
 </div>
-## Installation
 
 1)	Go to Admin > Dashboard > Settings > Fields > New Field  
 (For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)  
 2)	Select Field type as "Matrix".  
-<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />  
-In Configuration section :
-To install Website Toolbox Forums, follow these steps:
+<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />   
 
+In Configuration section :
 3)	Add details for "Menu Name"    
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />    
 4)	Add details for "URL"    
@@ -103,7 +102,6 @@ To install Website Toolbox Forums, follow these steps:
 8)	Drag and drop new created field item.       
 
 <img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.png" />
-You can also install Website Toolbox Forums via the **Plugin Store** in the Craft CP.
 
 9)	Go to Admin > dashboard > Globals    
 10)	Select the new global set you created.         
@@ -115,7 +113,6 @@ You can also install Website Toolbox Forums via the **Plugin Store** in the Craf
 
 ### For Embedded Forum Template Menu     	  
 </div>
-Website Toolbox Forums works on Craft 3.x.
 
 1.	Follow steps 1 & 2 [Steps to Create menu item to add forum Url](#non-embdded).   
 2.	Go to Admin > dashboard > Globals   
