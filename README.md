@@ -34,7 +34,6 @@
 * Set user permissions
 * Moderate content and users
 * Import or export your data
-Related: [Website Toolboxforums for Craft 3.x](https://github.com/webtoolbox/craftcms-plugin)
 
 ## Requirements
 This plugin requires Craft CMS 3.0.0 or later.   
@@ -54,7 +53,7 @@ Settings → Plugins, locate the plugin and hit “Install”.
 ## Configuring Website Toolbox Forum   
 1.	<a href="https://www.websitetoolbox.com/">Create a Website Toolbox Forum.</a>    
 2.	Go to your Website Toolbox forum Settings. Dashboard > Settings > Website Toolbox Forum.     
-	Add Login Credentials received from Website Toolbox :      
+	Add Login Credentials received from Website Toolbox.      
 
 	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/settings.jpg" />  
 
@@ -64,7 +63,8 @@ Settings → Plugins, locate the plugin and hit “Install”.
 
 ## Configuring Website Toolbox SSO Settings   
 1.	Visit the <a href='https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On'>Single Sign On Section</a>.       	
-2.	Add your website Log In, Log Out and Sign Up links.
+2.	Add your website Log In, Log Out and Sign Up links.   
+
 	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/SSO-section.png" />
 
 ### For Embedded Forum Front-End Template   
@@ -88,21 +88,25 @@ Add below code to website’s Forum template page.Exclude the <body> tag if it�
 
 1)	Go to Admin > Dashboard > Settings > Fields > New Field  
 (For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)  
-2)	Select Field type as "Matrix".  
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />   
+2)	Select Field type as "Matrix".      
 
-3) 	Go to Configuration section on same page:   
-4)	Add details for "Menu Name"    
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />    
-5)	Add details for "URL"    
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" />  
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />      
 
-6)	Go to admin > dashboard > settings > Globals > New Global Set    
-7)	Add Name for global set.          
-8)	Go to Field layout.    
-9)	Drag and drop new created field item.       
+3) 	Go to Configuration section on same page.             
+4)	Add details for "Menu Name".          
 
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.png" />
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />  
+	
+5)	Add details for "URL".       
+
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" />     
+
+6)	Go to admin > dashboard > settings > Globals > New Global Set      
+7)	Add Name for global set.            
+8)	Go to Field layout.      
+9)	Drag and drop new created field item.         
+
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.png" />    
 
 10)	Go to Admin > dashboard > Globals    
 11)	Select the new global set you created.         
@@ -117,18 +121,23 @@ Add below code to website’s Forum template page.Exclude the <body> tag if it�
 
 1)	Go to Admin > Dashboard > Settings > Fields > New Field  
 (For more details please visit. https://craftcms.com/docs/2.x/fields.html#translatable-fields)  
-2)	Select Field type as "Matrix".  
+2)	Select Field type as "Matrix".    
 
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />   
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step1.png" />      
 
-3)	Go to Configuration section on same page:   
-4)	Add details for "Menu Name"    
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />    
-5)	Add details for "URL"    
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" /> 
+3)	Go to Configuration section on same page.         
+4)	Add details for "Menu Name".    
+
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-a.png" />     
+	
+5)	Add details for "URL".       
+
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" />    
+	
 6)	Go to Admin > dashboard > Globals   
-7)	Select the new global set you created.        
-8)	Add Menu name you want to display.  
-9)	Add URL for forum template page created using above [instructions](#embedded_template).     
-	i.e. If your template name is "Forum.twig/forum.html". Then template path would be like "/forum".        		
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/embeddedforum-step1.png" />     
+7)	Select the new global set you created.           
+8)	Add Menu name you want to display.      
+9)	Add URL for forum template page created using above [instructions](#embedded_template).         
+	i.e. If your template name is "Forum.twig/forum.html". Then template path would be like "/forum".       
+	
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/embeddedforum-step1.png" />         
