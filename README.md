@@ -102,11 +102,14 @@ Add below code to websiteâ€™s Forum template page.Exclude the <body> tag if itâ€
 	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step2-b.png" />     
 
 6)	Go to admin > dashboard > settings > Globals > New Global Set      
-7)	Add Name for global set.            
+7)	Add Name for global set.   
+
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.PNG" />     
+
 8)	Go to Field layout.      
 9)	Drag and drop new created field item.         
 
-	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3.PNG" />    
+	<img src="https://github.com/webtoolbox/craftcms-plugin/blob/master/docs/img/unembedded_menu_step3-a.png" />    
 
 10)	Go to Admin > dashboard > Globals    
 11)	Select the new global set you created.         
