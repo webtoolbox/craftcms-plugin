@@ -134,30 +134,14 @@ class Websitetoolboxforum extends Plugin
         if(isset($_POST['settings']['forumUsername'])){
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
-            $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'query'); 
-            $deleteForumUrlRows     = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumUrl'])->execute();
-            $deleteForumApiKeyRows  = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumApiKey'])->execute();   
-            $affectedForumUrlRows   = Craft::$app->getDb()->createCommand()->insert('projectconfig',
-            [ 'path'=> 'plugins.websitetoolboxforum.settings.forumUrl','value' => '"'.$result->forumAddress.'"'],false)->execute(); 
-            $affectedForumApiKeyRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
-            [ 'path'=> 'plugins.websitetoolboxforum.settings.forumApiKey','value' => '"'.$result->forumApiKey.'"'],false)->execute();
         } else{
-            if(isset($_POST['settings']['forumEmbedded']) && ($_POST['settings']['forumEmbedded'] == 1)){  
-                $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);;
-                $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);;
-                $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
-                $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'query'); 
-                $deleteForumUrlRows     = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumUrl'])->execute();
-                $deleteForumApiKeyRows  = Craft::$app->getDb()->createCommand()->delete('projectconfig',['path' => 'plugins.websitetoolboxforum.settings.forumApiKey'])->execute();   
-                $affectedForumUrlRows   = Craft::$app->getDb()->createCommand()->insert('projectconfig',
-                [ 'path'=> 'plugins.websitetoolboxforum.settings.forumUrl','value' => '"'.$result->forumAddress.'"'],false)->execute(); 
-                $affectedForumApiKeyRows = Craft::$app->getDb()->createCommand()->insert('projectconfig',
-                [ 'path'=> 'plugins.websitetoolboxforum.settings.forumApiKey','value' => '"'.$result->forumApiKey.'"'],false)->execute();
-            }
+            $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
+            $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false); 
         } 
-        echo "<script>document.getElementById('settings-forumApiKey').value = ".$result->forumApiKey."</script>";
-        echo "<script>document.getElementById('settings-forumUrl').value = ".$result->forumAddress."</script>";
+        $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
+        $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'query'); 
+        Craft::$app->getProjectConfig()->set("plugins.websitetoolboxforum.settings.forumUrl",$result->forumAddress); 
+        Craft::$app->getProjectConfig()->set("plugins.websitetoolboxforum.settings.forumApiKey",$result->forumApiKey); 
         $RequestUrl   = $result->forumAddress."/register/setauthtoken";
         $userEmail    = Craft::$app->getUser()->getIdentity()->email;
         $userId       = Craft::$app->getUser()->getIdentity()->id;
