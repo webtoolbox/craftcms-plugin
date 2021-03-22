@@ -171,7 +171,8 @@ class Sso extends Component
        function renderEmbeddedHtmlWithAuthtoken()
       {  var embedUrl  = "{$forumUrl}";   
          var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
-        var wtbWrap = document.getElementById('embedForum');
+        var wtbWrap = document.createElement('div');
+        wtbWrap.id = "wtEmbedCode";
         var embedScript = document.createElement('script');
         embedScript.id = "embedded_forum";
         embedScript.type = 'text/javascript';
@@ -181,10 +182,8 @@ class Sso extends Component
           embedUrl += "/js/mb/embed.js";
         }
         embedScript.src = embedUrl; 
-        if(typeof(wtbWrap) != 'undefined' && wtbWrap != null){
-          wtbWrap.appendChild(embedScript); 
-        }
-        
+        wtbWrap.appendChild(embedScript); 
+        document.getElementById('embedForum').appendChild(embedScript);
 
       })();
 JS;
@@ -200,19 +199,17 @@ JS;
         (  
          function renderEmbeddedUnHtmlWithAuthtoken()
         { 
+        var forumUrl  = "{$forumUrl}"+"/";  
         var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
         var links = document.getElementsByTagName('a');
         for(var i = 0; i< links.length; i++){
-          var str = links[i].href; 
-          for(var j = 0; j< str.length; j++){
-            var res = str.split("."); 
-            if(res[j] == 'websitetoolbox'){ 
+          var str = links[i].href;  
+            if(str == forumUrl){  
                 var linkToChange = links[i]; 
                 if(typeof cookieForumLogoutToken != 'undefined' && cookieForumLogoutToken != 0){
                     linkToChange.setAttribute("href", linkToChange+"?authtoken="+cookieForumLogoutToken);
                 }
             }            
-          }
         }
         })();
 JS;
