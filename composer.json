@@ -11,8 +11,8 @@
         "websitetoolboxforum"
     ],
     "support": {
-        "docs": "https://www.websitetoolbox.com/documentation1",
-        "issues": "https://www.websitetoolbox.com/documentation1"
+        "docs": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
+        "issues": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md"
     },
     "license": "MIT",
     "authors": [
@@ -41,8 +41,8 @@
         "developer": "Website Toolbox",
         "hasCpSection": false,
         "developerUrl": "http://websitetoolbox.com",
-        "documentationUrl": "https://www.websitetoolbox.com/documentation1",
-        "changelogUrl": "https://www.websitetoolbox.com/documentation1",
+        "documentationUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
+        "changelogUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
         "class": "websitetoolbox\\websitetoolboxforum\\Websitetoolboxforum",
         "components": {
             "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
