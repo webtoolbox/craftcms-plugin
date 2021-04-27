@@ -138,7 +138,7 @@ class Websitetoolboxforum extends Plugin
             $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false); 
         } 
-        $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
+        $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword,'plugin' => 'craft',);
         $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'query'); 
         Craft::$app->getProjectConfig()->set("plugins.websitetoolboxforum.settings.forumUrl",$result->forumAddress); 
         Craft::$app->getProjectConfig()->set("plugins.websitetoolboxforum.settings.forumApiKey",$result->forumApiKey); 
