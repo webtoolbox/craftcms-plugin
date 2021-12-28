@@ -2,7 +2,7 @@
     "name": "websitetoolbox/websitetoolboxforum",
     "description": "Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required",
     "type": "craft-plugin",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "keywords": [
         "craft",
         "cms",
