@@ -1,6 +1,6 @@
 <?php
 /**
- * Website Toolbox Forum plugin for Craft CMS 3.x
+ * Website Toolbox Forum plugin for Craft CMS 4.x
  * Single Sign On Cloud Based plugin for CraftCMS
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
@@ -13,7 +13,7 @@ use yii\behaviors\AttributeTypecastBehavior;
 /**
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
- * @since     3.0.0
+ * @since     4.0.0
  */
 class Settings extends Model
 {
@@ -27,12 +27,12 @@ class Settings extends Model
   
     // Public Methods
     /**   * @inheritdoc     */
-    public function rules(){
+    public function rules(): array{
         return [
             [['forumUsername', 'forumPassword','forumApiKey','forumUrl'], 'string'],   
         ];
     }
-    public function behaviors(){
+    public function behaviors(): array{
         // Keep any parent behaviors
         $behaviors = parent::behaviors();
         // Add in the AttributeTypecastBehavior
