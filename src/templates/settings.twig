@@ -11,8 +11,8 @@
 #}
 {% import "_includes/forms" as forms %}
 <div>
-    <div>
-    {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('forumSettingOption') == 1) %} 
+    <div>        
+    {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('forumSettingOption') == 1)  %}     
         <div>
             <b>Please log in to your Website Toolbox account.</b>
             <p>Not a Website Toolbox Forum owner?  
@@ -38,13 +38,13 @@
             "required": true
            })
         }}
-    {% else %}           
+    {% else %}
         <div>
             <p>Please                 
-                <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up.            
+                <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up.
             </p>
             <br />
-            <b>Website Toolbox Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="?forumSettingOption=1" style="text-decoration:underline">Change</a>
+            <b>Website Toolbox Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="?p=admin/settings/plugins/websitetoolboxforum&forumSettingOption=1" style="text-decoration:underline">Change</a>
         </div>
         <br />
         <div>

@@ -110,11 +110,12 @@ class Websitetoolboxforum extends Plugin
         });
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_AFTER_SAVE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {
-                if(isset($_POST['userId'])){                     
+                if(isset($_POST['userId'])){                    
                     Websitetoolboxforum::getInstance()->sso->afterUpdateUser();
                 }
             }
         });
+
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_AFTER_DELETE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {                           
                 Websitetoolboxforum::getInstance()->sso->afterDeleteUser($event->element->username);
