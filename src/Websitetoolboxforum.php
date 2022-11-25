@@ -43,7 +43,7 @@ class Websitetoolboxforum extends Plugin
 {
     public static $plugin;
     public static $craft31 = false;
-    public string $schemaVersion = '1.0.0';
+    //public string $schemaVersion = '1.0.0';
     public $connection; 
     // Public Methods
   

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.0 - 2022-09-08
+### Added
+- Make Website Toolbox forum plugin work with craftcms version4. 
+ 
 ## 1.3.0 - 2021-12-27
 ### Added
 - Website Toolbox forum Settings issue resolved.  

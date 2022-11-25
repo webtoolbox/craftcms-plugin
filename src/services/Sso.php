@@ -182,7 +182,7 @@ class Sso extends Component
       setcookie('forumLoginUserid', '', time() - 3600, "/");
       setcookie('loginRemember', '', time() - 3600, "/");
    }   
-   function updateProfileImage()
+   /*function updateProfileImage()
    {
         $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);           
         if($token){                 
@@ -202,12 +202,13 @@ class Sso extends Component
                 $response = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
           }
       }
-   }
+   }*/
    function renderJsScriptEmbedded($forumUrl,$userStatus){
-        if(isset($_SESSION['isUserUpdated']) && $_SESSION['isUserUpdated']){
+
+        /*if(isset($_SESSION['isUserUpdated']) && $_SESSION['isUserUpdated']){
             unset($_SESSION['isUserUpdated']);
             $this->updateProfileImage();
-        } 
+        }*/ 
         
         if(isset($_COOKIE['forumLogoutToken'])){
             $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
@@ -223,21 +224,19 @@ class Sso extends Component
                 wtbImg.id = "wtbloginImage";                
                 if(cookieForumLogoutToken != 0){ 
                     embedUrl += '/register/dologin?authtoken='+cookieForumLogoutToken;
-                } else{ 
-                    embedUrl += '/register/dologin?authtoken=0';
-                }            
-                wtbImg.src = embedUrl;                
-                if(document.getElementById('wtEmbedCode') != null){
-                    document.getElementById('wtEmbedCode').appendChild(wtbImg);    
-                }                
+                    wtbImg.src = embedUrl;
+                    if(document.getElementById('wtEmbedCode') != null){
+                        document.getElementById('wtEmbedCode').appendChild(wtbImg);    
+                    }
+                }               
            })();
         JS;
         return $js;
         /*$js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
-          {  var embedUrl  = "{$forumUrl}";   
-             var userStatus = "{$userStatus}";             
+          {  var embedUrl  = "{$forumUrl}";
+             var userStatus = "{$userStatus}";
              var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
             var wtbWrap = document.createElement('div');
             wtbWrap.id = "wtEmbedCode";
@@ -253,15 +252,16 @@ class Sso extends Component
             } else{ 
                 embedUrl += "/js/mb/embed.js?authtoken=0";
             }            
-            embedScript.src = embedUrl; 
+            
+            embedScript.src = embedUrl;             
+            embedScript.src = 'kishan.mistry';
             wtbWrap.appendChild(embedScript); 
             document.getElementById('wtEmbedCode').appendChild(embedScript);
 
           })();
         JS;
         return $js;*/
-
-    }   
+   }   
   function renderJsScriptUnEmbedded(){  
         if(isset($_COOKIE['forumLogoutToken'])){
             $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
