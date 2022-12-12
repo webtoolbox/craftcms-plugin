@@ -233,11 +233,12 @@ class Sso extends Component
             } else{ 
                 embedUrl += "/js/mb/embed.js?authtoken=0";
             }                        
-            embedScript.src = embedUrl;                        
+            embedScript.src = embedUrl;
             embedScript.setAttribute('data-version','1.1');
             wtbWrap.appendChild(embedScript); 
-            document.getElementById('wtEmbedCode').appendChild(embedScript);
-
+            if(document.getElementById('wtEmbedCode') != null){
+                document.getElementById('wtEmbedCode').appendChild(embedScript);
+            }
           })();
         JS;
         return $js;
@@ -254,23 +255,22 @@ class Sso extends Component
         (  
          function renderEmbeddedUnHtmlWithAuthtoken()
         {
-            /*jQuery.expr[':'].contains = function(a, i, m) {
-              return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-            };   
-            var cookieForumLogoutToken = "{$cookieForumLogoutToken}";    
-            var authtokenStr = "?authtoken="+cookieForumLogoutToken;
-            var forumHref = "{$forumUrl}"+authtokenStr;            
-            $("a:contains('forum')").attr('href', forumHref);*/
             var forumUrl = "{$forumUrl}";
-            var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
-            var links = document.getElementsByTagName('a');        
+            var cookieForumLogoutToken = "{$cookieForumLogoutToken}";            
+            var authtokenStr = "?authtoken="+cookieForumLogoutToken;
+            var forumHref = "{$forumUrl}"+authtokenStr;
+            if(document.getElementById('wtEmbedCode')){
+                window.location.href = forumHref;
+            }
+            var links = document.getElementsByTagName('a');
             for(var i = 0; i< links.length; i++){
               var str = links[i].href; 
               for(var j = 0; j< str.length; j++){
                 var res = str.split(".");
-                if(res[j] == 'websitetoolbox'){                 
-                    var linkToChange = links[i]; 
-                    if(typeof cookieForumLogoutToken != 'undefined' && cookieForumLogoutToken != 0){
+                if(str.search(forumUrl) >= 0) //res[j] == 'websitetoolbox' &&
+                {
+                    var linkToChange = links[i];
+                    if(typeof cookieForumLogoutToken != 'undefined' && cookieForumLogoutToken != 0 && String(linkToChange).search('authtoken=') < 0){
                         linkToChange.setAttribute("href", linkToChange+"?authtoken="+cookieForumLogoutToken);
                     }
                 }
