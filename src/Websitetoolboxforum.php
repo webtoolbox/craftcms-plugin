@@ -26,6 +26,8 @@ use craft\web\Request;
 use yii\web\Response;
 use craft\elements\Entry;
 use craft\base\Element;
+use craft\events\RegisterUrlRulesEvent;
+use craft\web\UrlManager;
 
 
 define('WT_SETTINGS_URL', 'https://beta35.websitetoolbox.com/tool/members/mb/settings');
@@ -129,10 +131,31 @@ class Websitetoolboxforum extends Plugin
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {
             Websitetoolboxforum::getInstance()->sso->afterLogOut();
         });
-        $this->renderHtml();
+
+        Event::on(
+            \craft\web\UrlManager::class,
+            \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function(RegisterUrlRulesEvent $event) {
+                $event->rules['wtbforum'] = 'websitetoolboxforum/default/index';
+            }
+        );
     }
-    protected function renderHtml() 
+    protected function renderHtml()
     {
+        /*$htmlData = "<div id='wtEmbedCode'>Website Toolbox Forum</div>";
+        $vars = ['foo' => $htmlData]; // variables loaded into the template
+        $mode = 'cp'; // or "cp"
+        $html = Craft::$app->view->renderTemplate('websitetoolboxforum/kim', $vars, $mode);        
+        return $html;*/
+
+        $oldMode = Craft::$app->view->getTemplateMode();
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        $html = \Craft::$app->view->renderTemplate('websitetoolboxforum/kim');
+        Craft::$app->view->setTemplateMode($oldMode);
+        return $html;
+
+
+
         /*$templatePath = CRAFT_BASE_PATH.'/templates/_singles/wtbxForum.twig';
         if(!file_exists($templatePath))
         {   
@@ -175,12 +198,12 @@ class Websitetoolboxforum extends Plugin
         Craft::$app->getView()->setTemplatesPath(CRAFT_BASE_PATH . '/templates');        
         $html = Craft::$app->getView()->renderTemplate('kim.twig', ['variableName' => $htmlData]);*/
     }
-    protected function createSettingsModel(): ?\craft\base\Model{
+    protected function createSettingsModel(): ?\craft\base\Model{        
         return new Settings();
     }
     protected function settingsHtml(): ?string{        
         $hashTypes = hash_algos();
-        $hashTypes = array_combine($hashTypes, $hashTypes);
+        $hashTypes = array_combine($hashTypes, $hashTypes);        
         return Craft::$app->view->renderTemplate(
             'websitetoolboxforum/settings',
             [
