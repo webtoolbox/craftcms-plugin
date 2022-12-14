@@ -28,7 +28,7 @@ use craft\elements\Entry;
 use craft\base\Element;
 
 
-define('WT_SETTINGS_URL', 'https://beta16.websitetoolbox.com/tool/members/mb/settings');
+define('WT_SETTINGS_URL', 'https://beta35.websitetoolbox.com/tool/members/mb/settings');
 //https://www.websitetoolbox.com/tool/members/mb/settings
 
 
@@ -63,6 +63,7 @@ class Websitetoolboxforum extends Plugin
             'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
         ]);
         self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
+
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_BEFORE_SAVE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {
                 if($event->element->id){
@@ -128,7 +129,52 @@ class Websitetoolboxforum extends Plugin
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {
             Websitetoolboxforum::getInstance()->sso->afterLogOut();
         });
-    }    
+        $this->renderHtml();
+    }
+    protected function renderHtml() 
+    {
+        /*$templatePath = CRAFT_BASE_PATH.'/templates/_singles/wtbxForum.twig';
+        if(!file_exists($templatePath))
+        {   
+            $myFile = fopen($templatePath, "w") or die("Unable to open file!");
+            $htmlData = <<<EOD
+            <!DOCTYPE html>
+            <html lang="en-US">
+                <body>
+                    <div id="wtEmbedCode"></div>
+                </body>
+            </html>
+            EOD;
+            fwrite($myFile, $htmlData);
+            fclose($myFile);
+            chmod($templatePath, 0775);
+        }
+        Craft::$app->view->hook('test', function(array &$context) {
+            $context['foo'] = 'bar';
+            return '<p>Hey!</p>';  
+        });*/
+
+        
+        // $path = Craft::$app->path->getSiteTemplatesPath();
+        // Craft::$app->path->setTemplatesPath($path);
+        // $htmlData = "<div id='wtEmbedCode'>Website Toolbox Forum</div>";
+        // Craft::$app->getView()->renderTemplate('websitetoolboxforum/kim', ['variableName' => $htmlData]);
+
+        /*$oldPath =  Craft::$app->path->getSiteTemplatesPath();
+        echo $newPath = Craft::$app->path->getPluginsPath().'path/templates/folder';exit;
+        
+        craft()->path->setTemplatesPath($newPath);
+        $templateName = '_templatename';
+        //If you need to get data from somewhere else to pass to the template
+        $htmlData = "<div id='wtEmbedCode'>Website Toolbox Forum</div>";
+        $htmlResponse = craft()->templates->render($templateName, array("variableName" => $htmlData));
+        //reset path
+        craft()->path->setTemplatesPath($oldPath);
+        return $htmlResponse;
+        $htmlData = "<div id='wtEmbedCode'>Website Toolbox Forum</div>";
+        Craft::$app->getView()->setTemplatesPath(CRAFT_BASE_PATH . '/templates');        
+        $html = Craft::$app->getView()->renderTemplate('kim.twig', ['variableName' => $htmlData]);*/
+    }
     protected function createSettingsModel(): ?\craft\base\Model{
         return new Settings();
     }
@@ -142,7 +188,7 @@ class Websitetoolboxforum extends Plugin
                 'hashTypes' => $hashTypes,
             ]
         );
-    }    
+    }
     public function afterSaveSettings(): void{ 
         if(isset($_POST['settings']['forumUsername'])){
             $userName               = $_POST['settings']['forumUsername'];

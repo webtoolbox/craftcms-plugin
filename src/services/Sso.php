@@ -181,7 +181,8 @@ class Sso extends Component
       setcookie('forumLogoutToken', 0, time() - 3600, "/");
       setcookie('forumLoginUserid', '', time() - 3600, "/");
       setcookie('loginRemember', '', time() - 3600, "/");
-   }      
+   } 
+      
    function renderJsScriptEmbedded($forumUrl,$userStatus)
    {
         if(isset($_COOKIE['forumLogoutToken'])){
