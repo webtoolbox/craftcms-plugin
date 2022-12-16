@@ -189,31 +189,7 @@ class Sso extends Component
             $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
         }else{
             $cookieForumLogoutToken = 0;
-        }               
-        /*$js = <<<JS
-          (  
-           function renderEmbeddedHtmlWithAuthtoken(){
-                var embedUrl  = "{$forumUrl}";
-                var userStatus = "{$userStatus}";
-                var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
-                var wtbImg = document.createElement('img');
-                wtbImg.id = "wtbloginImage";                
-                if(typeof cookieForumLogoutToken != 'undefined' && cookieForumLogoutToken != 0){ 
-                    if(userStatus == 'loggedIn'){
-                        embedUrl += '/register/dologin?authtoken='+cookieForumLogoutToken;
-                    }else{
-                        embedUrl += '/register/logout?authtoken='+cookieForumLogoutToken;
-                    }
-                }else{
-                    embedUrl += '/register/logout?authtoken=0';
-                }                
-                wtbImg.src = embedUrl;
-                if(document.getElementById('wtEmbedCode') != null){
-                    document.getElementById('wtEmbedCode').appendChild(wtbImg);    
-                }
-           })();
-        JS;
-        return $js;*/
+        }        
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()

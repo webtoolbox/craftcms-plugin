@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
+	<style type="text/css">
+	.menu{ float:right; }
+	.menu li { display: inline; list-style-type: none; padding-right: 20px; float: left;}
+	.menu li a{ text-decoration: none}
+	</style>
 </head>
-	<body>		
+	<body>
+		<ul class="menu">
+			<li><a href="{{ url() }}">Home</a></li>
+			<li><a href="{{ url('wtbforum') }}">Forum</a></li>
+		</ul>	
 		<div id="wtEmbedCode"></div>
 	</body>
 </html>

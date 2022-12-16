@@ -7,6 +7,7 @@ use yii\web\Response;
 
 class DefaultController extends Controller
 {
+    protected array|bool|int $allowAnonymous = ['index', 'do-something'];
     // Front end action /your/route
     public function actionIndex(): Response
     {

@@ -136,68 +136,10 @@ class Websitetoolboxforum extends Plugin
             \craft\web\UrlManager::class,
             \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
             function(RegisterUrlRulesEvent $event) {
-                $event->rules['wtbforum'] = 'websitetoolboxforum/default/index';
+                $event->rules['forum'] = 'websitetoolboxforum/default/index';
             }
         );
-    }
-    protected function renderHtml()
-    {
-        /*$htmlData = "<div id='wtEmbedCode'>Website Toolbox Forum</div>";
-        $vars = ['foo' => $htmlData]; // variables loaded into the template
-        $mode = 'cp'; // or "cp"
-        $html = Craft::$app->view->renderTemplate('websitetoolboxforum/kim', $vars, $mode);        
-        return $html;*/
-
-        $oldMode = Craft::$app->view->getTemplateMode();
-        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-        $html = \Craft::$app->view->renderTemplate('websitetoolboxforum/kim');
-        Craft::$app->view->setTemplateMode($oldMode);
-        return $html;
-
-
-
-        /*$templatePath = CRAFT_BASE_PATH.'/templates/_singles/wtbxForum.twig';
-        if(!file_exists($templatePath))
-        {   
-            $myFile = fopen($templatePath, "w") or die("Unable to open file!");
-            $htmlData = <<<EOD
-            <!DOCTYPE html>
-            <html lang="en-US">
-                <body>
-                    <div id="wtEmbedCode"></div>
-                </body>
-            </html>
-            EOD;
-            fwrite($myFile, $htmlData);
-            fclose($myFile);
-            chmod($templatePath, 0775);
-        }
-        Craft::$app->view->hook('test', function(array &$context) {
-            $context['foo'] = 'bar';
-            return '<p>Hey!</p>';  
-        });*/
-
-        
-        // $path = Craft::$app->path->getSiteTemplatesPath();
-        // Craft::$app->path->setTemplatesPath($path);
-        // $htmlData = "<div id='wtEmbedCode'>Website Toolbox Forum</div>";
-        // Craft::$app->getView()->renderTemplate('websitetoolboxforum/kim', ['variableName' => $htmlData]);
-
-        /*$oldPath =  Craft::$app->path->getSiteTemplatesPath();
-        echo $newPath = Craft::$app->path->getPluginsPath().'path/templates/folder';exit;
-        
-        craft()->path->setTemplatesPath($newPath);
-        $templateName = '_templatename';
-        //If you need to get data from somewhere else to pass to the template
-        $htmlData = "<div id='wtEmbedCode'>Website Toolbox Forum</div>";
-        $htmlResponse = craft()->templates->render($templateName, array("variableName" => $htmlData));
-        //reset path
-        craft()->path->setTemplatesPath($oldPath);
-        return $htmlResponse;
-        $htmlData = "<div id='wtEmbedCode'>Website Toolbox Forum</div>";
-        Craft::$app->getView()->setTemplatesPath(CRAFT_BASE_PATH . '/templates');        
-        $html = Craft::$app->getView()->renderTemplate('kim.twig', ['variableName' => $htmlData]);*/
-    }
+    }    
     protected function createSettingsModel(): ?\craft\base\Model{        
         return new Settings();
     }
