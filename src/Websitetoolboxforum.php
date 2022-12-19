@@ -158,6 +158,7 @@ class Websitetoolboxforum extends Plugin
         if(isset($_POST['settings']['forumUsername'])){
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
+
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             
@@ -170,6 +171,7 @@ class Websitetoolboxforum extends Plugin
         } else{
             $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
+            $communityUrl           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.communityUrl',false);            
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json'); 
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');

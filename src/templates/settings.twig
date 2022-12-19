@@ -52,14 +52,16 @@
                 <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up.
             </p>
             <br />
-            <b>Website Toolbox Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="?p=admin/settings/plugins/websitetoolboxforum&forumSettingOption=1" style="text-decoration:underline">Change</a>
+            <span style="width:30%">
+                <b>Website Toolbox Username :&nbsp;&nbsp;&nbsp;&nbsp;</b> 
+            </span>
+            {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="?p=admin/settings/plugins/websitetoolboxforum&forumSettingOption=1" style="text-decoration:underline">Change</a>
         </div>
         <br />
         <div>
             <span style="width:30%">
-                <b>Embed the forum               :                 
-                </span>
-            </b>
+                <b>Embed the forum               :                             
+            </b></span>
          {{ forms.checkboxField({
                 label: "Yes"|t('app'),
                 id: 'forumEmbedded',
@@ -75,6 +77,29 @@
             <br />Disable this option to have your forum load in a full-sized window. You can use the Layout section in your Website Toolbox account to         
             <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank" style="text-decoration:underline">customize your forum layout to match your website</a> or         
             <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" style="text-decoration:underline" target="_blank">contact Website Toolbox support to customize it for you</a>            
+        </div>
+        <br />
+        <div id="cmUrl">
+            <span style="width:30%">
+                <b>Embed page :                 
+                </span>
+            </b>
+            {% if settings.communityUrl %}
+                {% set cmUrl = settings.communityUrl %}
+            {% else %}
+                {% set cmUrl = 'forum' %}
+            {% endif %}
+            {{ forms.textField({                
+                "id": "communityUrl",
+                "name": "communityUrl",
+                "value": cmUrl,
+                "required": true               
+            })
+        }} 
+        <p style="margin-left:20%;margin-top:2%"> 
+            Add a link to the following address in your website’s navigation menu: <a href="">https://public.websitetoolbox.com/craftcms_plugin/forum</a>
+        </p>
+        <p id='test'></p><br>
         </div>
     {% endif %}    
     </div>
@@ -102,8 +127,23 @@
     float: right;
     margin-top:0px;
 }
+#settings-communityUrl-field{ width:150px; position: absolute; top:340px; left:230px; }
 .classHide{
     display:none;
 }
-
+#settings-cmUrl{margin-top:10px;}
 </style>
+<script type="text/javascript">
+
+const log = document.getElementById('test');
+const input = document.querySelector('settings-communityUrl-field');
+
+input.addEventListener('keypress', logKey);
+
+function logKey(e) {
+    alert()
+  log.textContent += ` ${e.code}`;
+}
+
+
+</script>

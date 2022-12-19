@@ -24,6 +24,7 @@ class Settings extends Model
     public $forumEmbedded         = 1;
     public $forumApiKey           = '';
     public $forumUrl              = '';  
+    public $communityUrl          = 'forum';  
   
     // Public Methods
     /**   * @inheritdoc     */
@@ -48,7 +49,8 @@ class Settings extends Model
                     'forumUsername',
                     'forumPassword',
                     'forumApiKey',
-                    'forumUrl'
+                    'forumUrl',
+                    'communityUrl'
                 ],
             ];
         }
