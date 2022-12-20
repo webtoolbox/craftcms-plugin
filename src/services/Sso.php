@@ -212,8 +212,8 @@ class Sso extends Component
             }                        
             embedScript.src = embedUrl;
             embedScript.setAttribute('data-version','1.1');
-            wtbWrap.appendChild(embedScript); 
-            if(document.getElementById('wtEmbedCode') != null){
+            wtbWrap.appendChild(embedScript);             
+            if(document.getElementById('wtEmbedCode') != null && document.getElementById('wtEmbedCode').innerHTML == ''){                
                 document.getElementById('wtEmbedCode').appendChild(embedScript);
             }
           })();

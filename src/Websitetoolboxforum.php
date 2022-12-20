@@ -106,6 +106,18 @@ class Websitetoolboxforum extends Plugin
                 $view = Craft::$app->getView();
                 $view->registerJs($jsRender);
             });
+            if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"]))
+            {
+                // Register site url route for forum
+                Event::on(
+                    \craft\web\UrlManager::class,
+                    \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+                    function(RegisterUrlRulesEvent $event) {                
+                        $segement = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"];
+                        $event->rules[$segement] = 'websitetoolboxforum/default/index';
+                    }
+                );
+            }
         }
         Event::on(\craft\services\Users::class, \craft\services\Users::EVENT_AFTER_ACTIVATE_USER, function(Event $event) {         
                 Websitetoolboxforum::getInstance()->sso->afterUserCreate($event);
@@ -131,14 +143,6 @@ class Websitetoolboxforum extends Plugin
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {
             Websitetoolboxforum::getInstance()->sso->afterLogOut();
         });
-
-        Event::on(
-            \craft\web\UrlManager::class,
-            \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function(RegisterUrlRulesEvent $event) {
-                $event->rules['forum'] = 'websitetoolboxforum/default/index';
-            }
-        );
     }    
     protected function createSettingsModel(): ?\craft\base\Model{        
         return new Settings();
@@ -154,8 +158,8 @@ class Websitetoolboxforum extends Plugin
             ]
         );
     }
-    public function afterSaveSettings(): void{ 
-        if(isset($_POST['settings']['forumUsername'])){
+    public function afterSaveSettings(): void{         
+        if(isset($_POST['settings']['forumUsername'])){            
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
 
@@ -171,7 +175,14 @@ class Websitetoolboxforum extends Plugin
         } else{
             $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
-            $communityUrl           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.communityUrl',false);            
+
+            if(isset($_POST['settings']['communityUrl']) && $_POST['settings']['forumEmbedded'] == 1){
+                $embeddedPage = $_POST['settings']['communityUrl'];
+                if($_POST['settings']['communityUrl'] == ''){
+                    $embeddedPage = 'forum';
+                }                
+                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.communityUrl', trim($embeddedPage));
+            }
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json'); 
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
