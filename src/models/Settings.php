@@ -25,7 +25,7 @@ class Settings extends Model
     public $forumEmbedded         = 1;
     public $forumApiKey           = '';
     public $forumUrl              = '';  
-    public $communityUrl          = '/forum';  
+    public $communityUrl          = 'forum';  
   
     // Public Methods
     protected function makeUrl($page){
@@ -36,7 +36,7 @@ class Settings extends Model
             $url = "http://";             
         $url.= $_SERVER['HTTP_HOST']; 
         $url.= $_SERVER['REQUEST_URI'];  
-        if(strpos($url, 'index.php') >= 0){
+        if(strpos($url, 'index.php?') >= 0){
             $embedPage = $siteUrl.'index.php?p='.$page;
         }else{
             $embedPage = $siteUrl.$page;
@@ -75,7 +75,7 @@ class Settings extends Model
                 $message = "The page doesn't content embed code. Pleae add <div id=\"wtEmbedCode\"></div> to the page.";
                 $this->addError($attribute, $message);
                 return;
-            }        
+            }
             /*else{ echo "Found matches:\n"; echo implode("\n", $matches[0]);exit;}*/
         }
         

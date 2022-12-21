@@ -30,7 +30,7 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 
 
-define('WT_SETTINGS_URL', 'https://beta35.websitetoolbox.com/tool/members/mb/settings');
+define('WT_SETTINGS_URL', 'https://beta13.websitetoolbox.com/tool/members/mb/settings');
 //https://www.websitetoolbox.com/tool/members/mb/settings
 
 
@@ -61,6 +61,7 @@ class Websitetoolboxforum extends Plugin
             __METHOD__
         );                    
         self::$plugin = $this;
+        
         $this->setComponents([
             'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
         ]);
@@ -165,7 +166,9 @@ class Websitetoolboxforum extends Plugin
 
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
-            
+            if(empty($result)){
+                echo "Authentication fail for Website Toolbox Forum.";exit;
+            }
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');      
             
@@ -180,11 +183,14 @@ class Websitetoolboxforum extends Plugin
                 $embeddedPage = $_POST['settings']['communityUrl'];
                 if($_POST['settings']['communityUrl'] == ''){
                     $embeddedPage = 'forum';
-                }                
+                }
                 Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.communityUrl', trim($embeddedPage));
             }
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
-            $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json'); 
+            $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
+            if(empty($result)){
+                echo "Authentication fail for Website Toolbox Forum.";exit;
+            }
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');      
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 

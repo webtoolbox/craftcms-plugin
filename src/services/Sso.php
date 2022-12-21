@@ -38,7 +38,7 @@ class Sso extends Component
                     $postData     = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId, 'avatarUrl' => $image);                    
                     $result       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');                    
                     setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-                    setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");                    
+                    setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
               }
           }         
      }
@@ -154,7 +154,7 @@ class Sso extends Component
         $response = curl_exec($curl);                       
         if (curl_errno($curl)) {
             $error_msg = curl_error($curl);
-            print_r($error_msg);exit;
+            echo "<pre>";print_r($error_msg);exit;
         }
         curl_close($curl);
         return json_decode($response);
@@ -209,11 +209,12 @@ class Sso extends Component
                 }
             } else{ 
                 embedUrl += "/js/mb/embed.js?authtoken=0";
-            }                        
+            }            
             embedScript.src = embedUrl;
             embedScript.setAttribute('data-version','1.1');
             wtbWrap.appendChild(embedScript);             
-            if(document.getElementById('wtEmbedCode') != null && document.getElementById('wtEmbedCode').innerHTML == ''){                
+            var forumHtml = document.getElementById('wtEmbedCode').innerHTML;            
+            if(document.getElementById('wtEmbedCode') != null && forumHtml.match("iframe") == null){
                 document.getElementById('wtEmbedCode').appendChild(embedScript);
             }
           })();
@@ -235,7 +236,7 @@ class Sso extends Component
             var forumUrl = "{$forumUrl}";
             var cookieForumLogoutToken = "{$cookieForumLogoutToken}";            
             var authtokenStr = "?authtoken="+cookieForumLogoutToken;
-            var forumHref = "{$forumUrl}"+authtokenStr;
+            var forumHref = "{$forumUrl}"+authtokenStr;            
             if(document.getElementById('wtEmbedCode')){
                 window.location.href = forumHref;
             }
