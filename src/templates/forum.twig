@@ -7,9 +7,15 @@
 	.menu li a{ text-decoration: none}
 	</style>
 </head>
-	<body>		
+	<body>
+		{% set baseUrl = craft.app.sites.primarySite.baseUrl %}
+		{% if('index.php?' in craft.app.request.absoluteUrl) %}                        
+            {% set index = 'index.php?p=' %}
+            {% set baseUrl = baseUrl ~ index %}
+        {% endif %}
 		<ul class="menu">
-			<li><a href="{{ url() }}">Home</a></li>			
+			<li><a href="{{ url() }}">Home</a></li>
+			<li><a href="{{ baseUrl }}{{ craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ['settings']['communityUrl'] }}">Forum</a></li>
 		</ul>
 		<div id="wtEmbedCode"></div>	
 	</body>

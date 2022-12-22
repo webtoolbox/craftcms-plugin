@@ -39,6 +39,7 @@
                     "required": true
                    })
                 }}
+                {{ _self.errorList(settings.getErrors('forumUsername')) }}
             </td>
         </tr>
         <tr>
@@ -51,6 +52,7 @@
                     "required": true
                    })
                 }}
+                {{ _self.errorList(settings.getErrors('forumPassword')) }}
             </td>
         </tr>
     {% else %}
@@ -102,12 +104,14 @@
                             {% if('index.php?' in craft.app.request.absoluteUrl) %}                        
                                 {% set index = 'index.php?p=' %}
                                 {% set baseUrl = baseUrl ~ index %}
-                            {% endif %}                    
+                            {% endif %}
+                            
                             {% if settings.communityUrl %}
                                 {% set cmUrl = settings.communityUrl %}
                             {% else %}
                                 {% set cmUrl = 'forum' %}
                             {% endif %}
+                            
                             <div class='input-communityUrl'>
                                 <div class="inputUrl text" title='{{ baseUrl }}'>
                                     <p>{{ baseUrl }}</p>
@@ -191,7 +195,7 @@
 
     var cmurl  = document.getElementById('settings-communityUrl');
     cmurl.addEventListener('keyup', (event) => {
-        var letter = /^[a-z\/\_]+$/;
+        var letter = /^[a-z0-9\/\_-]+$/;
         if(cmurl.value.match(letter) || cmurl.value == ''){
             document.getElementById('settings-frmUrl').text = baseUrl+cmurl.value
         }else{            

@@ -18,8 +18,7 @@ use craft\helpers\UrlHelper;
  */
 class Settings extends Model
 {
-    // Public Properties
-    // =========================================================================
+    // Public Properties    
     public $forumUsername         = '';
     public $forumPassword         = '';
     public $forumEmbedded         = 1;
@@ -29,15 +28,9 @@ class Settings extends Model
   
     // Public Methods
     protected function makeUrl($page){
-        $siteUrl = UrlHelper::siteUrl();
-        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') 
-            $url = "https://"; 
-        else 
-            $url = "http://";             
-        $url.= $_SERVER['HTTP_HOST']; 
-        $url.= $_SERVER['REQUEST_URI'];  
-        if(strpos($url, 'index.php?') >= 0){
-            $embedPage = $siteUrl.'index.php?p='.$page;
+        $siteUrl = UrlHelper::siteUrl();                
+        if(strpos($siteUrl, 'index.php') >= 0){
+            $embedPage = $siteUrl.'?p='.$page;
         }else{
             $embedPage = $siteUrl.$page;
         }
@@ -52,20 +45,20 @@ class Settings extends Model
         }
     }
     public function validateUrl($attribute) {        
-        $value = $this->$attribute;
+        $value = $this->$attribute;        
         $file = $this->makeUrl($value);
         // check url is valid or not
-        if(!preg_match('/^[a-z\/_]+$/', $value)) {
+        if(!preg_match('/^[a-z0-9\/\_-]+$/', $value)) {            
             $message = 'only alphabet in lowercase letters allow.';
             $this->addError($attribute, $message);
             return;
         }
         // Check if already exist url and not contain embedded code
-        if($this->urlExists($file)){
+        if($this->urlExists($file)){            
             $searchFor = "<div id='wtEmbedCode'>";
             $searchDiv = '<div id="wtEmbedCode">';
             header('Content-Type: text/plain');
-            $contents = file_get_contents($file);        
+            $contents = file_get_contents($file);
             $pattern1 = preg_quote($searchFor, '/');
             $pattern2 = preg_quote($searchDiv, '/');
             $pattern1 = "/^.*$pattern1.*\$/m";
@@ -78,12 +71,12 @@ class Settings extends Model
             }
             /*else{ echo "Found matches:\n"; echo implode("\n", $matches[0]);exit;}*/
         }
-        
     }
     /**   * @inheritdoc     */
     public function rules(): array{
         return [
-            [['forumUsername', 'forumPassword','forumApiKey','forumUrl'], 'string'],
+            [['forumUsername', 'forumPassword'], 'required'],
+            [['forumApiKey','forumUrl'], 'string'],
             ['communityUrl', 'validateUrl']
         ];
     }

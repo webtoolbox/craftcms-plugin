@@ -29,10 +29,8 @@ use craft\base\Element;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 
-
 define('WT_SETTINGS_URL', 'https://beta13.websitetoolbox.com/tool/members/mb/settings');
 //https://www.websitetoolbox.com/tool/members/mb/settings
-
 
 /**
  * Class Websitetoolboxforum
@@ -47,8 +45,8 @@ class Websitetoolboxforum extends Plugin
     public static $craft31 = false;
     //public string $schemaVersion = '1.0.0';
     public $connection; 
-    // Public Methods
-  
+    
+    // Public Methods  
     public function init()
     { 
         parent::init();
@@ -61,7 +59,6 @@ class Websitetoolboxforum extends Plugin
             __METHOD__
         );                    
         self::$plugin = $this;
-        
         $this->setComponents([
             'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
         ]);
@@ -113,7 +110,7 @@ class Websitetoolboxforum extends Plugin
                 Event::on(
                     \craft\web\UrlManager::class,
                     \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-                    function(RegisterUrlRulesEvent $event) {                
+                    function(RegisterUrlRulesEvent $event) {
                         $segement = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"];
                         $event->rules[$segement] = 'websitetoolboxforum/default/index';
                     }
@@ -159,7 +156,7 @@ class Websitetoolboxforum extends Plugin
             ]
         );
     }
-    public function afterSaveSettings(): void{         
+    public function afterSaveSettings(): void{
         if(isset($_POST['settings']['forumUsername'])){            
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
@@ -170,11 +167,11 @@ class Websitetoolboxforum extends Plugin
                 echo "Authentication fail for Website Toolbox Forum.";exit;
             }
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
-            $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');      
+            $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');
             
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
 
-            $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);            
+            $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
         } else{
             $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
