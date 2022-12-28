@@ -103,7 +103,7 @@ class Sso extends Component
       $url            = WT_API_URL ."/users/$userId"; 
       $response       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
       if(isset($response->status) && $response->status == 'error'){        
-        echo 'Forum :: '.$response->error->message;exit;
+        echo 'Forum :: '.$response->error->message;
       }
     }
     function getUserid($userEmail){              
@@ -136,7 +136,7 @@ class Sso extends Component
                           'Content-Type: application/json',);                       
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers );
         }else{
-            $headers = array(                                                          
+            $headers = array(
                           'Content-Type: application/json',
                           'Accept: application/json');
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);    
@@ -153,10 +153,10 @@ class Sso extends Component
             curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         }        
         $response = curl_exec($curl);                       
-        if (curl_errno($curl)) {
+        /*if (curl_errno($curl)) {
             $error_msg = curl_error($curl);
             echo "<pre>";print_r($error_msg);exit;
-        }
+        }*/
         curl_close($curl);
         return json_decode($response);
     }
@@ -171,7 +171,7 @@ class Sso extends Component
         $RequestUrl   =  $forumUrl."/register";
         $result       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
     }
-    function afterLogOut(){        
+    function afterLogOut(){
       if(isset($_COOKIE['forumLogoutToken'])){
         $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
@@ -194,11 +194,11 @@ class Sso extends Component
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
-          {  var embedUrl  = "{$forumUrl}";
-             var userStatus = "{$userStatus}";
-             var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
+          { var embedUrl  = "{$forumUrl}";
+            var userStatus = "{$userStatus}";
+            var cookieForumLogoutToken = "{$cookieForumLogoutToken}";            
             var wtbWrap = document.createElement('div');
-            wtbWrap.id = "wtEmbedCode";
+            wtbWrap.id = "wtEmbedCode";            
             var embedScript = document.createElement('script');
             embedScript.id = "embedded_forum";
             embedScript.type = 'text/javascript'; 
@@ -210,12 +210,12 @@ class Sso extends Component
                 }
             } else{ 
                 embedUrl += "/js/mb/embed.js?authtoken=0";
-            }            
+            }
             embedScript.src = embedUrl;
             embedScript.setAttribute('data-version','1.1');
-            wtbWrap.appendChild(embedScript);             
-            var forumHtml = document.getElementById('wtEmbedCode').innerHTML;            
-            if(document.getElementById('wtEmbedCode') != null && forumHtml.match("iframe") == null){
+            wtbWrap.appendChild(embedScript);            
+            if(document.getElementById('wtEmbedCode') != null){
+                document.getElementById('wtEmbedCode').innerHTML = '';
                 document.getElementById('wtEmbedCode').appendChild(embedScript);
             }
           })();

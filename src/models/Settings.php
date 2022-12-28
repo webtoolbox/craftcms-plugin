@@ -49,12 +49,12 @@ class Settings extends Model
         $file = $this->makeUrl($value);
         // check url is valid or not
         if(!preg_match('/^[a-z0-9\/\_-]+$/', $value)) {            
-            $message = 'only alphabet in lowercase letters allow.';
+            $message = 'only alphabets, dash(-) and, underscore(_) are allowed.';
             $this->addError($attribute, $message);
             return;
         }
         // Check if already exist url and not contain embedded code
-        if($this->urlExists($file)){            
+        /*if($this->urlExists($file)){            
             $searchFor = "<div id='wtEmbedCode'>";
             $searchDiv = '<div id="wtEmbedCode">';
             header('Content-Type: text/plain');
@@ -65,12 +65,12 @@ class Settings extends Model
             $pattern2 = "/^.*$pattern2.*\$/m";
             if (!preg_match_all($pattern1, $contents, $matches) && !preg_match_all($pattern2, $contents, $matches))
             {
-                $message = "The page doesn't content embed code. Pleae add <div id=\"wtEmbedCode\"></div> to the page.";
+                $message = "The page doesn't content embedded code. Please add embedded code to the page.";
                 $this->addError($attribute, $message);
                 return;
             }
-            /*else{ echo "Found matches:\n"; echo implode("\n", $matches[0]);exit;}*/
-        }
+            //else{ echo "Found matches:\n"; echo implode("\n", $matches[0]);exit;}
+        }*/
     }
     /**   * @inheritdoc     */
     public function rules(): array{

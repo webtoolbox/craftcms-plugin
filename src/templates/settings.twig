@@ -64,14 +64,14 @@
         </tr>
         <tr>
             <td style='width:20%;' class='pt_20'>
-                <b>Website Toolbox Username :</b> 
+                <b>Website Toolbox Username:</b> 
             </td>
             <td class='pt_20'>
                 {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="?p=admin/settings/plugins/websitetoolboxforum&forumSettingOption=1" style="text-decoration:underline">Change</a>
             </td>
         </tr>
         <tr>
-            <td style='width:20%;'  class='pt_20'><b>Embed the forum :</b></td>
+            <td style='width:20%;'  class='pt_20'><b>Embed the forum:</b></td>
             <td class='pt_20'>
              {{ 
                 forms.checkboxField({
@@ -99,7 +99,7 @@
             <td colspan="2">
                 <table id='cmUrl' style="width:100%">
                     <tr >
-                        <td style='width:20%;' class='pt_20'><b>Embed Page :</b></td>
+                        <td style='width:20%;' class='pt_20'><b>Embed Page:</b></td>
                         <td class='pt_20'>                            
                             {% if('index.php?' in craft.app.request.absoluteUrl) %}                        
                                 {% set index = 'index.php?p=' %}
