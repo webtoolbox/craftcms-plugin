@@ -13,7 +13,7 @@ use craft\base\Component;
 use craft\web\View;
 use craft\services\Config;
 use craft\helpers\UrlHelper;
-define('WT_API_URL', 'https://api.websitetoolbox.com/dev/api');
+define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
 /**
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
@@ -67,7 +67,7 @@ class Sso extends Component
                $postData['name'] .=  " ".$user->user->lastName;
             }        
             $RequestUrl           = $forumUrl . "/register/create_account/";
-            $result               = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');      
+            $result               = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');                  
             $RequestUrl           = $forumUrl."/register/setauthtoken";
             $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
             $result               = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
@@ -144,7 +144,7 @@ class Sso extends Component
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         if ($method == "POST") {
             curl_setopt($curl, CURLOPT_POST, true);
-            if($postType == 'json'){              
+            if($postType == 'json'){                
               curl_setopt($curl,CURLOPT_POSTFIELDS,json_encode($requestData));
             }else{              
               curl_setopt($curl,CURLOPT_POSTFIELDS,http_build_query($requestData));
@@ -152,12 +152,12 @@ class Sso extends Component
         } elseif ($method == "GET") {
             curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         }        
-        $response = curl_exec($curl);                       
+        $response = curl_exec($curl);        
         /*if (curl_errno($curl)) {
             $error_msg = curl_error($curl);
             echo "<pre>";print_r($error_msg);exit;
-        }*/
-        curl_close($curl);
+        }*/        
+        curl_close($curl);        
         return json_decode($response);
     }
    function afterDeleteUser($userName){        
