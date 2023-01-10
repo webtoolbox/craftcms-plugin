@@ -162,10 +162,13 @@ class Websitetoolboxforum extends Plugin
             $userPassword           = $_POST['settings']['forumPassword'];
 
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');
-            $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');                    
+            $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');            
             if(empty($result)){
                 echo "Authentication fail for Website Toolbox Forum.";exit;
             }
+            if(isset($result->errorMessage) && $result->errorMessage != ''){
+                echo $result->errorMessage;exit;
+            }            
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');
             
@@ -184,9 +187,12 @@ class Websitetoolboxforum extends Plugin
                 Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.communityUrl', trim($embeddedPage));
             }
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');
-            $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');                        
+            $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             if(empty($result)){
                 echo "Authentication fail for Website Toolbox Forum.";exit;
+            }
+            if(isset($result->errorMessage) && $result->errorMessage != ''){
+                echo $result->errorMessage;exit;
             }
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');      
