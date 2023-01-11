@@ -45,7 +45,7 @@ class Settings extends Model
         }
     }
     public function validateUrl($attribute) {        
-        $value = $this->$attribute;        
+        $value = $this->$attribute;
         $file = $this->makeUrl($value);
         // check url is valid or not
         if(!preg_match('/^[a-z0-9\/\_-]+$/', $value)) {            

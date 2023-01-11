@@ -19,7 +19,7 @@
 <table style='width:100%;'>
     {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('forumSettingOption') == 1)  %}     
         <tr>
-            <td>
+            <td>                
                 <b>Please log in to your Website Toolbox account.</b>
                 <p>Not a Website Toolbox Forum owner?  
                     <a href="https://www.websitetoolbox.com/craftCMS" target="_blank" style="text-decoration:underline">Create a Forum Now!</a>
@@ -66,8 +66,8 @@
             <td style='width:20%;' class='pt_20'>
                 <b>Website Toolbox Username:</b> 
             </td>
-            <td class='pt_20'>
-                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="?p=admin/settings/plugins/websitetoolboxforum&forumSettingOption=1" style="text-decoration:underline">Change</a>
+            <td class='pt_20'>                
+                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="{{ craft.app.request.absoluteUrl }}&forumSettingOption=1" style="text-decoration:underline">Change</a>
             </td>
         </tr>
         <tr>

@@ -162,20 +162,24 @@ class Websitetoolboxforum extends Plugin
             $userPassword           = $_POST['settings']['forumPassword'];
 
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');
+
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');            
-            if(empty($result)){
-                echo "Authentication fail for Website Toolbox Forum.";exit;
+            if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
+                if(empty($result)){
+                    $errorMessage = 'Authentication fail for Websitetoolboxforum';
+                }else{
+                    $errorMessage = $result->errorMessage;
+                }
+                Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $errorMessage));
+                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();exit;
             }
-            if(isset($result->errorMessage) && $result->errorMessage != ''){
-                echo $result->errorMessage;exit;
-            }            
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');
             
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
 
             $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
-        } else{
+        } else{            
             $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
 
@@ -188,11 +192,14 @@ class Websitetoolboxforum extends Plugin
             }
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
-            if(empty($result)){
-                echo "Authentication fail for Website Toolbox Forum.";exit;
-            }
-            if(isset($result->errorMessage) && $result->errorMessage != ''){
-                echo $result->errorMessage;exit;
+            if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
+                if(empty($result)){
+                    $errorMessage = 'Authentication fail for Websitetoolboxforum';
+                }else{
+                    $errorMessage = $result->errorMessage;
+                }
+                Craft::$app->getSession()->setNotice(Craft::t('websitetoolboxforum', $errorMessage));
+                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();exit;
             }
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');      
