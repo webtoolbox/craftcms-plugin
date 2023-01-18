@@ -63,7 +63,6 @@ class Websitetoolboxforum extends Plugin
             'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
         ]);
         self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
-
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_BEFORE_SAVE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {
                 if($event->element->id){
@@ -73,17 +72,19 @@ class Websitetoolboxforum extends Plugin
                 }
             }
         });
-        
-        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
-        if(!$token && isset($_COOKIE['forumLogoutToken'])){
-            Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
-                    $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-                    echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';
-                    Websitetoolboxforum::getInstance()->sso->resetCookieOnLogout();
-            });
-        } 
+        if(!Craft::$app->getRequest()->getIsConsoleRequest()){
+            $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
+
+            if(!$token && isset($_COOKIE['forumLogoutToken'])){
+                Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
+                        $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+                        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';
+                        Websitetoolboxforum::getInstance()->sso->resetCookieOnLogout();
+                });
+            }
+        }
  
-        if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){           
+        if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
             Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
                 $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
                 if(!$token){
@@ -140,7 +141,7 @@ class Websitetoolboxforum extends Plugin
         });
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {
             Websitetoolboxforum::getInstance()->sso->afterLogOut();
-        });
+        });        
     }    
     protected function createSettingsModel(): ?\craft\base\Model{        
         return new Settings();
@@ -162,7 +163,6 @@ class Websitetoolboxforum extends Plugin
             $userPassword           = $_POST['settings']['forumPassword'];
 
             $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');
-
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');            
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -217,4 +217,3 @@ class Websitetoolboxforum extends Plugin
         setcookie("forumLoginUserid", $result->userid, time() + 3600,"/"); 
     }
 }
-   
