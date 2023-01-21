@@ -30,8 +30,6 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 
 define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
-//https://www.websitetoolbox.com/tool/members/mb/settings
-
 /**
  * Class Websitetoolboxforum
  * @author    Website Toolbox

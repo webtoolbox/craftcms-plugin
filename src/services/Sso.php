@@ -152,11 +152,7 @@ class Sso extends Component
         } elseif ($method == "GET") {
             curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         }        
-        $response = curl_exec($curl);        
-        /*if (curl_errno($curl)) {
-            $error_msg = curl_error($curl);
-            echo "<pre>";print_r($error_msg);exit;
-        }*/        
+        $response = curl_exec($curl);               
         curl_close($curl);        
         return json_decode($response);
     }
