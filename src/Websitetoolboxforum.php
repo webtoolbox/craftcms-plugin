@@ -29,7 +29,7 @@ use craft\base\Element;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 
-define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
+define('WT_SETTINGS_URL', 'https://beta35.websitetoolbox.com/tool/members/mb/settings');
 /**
  * Class Websitetoolboxforum
  * @author    Website Toolbox
@@ -57,10 +57,19 @@ class Websitetoolboxforum extends Plugin
             __METHOD__
         );                    
         self::$plugin = $this;
+        
+        /*Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
+        Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');
+        Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumEmbedded');
+        Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUsername');
+        Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumPassword');
+        Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.communityUrl');*/
+
         $this->setComponents([
             'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
         ]);
         self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
+
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_BEFORE_SAVE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {
                 if($event->element->id){
@@ -82,8 +91,8 @@ class Websitetoolboxforum extends Plugin
             }
         }
  
-        if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
-            Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
+        if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){            
+            Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {                
                 $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
                 if(!$token){
                     Websitetoolboxforum::getInstance()->sso->afterLogOut();
@@ -109,18 +118,18 @@ class Websitetoolboxforum extends Plugin
                 Event::on(
                     \craft\web\UrlManager::class,
                     \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-                    function(RegisterUrlRulesEvent $event) {
+                    function(RegisterUrlRulesEvent $event) {                        
                         $segement = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"];
                         $event->rules[$segement] = 'websitetoolboxforum/default/index';
                     }
                 );
-            }
+            }            
         }
-        Event::on(\craft\services\Users::class, \craft\services\Users::EVENT_AFTER_ACTIVATE_USER, function(Event $event) {         
+        Event::on(\craft\services\Users::class, \craft\services\Users::EVENT_AFTER_ACTIVATE_USER, function(Event $event) {                         
                 Websitetoolboxforum::getInstance()->sso->afterUserCreate($event);
              
         });
-        Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_AFTER_SAVE_ELEMENT, function(Event $event) {
+        Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_AFTER_SAVE_ELEMENT, function(Event $event) {            
             if ($event->element instanceof \craft\elements\User) {
                 if(isset($_POST['userId'])){                    
                     Websitetoolboxforum::getInstance()->sso->afterUpdateUser();
@@ -134,10 +143,10 @@ class Websitetoolboxforum extends Plugin
                 Websitetoolboxforum::getInstance()->sso->afterLogOut();
             }
         });  
-        Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {
+        Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {                        
             Websitetoolboxforum::getInstance()->sso->afterLogin();
         });
-        Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {
+        Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {            
             Websitetoolboxforum::getInstance()->sso->afterLogOut();
         });        
     }    
@@ -158,10 +167,12 @@ class Websitetoolboxforum extends Plugin
     public function afterSaveSettings(): void{
         if(isset($_POST['settings']['forumUsername'])){            
             $userName               = $_POST['settings']['forumUsername'];
-            $userPassword           = $_POST['settings']['forumPassword'];
-
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');
-            $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');            
+            $userPassword           = $_POST['settings']['forumPassword'];            
+            
+            
+            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');           
+            $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
+            
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
                     $errorMessage = 'Authentication fail for Websitetoolboxforum';
@@ -177,10 +188,11 @@ class Websitetoolboxforum extends Plugin
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
 
             $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
-        } else{            
+            $embeddedPage = 'forum';
+        } else{              
             $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
-
+            $embeddedPage = '';
             if(isset($_POST['settings']['communityUrl']) && $_POST['settings']['forumEmbedded'] == 1){
                 $embeddedPage = $_POST['settings']['communityUrl'];
                 if($_POST['settings']['communityUrl'] == ''){
@@ -188,8 +200,9 @@ class Websitetoolboxforum extends Plugin
                 }
                 Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.communityUrl', trim($embeddedPage));
             }
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');
+            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');            
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
+
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
                     $errorMessage = 'Authentication fail for Websitetoolboxforum';
@@ -203,15 +216,45 @@ class Websitetoolboxforum extends Plugin
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');      
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
             $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
-        } 
+        }        
         $RequestUrl   = $result->forumAddress."/register/setauthtoken";
         $myUserQuery  = \craft\elements\User::find();
         $loggedinUserEmail    = Craft::$app->getUser()->getIdentity()->email;
         $loggedinUserId       = Craft::$app->getUser()->getIdentity()->id;
         $loggediUserName     = Craft::$app->getUser()->getIdentity()->username;
         $postData     = array('type'=>'json','apikey' => $result->forumApiKey, 'user' => $loggediUserName,'email'=>$loggedinUserEmail,'externalUserid'=>$loggedinUserId);
-        $result       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
-        setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-        setcookie("forumLoginUserid", $result->userid, time() + 3600,"/"); 
+        $response       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
+        setcookie("forumLogoutToken", $response->authtoken, time() + 3600,"/");
+        setcookie("forumLoginUserid", $response->userid, time() + 3600,"/"); 
+        // to set embedded url        
+        $this->updateEmbeddedUrl($userName, $result->forumApiKey, $embeddedPage);
+    }
+    /**
+     * @uses function to add/edit emebedded URL
+     * @param forumUserName - string
+     * @param forumApiKey - string
+     */
+    public function updateEmbeddedUrl($forumUserName, $forumApiKey, $embeddedPage){
+        if($embeddedPage != ''){
+            $siteUrl = UrlHelper::siteUrl();
+            $embedUrl = $siteUrl.'/'.$embeddedPage;
+            if(strpos($siteUrl, 'index.php') > 0)
+            {
+                $embedUrl = $siteUrl.'?p='.$embeddedPage;
+            }    
+        }else{
+            $embedUrl = '';
+        }
+        
+        $fields = array(
+            'action' => 'modifySSOURLs',
+            'forumUsername' => $forumUserName,
+            'forumApikey' => $forumApiKey,
+            'embed_page_url' => $embedUrl,
+            'altEmbedParam' => '',
+            'plugin'    => 'craftcms'
+        );        
+        $response = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$fields,'json');
+        return $response;
     }
 }

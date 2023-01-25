@@ -117,15 +117,15 @@
                                     <p>{{ baseUrl }}</p>
                                 </div>
                                 {{ 
-                                    forms.textField({                
+                                    forms.textField({
                                     "id": "communityUrl",
                                     "name": "communityUrl",
                                     "value": cmUrl,
-                                    "required": true               
+                                    "required": true
                                     })
                                 }} 
                                 <div class="urlCopy text">
-                                    <a href='javascript:void(0);' onClick="copyUrl()">Copy URL</a>
+                                    <a href='javascript:void(0);' class="test" onClick="copyUrl(this)">Copy URL</a>
                                 </div>
                             </div>                    
                             {{ _self.errorList(settings.getErrors('communityUrl')) }}
@@ -177,6 +177,7 @@
 .input-communityUrl > #settings-communityUrl-field .input.ltr > input { width: 100%; border-radius: 0; }
 .input-communityUrl > .urlCopy{width: 80px;background:#ebf2fa; border-radius:0 3px 3px 0;border-left: none;}
 .input-communityUrl > .urlCopy > a{ text-decoration: none; color:#3f4d5a; }
+.success{ color: green;}
 </style>
 <script type="text/javascript">
     var baseUrl = "{{ baseUrl }}";
@@ -202,12 +203,21 @@
             cmurl.value = cmurl.value.substring(0, cmurl.value.length - 1);             
         }
     });
-    function copyUrl(){
+    function copyUrl(me){
         var page = document.getElementById('settings-communityUrl').value;
         if(page !== ''){
             var copyText = document.getElementById('settings-frmUrl').text;
-            navigator.clipboard.writeText(copyText);
-            alert("Copied the URL: \n" + copyText);
+            navigator.clipboard.writeText(copyText);                        
+            me.text = ' Copied'
+            me.classList.add('success');
+            me.setAttribute('data-icon', 'check');
+            setTimeout(function(){
+                me.text = 'Copy URL';
+                me.classList.remove('success');
+                me.removeAttribute('data-icon', 'check');
+            },1000);
+            
+            //alert("URL copied successfully. \n\n" + copyText);
         }else{
             alert('Error! Please enter embedded page first.');
         }     
