@@ -244,8 +244,7 @@ class Websitetoolboxforum extends Plugin
             }    
         }else{
             $embedUrl = '';
-        }
-        
+        }        
         $fields = array(
             'action' => 'modifySSOURLs',
             'forumUsername' => $forumUserName,
