@@ -82,7 +82,7 @@ class Websitetoolboxforum extends Plugin
         if(!Craft::$app->getRequest()->getIsConsoleRequest()){
             $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
 
-            if(!$token && isset($_COOKIE['forumLogoutToken'])){
+            if(!$token && isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
                 Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
                         $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
                         echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';
@@ -143,7 +143,7 @@ class Websitetoolboxforum extends Plugin
                 Websitetoolboxforum::getInstance()->sso->afterLogOut();
             }
         });  
-        Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {                        
+        Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {            
             Websitetoolboxforum::getInstance()->sso->afterLogin();
         });
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {            
@@ -223,9 +223,9 @@ class Websitetoolboxforum extends Plugin
         $loggedinUserId       = Craft::$app->getUser()->getIdentity()->id;
         $loggediUserName     = Craft::$app->getUser()->getIdentity()->username;
         $postData     = array('type'=>'json','apikey' => $result->forumApiKey, 'user' => $loggediUserName,'email'=>$loggedinUserEmail,'externalUserid'=>$loggedinUserId);
-        $response       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
+        $response       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');         
         setcookie("forumLogoutToken", $response->authtoken, time() + 3600,"/");
-        setcookie("forumLoginUserid", $response->userid, time() + 3600,"/"); 
+        setcookie("forumLoginUserid", $response->userid, time() + 3600,"/");         
         // to set embedded url        
         $this->updateEmbeddedUrl($userName, $result->forumApiKey, $embeddedPage);
     }
