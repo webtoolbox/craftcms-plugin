@@ -13,7 +13,7 @@ use craft\base\Component;
 use craft\web\View;
 use craft\services\Config;
 use craft\helpers\UrlHelper;
-define('WT_API_URL', 'https://api.websitetoolbox.com/qa/api');
+define('WT_API_URL', 'https://api.websitetoolbox.com/dev/api');
 /**
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
@@ -38,6 +38,7 @@ class Sso extends Component
                     $RequestUrl   = $forumUrl."/register/setauthtoken";                    
                     $postData     = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId, 'avatarUrl' => $image);
                     $result       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');                    
+                    setcookie("forumLogInToken", $result->authtoken, time() + 3600,"/");
                     setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
                     setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
               }
@@ -175,6 +176,7 @@ class Sso extends Component
       }
     }
     function resetCookieOnLogout(){
+      setcookie('forumLogInToken', 0, time() - 3600, "/");
       setcookie('forumLogoutToken', 0, time() - 3600, "/");
       setcookie('forumLoginUserid', '', time() - 3600, "/");
       setcookie('loginRemember', '', time() - 3600, "/");
@@ -183,37 +185,48 @@ class Sso extends Component
       
    function renderJsScriptEmbedded($forumUrl,$userStatus)
    {
-        if(isset($_COOKIE['forumLogoutToken'])){
-            $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
+        if(isset($_COOKIE['forumLogInToken'])){
+            $cookieForumLoginToken = $_COOKIE['forumLogInToken'];            
         }else{
-            $cookieForumLogoutToken = 0;
+            $cookieForumLoginToken = 0;
         }        
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
           { var embedUrl  = "{$forumUrl}";
             var userStatus = "{$userStatus}";
-            var cookieForumLogoutToken = "{$cookieForumLogoutToken}";            
+            var cookieForumLoginToken = "{$cookieForumLoginToken}";            
             var wtbWrap = document.createElement('div');
             wtbWrap.id = "wtEmbedCode";            
             var embedScript = document.createElement('script');
             embedScript.id = "embedded_forum";
             embedScript.type = 'text/javascript'; 
-            if(typeof cookieForumLogoutToken != 'undefined' && cookieForumLogoutToken != 0){ 
-                if(userStatus == 'loggedIn'){
-                    embedUrl += "/js/mb/embed.js?authtoken="+cookieForumLogoutToken;
+            if(typeof cookieForumLoginToken != 'undefined' && cookieForumLoginToken != 0){ 
+                if(userStatus == 'loggedIn'){                      
+                    embedUrl += "/js/mb/embed.js?authtoken="+cookieForumLoginToken;
                 }else{
                     embedUrl += "/js/mb/embed.js?authtoken=0";
                 }
-            } else{ 
-                embedUrl += "/js/mb/embed.js?authtoken=0";
-            }
+            } else{                 
+                embedUrl += "/js/mb/embed.js";
+            }            
             embedScript.src = embedUrl;
             embedScript.setAttribute('data-version','1.1');
             wtbWrap.appendChild(embedScript);            
             if(document.getElementById('wtEmbedCode') != null){
                 document.getElementById('wtEmbedCode').innerHTML = '';
-                document.getElementById('wtEmbedCode').appendChild(embedScript);
+                document.getElementById('wtEmbedCode').appendChild(embedScript);  
+                setTimeout(function(){
+                    var tempUrl = embedUrl.split('?');
+                    if(document.getElementById('embedded_forum')){
+                        document.getElementById('embedded_forum') = tempUrl[0];
+                    }
+                    var date = new Date();
+                    date.setTime(date.getTime() - 3600);
+                    var expires = "; expires=" + date.toUTCString();                
+                    document.cookie = 'forumLogInToken' + "=" + 0  + expires + "; path=/";
+                }, 2000)
+                
             }
           })();
         JS;
@@ -226,8 +239,9 @@ class Sso extends Component
         if(isset($_COOKIE['forumLogoutToken'])){
             $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
             if(!isset($_COOKIE['logInForum'])){
-                setcookie('logInForum', 1, time() + 3600,"/");
-                echo '<img src='.$forumUrl.'/register/login?authtoken='.$cookieForumLogoutToken.' border="0" width="0" height="0" alt="" id="imageTag">'; 
+                setcookie('logInForum', 1, time() + 3600,"/");                                
+                $_COOKIE['logInForum'] = 1;
+                echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' style="width:0px !important;height:0px !important;" border="0" alt="" id="imageTag">'; 
             }
         }else{
             $cookieForumLogoutToken = 0;

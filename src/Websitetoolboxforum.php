@@ -29,7 +29,7 @@ use craft\base\Element;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 
-define('WT_SETTINGS_URL', 'https://beta35.websitetoolbox.com/tool/members/mb/settings');
+define('WT_SETTINGS_URL', 'https://beta4.websitetoolbox.com/tool/members/mb/settings');
 /**
  * Class Websitetoolboxforum
  * @author    Website Toolbox
@@ -63,8 +63,7 @@ class Websitetoolboxforum extends Plugin
         Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumEmbedded');
         Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUsername');
         Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumPassword');
-        Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.communityUrl');*/
-
+        Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.communityUrl');*/        
         $this->setComponents([
             'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
         ]);
@@ -106,7 +105,7 @@ class Websitetoolboxforum extends Plugin
                     }else{                        
                         $jsRender = Websitetoolboxforum::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedout');
                     }
-                 }else{
+                 }else{                    
                     $jsRender = Websitetoolboxforum::getInstance()->sso->renderJsScriptUnEmbedded();
                 }                                
                 $view = Craft::$app->getView();
@@ -165,12 +164,15 @@ class Websitetoolboxforum extends Plugin
         );
     }
     public function afterSaveSettings(): void{
-        if(isset($_POST['settings']['forumUsername'])){            
+        if(isset($_POST['settings']['forumUsername'])){ 
+            $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);            
+            $forumUrl  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
+
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];            
             
             
-            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');           
+            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms');           
             $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
@@ -188,7 +190,12 @@ class Websitetoolboxforum extends Plugin
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
 
             $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
-            $embeddedPage = 'forum';
+            if($forumUrl !='' && $forumType ==''){
+                $embeddedPage = '';
+            }else{
+                $embeddedPage = 'forum';
+            }
+            
         } else{              
             $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
@@ -200,7 +207,7 @@ class Websitetoolboxforum extends Plugin
                 }
                 Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.communityUrl', trim($embeddedPage));
             }
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craftcms');            
+            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms');            
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
 
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
@@ -251,7 +258,7 @@ class Websitetoolboxforum extends Plugin
             'forumApikey' => $forumApiKey,
             'embed_page_url' => $embedUrl,
             'altEmbedParam' => '',
-            'plugin'    => 'craftcms'
+            'plugin' => 'craft'
         );        
         $response = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$fields,'json');
         return $response;
