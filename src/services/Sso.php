@@ -185,48 +185,32 @@ class Sso extends Component
       
    function renderJsScriptEmbedded($forumUrl,$userStatus)
    {
-        if(isset($_COOKIE['forumLogInToken'])){
+        if(isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != ''){
             $cookieForumLoginToken = $_COOKIE['forumLogInToken'];            
-        }else{
-            $cookieForumLoginToken = 0;
-        }        
+            setcookie("forumLogInToken", '', time() - 3600,"/");            
+            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.' style="width:0px !important;height:0px !important;" border="0" alt="" id="imageTag">';
+        }
+        /*if(isset(Craft::$app->getUser()->getIdentity()->id) && !isset($_COOKIE['forumLogInToken'])) {            
+            $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
+            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' style="width:0px !important;height:0px !important;" border="0" alt="" id="imageTag">';
+        }*/          
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
           { var embedUrl  = "{$forumUrl}";
-            var userStatus = "{$userStatus}";
-            var cookieForumLoginToken = "{$cookieForumLoginToken}";            
+            var userStatus = "{$userStatus}";            
             var wtbWrap = document.createElement('div');
             wtbWrap.id = "wtEmbedCode";            
             var embedScript = document.createElement('script');
             embedScript.id = "embedded_forum";
             embedScript.type = 'text/javascript'; 
-            if(typeof cookieForumLoginToken != 'undefined' && cookieForumLoginToken != 0){ 
-                if(userStatus == 'loggedIn'){                      
-                    embedUrl += "/js/mb/embed.js?authtoken="+cookieForumLoginToken;
-                }else{
-                    embedUrl += "/js/mb/embed.js?authtoken=0";
-                }
-            } else{                 
-                embedUrl += "/js/mb/embed.js";
-            }            
+            embedUrl += "/js/mb/embed.js";                        
             embedScript.src = embedUrl;
             embedScript.setAttribute('data-version','1.1');
-            wtbWrap.appendChild(embedScript);            
+            wtbWrap.appendChild(embedScript);
             if(document.getElementById('wtEmbedCode') != null){
                 document.getElementById('wtEmbedCode').innerHTML = '';
-                document.getElementById('wtEmbedCode').appendChild(embedScript);  
-                setTimeout(function(){
-                    var tempUrl = embedUrl.split('?');
-                    if(document.getElementById('embedded_forum')){
-                        document.getElementById('embedded_forum') = tempUrl[0];
-                    }
-                    var date = new Date();
-                    date.setTime(date.getTime() - 3600);
-                    var expires = "; expires=" + date.toUTCString();                
-                    document.cookie = 'forumLogInToken' + "=" + 0  + expires + "; path=/";
-                }, 2000)
-                
+                document.getElementById('wtEmbedCode').appendChild(embedScript);                  
             }
           })();
         JS;
@@ -248,8 +232,6 @@ class Sso extends Component
         }         
         $cmUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.communityUrl',false);
         $embed = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
-
-
         $js = <<<JS
         (  
          function renderEmbeddedUnHtmlWithAuthtoken()
