@@ -29,7 +29,7 @@ use craft\base\Element;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 
-define('WT_SETTINGS_URL', 'https://beta35.websitetoolbox.com/tool/members/mb/settings');
+define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
 /**
  * Class Websitetoolboxforum
  * @author    Website Toolbox

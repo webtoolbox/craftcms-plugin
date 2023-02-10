@@ -13,7 +13,7 @@ use craft\base\Component;
 use craft\web\View;
 use craft\services\Config;
 use craft\helpers\UrlHelper;
-define('WT_API_URL', 'https://api.websitetoolbox.com/dev/api');
+define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
 /**
  * @author    Website Toolbox
  * @package   Websitetoolboxforum
@@ -104,7 +104,7 @@ class Sso extends Component
       $url            = WT_API_URL ."/users/$userId";      
       $response       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
       if(isset($response->status) && $response->status == 'error'){        
-        echo 'Forum :: '.$response->error->message;exit;
+        echo 'Forum :: '.$response->error->message;
       }
     }
     function getUserid($userEmail){              
@@ -119,8 +119,7 @@ class Sso extends Component
                  return $response->userId;
             } 
         }else{            
-            $this->afterLogin();
-            //echo 'Invalid user.';exit;
+            $this->afterLogin();            
         }
     }
     function sendApiRequest($method, $url, $requestData, $postType, $apiKey=''){                   
@@ -189,11 +188,7 @@ class Sso extends Component
             $cookieForumLoginToken = $_COOKIE['forumLogInToken'];            
             setcookie("forumLogInToken", '', time() - 3600,"/");            
             echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.' style="width:0px !important;height:0px !important;" border="0" alt="" id="imageTag">';
-        }
-        /*if(isset(Craft::$app->getUser()->getIdentity()->id) && !isset($_COOKIE['forumLogInToken'])) {            
-            $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
-            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' style="width:0px !important;height:0px !important;" border="0" alt="" id="imageTag">';
-        }*/          
+        }                
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
