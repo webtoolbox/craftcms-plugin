@@ -29,7 +29,7 @@ use craft\base\Element;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 
-define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
+define('WT_SETTINGS_URL', 'https://beta35.websitetoolbox.com/tool/members/mb/settings');
 /**
  * Class Websitetoolboxforum
  * @author    Website Toolbox
@@ -40,11 +40,10 @@ define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settin
 class Websitetoolboxforum extends Plugin
 {
     public static $plugin;
-    public static $craft31 = false;
-    //public string $schemaVersion = '1.0.0';
+    public static $craft31 = false;    
     public $connection; 
     
-    // Public Methods  
+    // Public Methods
     public function init()
     { 
         parent::init();
@@ -61,7 +60,6 @@ class Websitetoolboxforum extends Plugin
             'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
         ]);
         self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
-
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_BEFORE_SAVE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {
                 if($event->element->id){

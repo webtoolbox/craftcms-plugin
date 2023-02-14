@@ -7,6 +7,7 @@
  */
 namespace websitetoolbox\websitetoolboxforum\models;
 use websitetoolbox\websitetoolboxforum\Websitetoolboxforum;
+use Craft;
 use craft\base\Model;
 use craft\behaviors\EnvAttributeParserBehavior;
 use yii\behaviors\AttributeTypecastBehavior;
@@ -30,10 +31,11 @@ class Settings extends Model
     protected function makeUrl($page){
         $siteUrl = UrlHelper::siteUrl();                
         if(strpos($siteUrl, 'index.php') >= 0){
-            $embedPage = $siteUrl.'?p='.$page;
+            $pageTrigger = Craft::$app->getConfig()->general->pageTrigger;
+            $embedPage = $siteUrl.'?'.$pageTrigger.'='.$page;
         }else{
             $embedPage = $siteUrl.$page;
-        }
+        }        
         return $embedPage;
     }
     public function urlExists($url) {
@@ -45,32 +47,14 @@ class Settings extends Model
         }
     }
     public function validateUrl($attribute) {        
-        $value = $this->$attribute;
+        $value = $this->$attribute;        
         $file = $this->makeUrl($value);
         // check url is valid or not
         if(!preg_match('/^[a-z0-9\/\_-]+$/', $value)) {            
             $message = 'only alphabets, dash(-) and, underscore(_) are allowed.';
             $this->addError($attribute, $message);
             return;
-        }
-        // Check if already exist url and not contain embedded code
-        /*if($this->urlExists($file)){            
-            $searchFor = "<div id='wtEmbedCode'>";
-            $searchDiv = '<div id="wtEmbedCode">';
-            header('Content-Type: text/plain');
-            $contents = file_get_contents($file);
-            $pattern1 = preg_quote($searchFor, '/');
-            $pattern2 = preg_quote($searchDiv, '/');
-            $pattern1 = "/^.*$pattern1.*\$/m";
-            $pattern2 = "/^.*$pattern2.*\$/m";
-            if (!preg_match_all($pattern1, $contents, $matches) && !preg_match_all($pattern2, $contents, $matches))
-            {
-                $message = "The page doesn't content embedded code. Please add embedded code to the page.";
-                $this->addError($attribute, $message);
-                return;
-            }
-            //else{ echo "Found matches:\n"; echo implode("\n", $matches[0]);exit;}
-        }*/
+        }        
     }
     /**   * @inheritdoc     */
     public function rules(): array{

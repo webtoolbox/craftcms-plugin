@@ -184,10 +184,10 @@ class Sso extends Component
       
    function renderJsScriptEmbedded($forumUrl,$userStatus)
    {
-        if(isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != ''){
+        if(isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != ''){            
             $cookieForumLoginToken = $_COOKIE['forumLogInToken'];            
             setcookie("forumLogInToken", '', time() - 3600,"/");            
-            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.' style="width:0px !important;height:0px !important;" border="0" alt="" id="imageTag">';
+            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="" id="imageTag">';
         }                
         $js = <<<JS
           (  
@@ -220,7 +220,7 @@ class Sso extends Component
             if(!isset($_COOKIE['logInForum'])){
                 setcookie('logInForum', 1, time() + 3600,"/");                                
                 $_COOKIE['logInForum'] = 1;
-                echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' style="width:0px !important;height:0px !important;" border="0" alt="" id="imageTag">'; 
+                echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' width="0" height="0" border="0" alt="" id="imageTag">'; 
             }
         }else{
             $cookieForumLogoutToken = 0;
