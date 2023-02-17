@@ -1,6 +1,6 @@
 {
-    "name": "websitetoolbox/websitetoolboxforum",
-    "description": "Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required.",
+    "name": "websitetoolbox/websitetoolboxcommunity",
+    "description": "Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based community plugin that allows you to easily add a powerful, intuitive, and maintenance-free community to CraftCMS without slowing it down. No database, servers, or coding required.",
     "type": "craft-plugin",
     "version": "1.4.0",
     "keywords": [
@@ -33,7 +33,7 @@
     },
     "extra": {
         "hasCpSettings": true,
-        "name": "Website Toolbox Forum",
+        "name": "Website Toolbox Community",
         "handle": "websitetoolboxforum",
         "developer": "Website Toolbox",
         "hasCpSection": false,

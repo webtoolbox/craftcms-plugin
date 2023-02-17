@@ -25,7 +25,7 @@ class Settings extends Model
     public $forumEmbedded         = 1;
     public $forumApiKey           = '';
     public $forumUrl              = '';  
-    public $communityUrl          = 'forum';  
+    public $communityUrl          = 'community';  
   
     // Public Methods
     protected function makeUrl($page){

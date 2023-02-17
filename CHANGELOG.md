@@ -1,4 +1,4 @@
-# websitetoolboxforum Changelog
+# websitetoolboxcommunity Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -6,11 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.4.0 - 2023-02-14
 ### Added
-- Make Website Toolbox forum plugin work with craftcms version4. 
+- Make Website Toolbox Community plugin work with craftcms version4. 
  
 ## 1.3.0 - 2021-12-27
 ### Added
-- Website Toolbox forum Settings issue resolved.  
+- Website Toolbox Community Settings issue resolved.  
 
 ## 1.0.0 - 2020-06-30
 ### Added

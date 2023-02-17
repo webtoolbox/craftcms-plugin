@@ -183,7 +183,7 @@ class Websitetoolboxforum extends Plugin
             if($forumUrl !='' && $forumType ==''){
                 $embeddedPage = '';
             }else{
-                $embeddedPage = 'forum';
+                $embeddedPage = 'community';
             }
             
         } else{              
@@ -193,7 +193,7 @@ class Websitetoolboxforum extends Plugin
             if(isset($_POST['settings']['communityUrl']) && $_POST['settings']['forumEmbedded'] == 1){
                 $embeddedPage = $_POST['settings']['communityUrl'];
                 if($_POST['settings']['communityUrl'] == ''){
-                    $embeddedPage = 'forum';
+                    $embeddedPage = 'community';
                 }
                 Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.communityUrl', trim($embeddedPage));
             }
