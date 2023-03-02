@@ -17,7 +17,7 @@
 {% endmacro %}
 {% set baseUrl = craft.app.sites.primarySite.baseUrl %}
 <table style='width:100%;'>
-    {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('forumSettingOption') == 1)  %}     
+    {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxcommunity') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('communitySettingOption') == 1)  %}     
         <tr>
             <td>                
                 <b>Please log in to your Website Toolbox account.</b>
@@ -32,7 +32,7 @@
         <tr>
             <td class='pt_20' colspan='2' >
                 {{ forms.textField({
-                    "label": "Website Toolbox Username"|t("websitetoolboxforum"),
+                    "label": "Website Toolbox Username"|t("websitetoolboxcommunity"),
                     "id": "forumUsername",
                     "name": "forumUsername",
                     "value": settings.forumUsername,
@@ -45,7 +45,7 @@
         <tr>
             <td class='pt_20'  colspan='2'>
                 {{ forms.passwordField({
-                    "label": "Website Toolbox Password"|t("websitetoolboxforum"),
+                    "label": "Website Toolbox Password"|t("websitetoolboxcommunity"),
                     "id": "forumPassword",
                     "name": "forumPassword",
                     "value": settings.forumPassword,
@@ -68,7 +68,7 @@
                 <b class="pull_right">Account</b> 
             </td>
             <td class='pt_20'>                
-                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="{{ craft.app.request.absoluteUrl }}&forumSettingOption=1" style="text-decoration:underline">Change</a>
+                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxcommunity') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="{{ craft.app.request.absoluteUrl }}&communitySettingOption=1" style="text-decoration:underline">Change</a>
             </td>
         </tr>
         <tr>

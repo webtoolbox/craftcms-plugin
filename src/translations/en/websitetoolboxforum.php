@@ -14,5 +14,5 @@
  * @since     1.4.0
  */
 return [
-    'websitetoolboxforum plugin loaded' => 'websitetoolboxforum plugin loaded',
+    'websitetoolboxcommunity plugin loaded' => 'websitetoolboxcommunity plugin loaded',
 ];

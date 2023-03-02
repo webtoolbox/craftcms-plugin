@@ -8,7 +8,7 @@
         "cms",
         "craftcms",
         "craft-plugin",
-        "websitetoolboxforum"
+        "websitetoolboxcommunity"
     ],
     "support": {
         "docs": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
@@ -28,21 +28,21 @@
     },
     "autoload": {
         "psr-4": {
-          "websitetoolbox\\websitetoolboxforum\\": "src/"
+          "websitetoolbox\\websitetoolboxcommunity\\": "src/"
         }
     },
     "extra": {
         "hasCpSettings": true,
         "name": "Website Toolbox Community",
-        "handle": "websitetoolboxforum",
+        "handle": "websitetoolboxcommunity",
         "developer": "Website Toolbox",
         "hasCpSection": false,
         "developerUrl": "http://websitetoolbox.com",
         "documentationUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
         "changelogUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
-        "class": "websitetoolbox\\websitetoolboxforum\\Websitetoolboxforum",
+        "class": "websitetoolbox\\websitetoolboxcommunity\\Websitetoolboxcommunity",
         "components": {
-            "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
+            "sso": "websitetoolbox\\websitetoolboxcommunity\\services\\Sso"
         }
     }
   

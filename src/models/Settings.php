@@ -5,8 +5,8 @@
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
  */
-namespace websitetoolbox\websitetoolboxforum\models;
-use websitetoolbox\websitetoolboxforum\Websitetoolboxforum;
+namespace websitetoolbox\websitetoolboxcommunity\models;
+use websitetoolbox\websitetoolboxcommunity\Websitetoolboxcommunity;
 use Craft;
 use craft\base\Model;
 use craft\behaviors\EnvAttributeParserBehavior;
@@ -14,7 +14,7 @@ use yii\behaviors\AttributeTypecastBehavior;
 use craft\helpers\UrlHelper;
 /**
  * @author    Website Toolbox
- * @package   Websitetoolboxforum
+ * @package   Websitetoolboxcommunity
  * @since     4.0.0
  */
 class Settings extends Model
@@ -73,7 +73,7 @@ class Settings extends Model
             // 'attributeTypes' will be composed automatically according to `rules()`
         ];
         // If we're running Craft 3.1 or later, add in the EnvAttributeParserBehavior
-        if (Websitetoolboxforum::$craft31) {
+        if (Websitetoolboxcommunity::$craft31) {
             $behaviors['parser'] = [
                 'class' => EnvAttributeParserBehavior::class,
                 'attributes' => [

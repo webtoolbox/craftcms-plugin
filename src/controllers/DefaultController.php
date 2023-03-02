@@ -1,5 +1,5 @@
 <?php
-namespace websitetoolbox\websitetoolboxforum\controllers;
+namespace websitetoolbox\websitetoolboxcommunity\controllers;
 use Craft;
 use craft\web\Controller;
 use craft\web\View;
@@ -15,7 +15,7 @@ class DefaultController extends Controller
             'key' => 'value'
         ];
         return $this->renderTemplate(
-            'websitetoolboxforum/forum',
+            'websitetoolboxcommunity/forum',
             $variables,
             View::TEMPLATE_MODE_CP
         );
