@@ -136,7 +136,7 @@ class Websitetoolboxcommunity extends Plugin{
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {            
             Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
         });        
-    }    
+    }
     protected function createSettingsModel(): ?\craft\base\Model{        
         return new Settings();
     }
@@ -223,11 +223,7 @@ class Websitetoolboxcommunity extends Plugin{
             setcookie("forumLogoutToken", $response->authtoken, time() + 3600,"/");
             setcookie("forumLoginUserid", $response->userid, time() + 3600,"/");    
         }else{
-            $errorMessage = 'Website Toolbox Community error, user is not logged in.';
-            if(isset($response->message)){
-                $errorMessage = $response->message;
-            }
-            Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity', $errorMessage));
+            Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity', $response->message));
         }
         // to set embedded url        
         $this->updateEmbeddedUrl($userName, $result->forumApiKey, $embeddedPage);

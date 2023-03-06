@@ -42,11 +42,7 @@ class Sso extends Component{
                         setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
                         setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");    
                     }else{
-                        $errorMessage = 'Website Toolbox Community error while user login.';
-                        if(isset($result->message)){
-                            $errorMessage = $result->message;
-                        }
-                        Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity', $errorMessage));
+                        Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity', $result->message));
                     }
               }
           }         
@@ -84,11 +80,7 @@ class Sso extends Component{
                 setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
                 setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
             }else{
-                $errorMessage = 'Website Toolbox Community error while user update.';
-                if(isset($result->message)){
-                    $errorMessage = $result->message;
-                }
-                Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity', $errorMessage));
+                Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity',$result->message));
             }            
         }
     }
