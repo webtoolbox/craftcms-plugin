@@ -218,7 +218,7 @@ class Websitetoolboxcommunity extends Plugin{
         $loggediUserName     = Craft::$app->getUser()->getIdentity()->username;
         $postData     = array('type'=>'json','apikey' => $result->forumApiKey, 'user' => $loggediUserName,'email'=>$loggedinUserEmail,'externalUserid'=>$loggedinUserId);
         $response       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
-        if(isset($response->authtoken) && $response->authtoke !=''){
+        if(isset($response->authtoken) && $response->authtoken !=''){
             setcookie("forumLogInToken", $response->authtoken, time() + 3600,"/");
             setcookie("forumLogoutToken", $response->authtoken, time() + 3600,"/");
             setcookie("forumLoginUserid", $response->userid, time() + 3600,"/");    
