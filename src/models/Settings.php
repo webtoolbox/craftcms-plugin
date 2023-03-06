@@ -17,8 +17,7 @@ use craft\helpers\UrlHelper;
  * @package   Websitetoolboxcommunity
  * @since     4.0.0
  */
-class Settings extends Model
-{
+class Settings extends Model{
     // Public Properties    
     public $forumUsername         = '';
     public $forumPassword         = '';

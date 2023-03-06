@@ -19,8 +19,7 @@ define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
  * @package   Websitetoolboxcommunity
  * @since     4.0.0
  */
-class Sso extends Component
-{   
+class Sso extends Component{   
     function afterLogin(){            
           $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);           
           if($token){                 
@@ -37,25 +36,33 @@ class Sso extends Component
                     }
                     $RequestUrl   = $forumUrl."/register/setauthtoken";                    
                     $postData     = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId, 'avatarUrl' => $image);
-                    $result       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');                    
-                    setcookie("forumLogInToken", $result->authtoken, time() + 3600,"/");
-                    setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-                    setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
+                    $result       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
+                    if(isset($result->authtoken) && $result->authtoke !=''){
+                        setcookie("forumLogInToken", $result->authtoken, time() + 3600,"/");
+                        setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
+                        setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");    
+                    }else{
+                        $errorMessage = 'Website Toolbox Community error while user login.';
+                        if(isset($result->message)){
+                            $errorMessage = $result->message;
+                        }
+                        Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity', $errorMessage));
+                    }
               }
           }         
      }
     function afterUserCreate($user){        
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxcommunity.settings.forumUrl',false);
         $forumApiKey  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxcommunity.settings.forumApiKey',false); 
-        $userId       =       $user->user->id;
+        $userId =  $user->user->id;
         if(!isset($user->user->newPassword)){
             if(isset($user->user->username)){
-                $userName     = $user->user->username;
+                $userName = $user->user->username;
             }
             if($user->user->email){
-                $userEmail    =$user->user->email;
+                $userEmail = $user->user->email;
             }
-            $postData     = array( 
+            $postData   = array( 
                               'type'=>'json',
                               'apikey'          => $forumApiKey,
                               'member'          => $userName,
@@ -72,9 +79,17 @@ class Sso extends Component
             $RequestUrl           = $forumUrl."/register/setauthtoken";
             $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
             $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
-
-            setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-            setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");  
+            if(isset($result->authtoken) && $result->authtoke !=''){
+                setcookie("forumLogInToken", $result->authtoken, time() + 3600,"/");
+                setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
+                setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
+            }else{
+                $errorMessage = 'Website Toolbox Community error while user update.';
+                if(isset($result->message)){
+                    $errorMessage = $result->message;
+                }
+                Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity', $errorMessage));
+            }            
         }
     }
     function afterUpdateUser(){
@@ -171,7 +186,7 @@ class Sso extends Component
       if(isset($_COOKIE['forumLogoutToken'])){
         $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxcommunity.settings.forumUrl',false);
-        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$cookieForumLogoutToken.' border="0" width="0" height="0" alt="" id="imageTag">'; 
+        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$cookieForumLogoutToken.' border="0" width="0" height="0" alt="">'; 
       }
     }
     function resetCookieOnLogout(){
@@ -182,12 +197,11 @@ class Sso extends Component
       setcookie('logInForum', '', time() - 3600, "/");
    } 
       
-   function renderJsScriptEmbedded($forumUrl,$userStatus)
-   {
+   function renderJsScriptEmbedded($forumUrl,$userStatus){
         if(isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != ''){            
             $cookieForumLoginToken = $_COOKIE['forumLogInToken'];            
             setcookie("forumLogInToken", '', time() - 3600,"/");            
-            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="" id="imageTag">';
+            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
         }                
         $js = <<<JS
           (  
@@ -220,7 +234,7 @@ class Sso extends Component
             if(!isset($_COOKIE['logInForum'])){
                 setcookie('logInForum', 1, time() + 3600,"/");                                
                 $_COOKIE['logInForum'] = 1;
-                echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' width="0" height="0" border="0" alt="" id="imageTag">'; 
+                echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' width="0" height="0" border="0" alt="">'; 
             }
         }else{
             $cookieForumLogoutToken = 0;

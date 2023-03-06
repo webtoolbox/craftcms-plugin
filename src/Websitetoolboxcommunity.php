@@ -37,15 +37,13 @@ define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settin
  * @since     3.0.0
  * @property  SsoService $sso
  */
-class Websitetoolboxcommunity extends Plugin
-{
+class Websitetoolboxcommunity extends Plugin{
     public static $plugin;
     public static $craft31 = false;    
     public $connection; 
     
     // Public Methods
-    public function init()
-    { 
+    public function init(){ 
         parent::init();
         Craft::info(
             Craft::t(
@@ -75,14 +73,14 @@ class Websitetoolboxcommunity extends Plugin
             if(!$token && isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxcommunity') ["settings"]["forumUrl"])){
                 Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
                         $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxcommunity') ["settings"]["forumUrl"];
-                        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';
+                        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="">';
                         Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
                 });
             }
         }
  
         if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxcommunity') ["settings"]["forumUrl"])){            
-            Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {                
+            Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {              
                 $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
                 if(!$token){
                     Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
@@ -102,8 +100,7 @@ class Websitetoolboxcommunity extends Plugin
                 $view = Craft::$app->getView();
                 $view->registerJs($jsRender);
             });
-            if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxcommunity') ["settings"]["communityUrl"]))
-            {
+            if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxcommunity') ["settings"]["communityUrl"])){
                 // Register site url route for community
                 Event::on(
                     \craft\web\UrlManager::class,
@@ -154,7 +151,7 @@ class Websitetoolboxcommunity extends Plugin
             ]
         );
     }
-    public function afterSaveSettings(): void{
+    public function afterSaveSettings(): void{        
         if(isset($_POST['settings']['forumUsername'])){ 
             $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxcommunity.settings.forumEmbedded',false);            
             $forumUrl  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxcommunity.settings.forumUrl',false);
@@ -163,8 +160,7 @@ class Websitetoolboxcommunity extends Plugin
             $userPassword           = $_POST['settings']['forumPassword'];
             
             $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms');           
-            $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
-            //echo '<pre>';print_r($result);exit;
+            $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');            
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
                     $errorMessage = 'Authentication fail for Websitetoolboxcommunity';
@@ -172,7 +168,8 @@ class Websitetoolboxcommunity extends Plugin
                     $errorMessage = $result->errorMessage;
                 }
                 Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity', $errorMessage));
-                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxcommunity'))->send();exit;
+                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxcommunity'))->send();
+                exit;
             }
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxcommunity.settings.forumUrl');
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxcommunity.settings.forumApiKey');
@@ -206,7 +203,8 @@ class Websitetoolboxcommunity extends Plugin
                     $errorMessage = $result->errorMessage;
                 }
                 Craft::$app->getSession()->setNotice(Craft::t('websitetoolboxcommunity', $errorMessage));
-                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxcommunity'))->send();exit;
+                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxcommunity'))->send();
+                exit;
             }
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxcommunity.settings.forumUrl');
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxcommunity.settings.forumApiKey');      
@@ -219,9 +217,18 @@ class Websitetoolboxcommunity extends Plugin
         $loggedinUserId       = Craft::$app->getUser()->getIdentity()->id;
         $loggediUserName     = Craft::$app->getUser()->getIdentity()->username;
         $postData     = array('type'=>'json','apikey' => $result->forumApiKey, 'user' => $loggediUserName,'email'=>$loggedinUserEmail,'externalUserid'=>$loggedinUserId);
-        $response       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');         
-        setcookie("forumLogoutToken", $response->authtoken, time() + 3600,"/");
-        setcookie("forumLoginUserid", $response->userid, time() + 3600,"/");         
+        $response       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
+        if(isset($response->authtoken) && $response->authtoke !=''){
+            setcookie("forumLogInToken", $response->authtoken, time() + 3600,"/");
+            setcookie("forumLogoutToken", $response->authtoken, time() + 3600,"/");
+            setcookie("forumLoginUserid", $response->userid, time() + 3600,"/");    
+        }else{
+            $errorMessage = 'Website Toolbox Community error, user is not logged in.';
+            if(isset($response->message)){
+                $errorMessage = $response->message;
+            }
+            Craft::$app->getSession()->setError(Craft::t('websitetoolboxcommunity', $errorMessage));
+        }
         // to set embedded url        
         $this->updateEmbeddedUrl($userName, $result->forumApiKey, $embeddedPage);
     }
@@ -234,9 +241,9 @@ class Websitetoolboxcommunity extends Plugin
         if($embeddedPage != ''){
             $siteUrl = UrlHelper::siteUrl();
             $embedUrl = $siteUrl.'/'.$embeddedPage;
-            if(strpos($siteUrl, 'index.php') > 0)
-            {
-                $embedUrl = $siteUrl.'?p='.$embeddedPage;
+            if(strpos($siteUrl, 'index.php') > 0){
+                $pageTrigger = Craft::$app->getConfig()->general->pageTrigger;
+                $embedUrl = $siteUrl.'?'.$pageTrigger.'='.$embeddedPage;
             }    
         }else{
             $embedUrl = '';
