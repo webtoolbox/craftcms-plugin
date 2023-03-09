@@ -142,7 +142,8 @@ class Websitetoolboxcommunity extends Plugin{
     }
     protected function settingsHtml(): ?string{        
         $hashTypes = hash_algos();
-        $hashTypes = array_combine($hashTypes, $hashTypes);        
+        $hashTypes = array_combine($hashTypes, $hashTypes);
+        Craft::$app->view->registerAssetBundle(Communityassets::class);
         return Craft::$app->view->renderTemplate(
             'websitetoolboxcommunity/settings',
             [

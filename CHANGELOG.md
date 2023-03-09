@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.4.0 - 2023-02-14
 ### Added
-- Make Website Toolbox Community plugin work with craftcms version4. 
+- Added support for CraftCMS 4.
  
 ## 1.3.0 - 2021-12-27
 ### Added
