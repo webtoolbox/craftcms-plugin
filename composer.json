@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-          "websitetoolbox\\websitetoolboxcommunity\\": "src/"
+          "websitetoolbox\\community\\": "src/"
         }
     },
     "extra": {
@@ -40,9 +40,9 @@
         "developerUrl": "http://websitetoolbox.com",
         "documentationUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
         "changelogUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
-        "class": "websitetoolbox\\websitetoolboxcommunity\\Websitetoolboxcommunity",
+        "class": "websitetoolbox\\community\\Websitetoolboxcommunity",
         "components": {
-            "sso": "websitetoolbox\\websitetoolboxcommunity\\services\\Sso"
+            "sso": "websitetoolbox\\community\\services\\Sso"
         }
     }
   

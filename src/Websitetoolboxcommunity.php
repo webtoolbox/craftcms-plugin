@@ -5,10 +5,10 @@
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
  */
-namespace websitetoolbox\websitetoolboxcommunity;
-use websitetoolbox\websitetoolboxcommunity\services\Sso as SsoService;
-use websitetoolbox\websitetoolboxcommunity\models\Settings;
-use websitetoolbox\websitetoolboxcommunity\assetbundles\Websitetoolboxcommunity\WebsitetoolboxcommunityAsset;
+namespace websitetoolbox\community;
+use websitetoolbox\community\services\Sso as SsoService;
+use websitetoolbox\community\models\Settings;
+use websitetoolbox\community\assetbundles\Websitetoolboxcommunity\WebsitetoolboxcommunityAsset;
 use Craft;
 use craft\base\Plugin;
 use craft\web\twig\variables\CraftVariable;
@@ -55,7 +55,7 @@ class Websitetoolboxcommunity extends Plugin{
         );                    
         self::$plugin = $this;        
         $this->setComponents([
-            'sso' => \websitetoolbox\websitetoolboxcommunity\services\Sso::class,
+            'sso' => \websitetoolbox\community\services\Sso::class,
         ]);
         self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_BEFORE_SAVE_ELEMENT, function(Event $event) {

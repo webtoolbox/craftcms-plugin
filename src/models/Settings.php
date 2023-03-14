@@ -5,8 +5,8 @@
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
  */
-namespace websitetoolbox\websitetoolboxcommunity\models;
-use websitetoolbox\websitetoolboxcommunity\Websitetoolboxcommunity;
+namespace websitetoolbox\community\models;
+use websitetoolbox\community\Websitetoolboxcommunity;
 use Craft;
 use craft\base\Model;
 use craft\behaviors\EnvAttributeParserBehavior;

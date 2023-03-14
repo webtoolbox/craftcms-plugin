@@ -1,5 +1,5 @@
 <?php
-namespace websitetoolbox\websitetoolboxcommunity\controllers;
+namespace websitetoolbox\community\controllers;
 use Craft;
 use craft\web\Controller;
 use craft\web\View;

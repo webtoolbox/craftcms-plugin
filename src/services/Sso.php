@@ -5,9 +5,9 @@
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
  */
-namespace websitetoolbox\websitetoolboxcommunity\services;
-use websitetoolbox\websitetoolboxcommunity\models\Settings;
-use websitetoolbox\websitetoolboxcommunity\Websitetoolboxcommunity;
+namespace websitetoolbox\community\services;
+use websitetoolbox\community\models\Settings;
+use websitetoolbox\community\Websitetoolboxcommunity;
 use Craft;
 use craft\base\Component;
 use craft\web\View;
