@@ -1,0 +1,91 @@
+.classHide {
+    display: none;
+}
+.pt_20 {
+    padding-top: 20px !important;
+}
+.form_label {
+    width: 12%;
+    padding-right: 6px !important;
+}
+.valign {
+    margin-bottom: 37px;
+}
+.pull_right {
+    float: right;
+    text-align: right;
+}
+.input-communityUrl {
+    width: 100%;
+    display: flex;
+}
+.field {
+    margin: 0;
+}
+.input-communityUrl>.inputUrl {
+    max-width: 40%;
+    background: #ebf2fa;
+    border-radius: 3px 0 0 3px;
+    border-right: none;
+}
+.input-communityUrl>#settings-communityUrl-field {
+    max-width: calc(60% - 100px);
+    width: 100%;
+}
+.input-communityUrl>.inputUrl p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.input-communityUrl>.input.ltr {
+    width: 100%;
+}
+.input-communityUrl>#settings-communityUrl-field .input.ltr>input {
+    width: 100%;
+    border-radius: 0;
+}
+.input-communityUrl>.urlCopy {
+    width: 100px;
+    background: #ebf2fa;
+}
+.input-communityUrl>.urlCopy>a {
+    text-decoration: none;
+    color: #3f4d5a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.input-communityUrl>.urlCopy>a:before {
+    margin-right: 3px;
+}
+.success {
+    color: green;
+}
+@media screen and (min-width: 768px) {
+    .input-communityUrl>.urlCopy {
+        border-radius: 0 3px 3px 0;
+        border-left: none;
+    }
+}
+@media screen and (max-width: 767px) {
+    .input-communityUrl {
+        display: block;
+        float: left;
+    }
+        .input-communityUrl>.inputUrl {
+        float: left;
+        display: grid;
+    }
+        .input-communityUrl>#settings-communityUrl-field {
+        max-width: 60%;
+        float: left;
+        display: grid;
+    }
+        .input-communityUrl>.urlCopy {
+        float: left;
+        margin-top: 5px;
+    }
+        #settings-cmUrl .valign {
+        margin-bottom: 60px;
+    }
+}
