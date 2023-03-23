@@ -1,197 +1,101 @@
 {#
 /**
- * Website Toolbox Forum plugin for Craft CMS 4.x
+ * Website Toolbox Forum plugin for Craft CMS 3.x
  * Website Toolbox Forum Settings.twig
  * @author    Website Toolbox
  * @copyright Copyright (c) 2020 Website Toolbox
  * @link      https://websitetoolbox.com/
  * @package   Website Toolbox Forum
- * @since     4.0.0
+ * @since     3.0.0
  */
 #}
 {% import "_includes/forms" as forms %}
-{% macro errorList(errors) %}
-    {% if errors %}
-        {{ ul(errors, {class: 'errors'}) }}
-    {% endif %}
-{% endmacro %}
-{% set baseUrl = craft.app.sites.primarySite.baseUrl %}
-<table style='width:100%;'>
-    {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxcommunity') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('communitySettingOption') == 1)  %}     
-        <tr>
-            <td>                
-                <b>Please log in to your Website Toolbox account.</b>
-                <p>Not a Website Toolbox Community owner?  
-                    <a href="https://www.websitetoolbox.com/tool/members/signup?tool=mb" target="_blank" style="text-decoration:underline">Create a Community Now!</a>
-                </p>
-                <p>Please <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up. 
-                </p>
-                {{ _self.errorList(settings.getErrors('communityUrl')) }}
-            </td>
-        </tr>
-        <tr>
-            <td class='pt_20' colspan='2' >
-                {{ forms.textField({
-                    "label": "Website Toolbox Username"|t("websitetoolboxcommunity"),
-                    "id": "forumUsername",
-                    "name": "forumUsername",
-                    "value": settings.forumUsername,
-                    "required": true
-                   })
-                }}
-                {{ _self.errorList(settings.getErrors('forumUsername')) }}
-            </td>
-        </tr>
-        <tr>
-            <td class='pt_20'  colspan='2'>
-                {{ forms.passwordField({
-                    "label": "Website Toolbox Password"|t("websitetoolboxcommunity"),
-                    "id": "forumPassword",
-                    "name": "forumPassword",
-                    "value": settings.forumPassword,
-                    "required": true
-                   })
-                }}
-                {{ _self.errorList(settings.getErrors('forumPassword')) }}
-                <span class="pull_right"><a href='https://www.websitetoolbox.com/tool/members/reset-password'>Forgot Password?</a></span>
-            </td>
-        </tr>
-    {% else %}
-        <tr>
-            <td colspan='2'>
-                <p>Please                 
-                    <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up.</p>
-            </td>
-        </tr>
-        <tr>
-            <td class='form_label pt_20'>
-                <b class="pull_right">Account</b> 
-            </td>
-            <td class='pt_20'>                
-                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxcommunity') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="{{ craft.app.request.absoluteUrl }}&communitySettingOption=1" style="text-decoration:underline">Change</a>
-            </td>
-        </tr>
-        <tr>
-            <td class='form_label pt_20'><b class="pull_right">Embedded</b></td>
-            <td class='pt_20'>
-             {{ 
-                forms.checkboxField({
-                    label: "Yes"|t('app'),
-                    id: 'forumEmbedded',
-                    name: 'forumEmbedded',
-                    checked: settings.forumEmbedded,
-                    class : "embedded",
-                    default:"checked"
-                })
-            }} 
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <div>Enable this option to have your community embedded in a page of your website.        
-                <br />Disable this option to have your community load in a full-sized window. You can use the Layout section in your Website Toolbox account to         
-                <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank" style="text-decoration:underline">customize your community layout to match your website</a> or         
-                <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" style="text-decoration:underline" target="_blank">contact Website Toolbox support to customize it for you</a>            
-            </div>
-            </td>
-        </tr>
-        <tr id='cmUrl'>
-            <td class='form_label pt_20'><b class="pull_right valign">Embedded Page</b></td>
-            <td class="pt_20">
-                {% if('index.php?' in craft.app.request.absoluteUrl) %}                        
-                    {% set index = 'index.php?p=' %}
-                    {% set baseUrl = baseUrl ~ index %}
-                {% endif %}
-                
-                {% if settings.communityUrl %}
-                    {% set cmUrl = settings.communityUrl %}
-                {% else %}
-                    {% set cmUrl = 'community' %}
-                {% endif %}
-                
-                <div class='input-communityUrl'>
-                    <div class="inputUrl text" title='{{ baseUrl }}'>
-                        <p>{{ baseUrl }}</p>
-                    </div>
-                    {{ 
-                        forms.textField({
-                        "id": "communityUrl",
-                        "name": "communityUrl",
-                        "value": cmUrl,
-                        "required": true
-                        })
-                    }} 
-                    <div class="urlCopy text">
-                        <a href='javascript:void(0);' class="test" onClick="copyUrl(this)">Copy URL</a>
-                    </div>
-                </div>                    
-                {{ _self.errorList(settings.getErrors('communityUrl')) }}
-                <p>Copy the address above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="classHide">{{ baseUrl }}{{ settings.communityUrl }}</a></p>
-            </td>
-        </tr>
-        {% endif %}
-        <tr>
-            <td colspan='2' class='pt_20'>
-                {{ 
-                    forms.textField({
-                        "id": "forumApiKey",
-                        "name": "forumApiKey",
-                        "value": settings.forumApiKey,
-                        class: "classHide"
-                    })
-                }} 
-                {{ 
-                    forms.textField
-                    ({
-                        "id": "forumUrl",
-                        "name": "forumUrl",
-                        "value": settings.forumUrl,
-                        class: "classHide"
-                    })
-                }}
-                <b>Be sure to specify your sign up, log in, and log out page addresses in the <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single Sign On" style="text-decoration:underline"> Single Sign On section </a>of Website Toolbox.</b>
-            </td>
-        </tr>
-</table>
-<script type="text/javascript">
-    var baseUrl = "{{ baseUrl }}";    
-    var checkbox  = document.getElementById('settings-forumEmbedded');
-    if(!checkbox.checked){        
-       document.getElementById('settings-cmUrl').style.display = 'none';       
-    }
-    checkbox.addEventListener('change', (event) => {
-        var chk = event.target;
-        if (chk.checked) {
-            document.getElementById('settings-cmUrl').style.display = '';            
-        } else {
-            document.getElementById('settings-cmUrl').style.display = 'none';            
-        }
-    });
+<div>
+    <div>
+    {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.request.getQuery('forumSettingOption') == 1)  %}        
+        <div>
+            <b>Please log in to your Website Toolbox account.</b>
+            <p>Not a Website Toolbox Forum owner?  
+                <a href="https://www.websitetoolbox.com/craftCMS" target="_blank" style="text-decoration:underline">Create a Forum Now!</a>
+            </p>
+            <p>Please
+                <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up. 
+            </p>
+        </div>
+        {{ forms.textField({
+            "label": "Website Toolbox Username"|t("websitetoolboxforum"),
+            "id": "forumUsername",
+            "name": "forumUsername",
+            "value": settings.forumUsername,
+            "required": true
+           })
+        }}
+        {{ forms.passwordField({
+            "label": "Website Toolbox Password"|t("websitetoolboxforum"),
+            "id": "forumPassword",
+            "name": "forumPassword",
+            "value": settings.forumPassword,
+            "required": true
+           })
+        }}
+    {% else %}           
+        <div>
+            <p>Please                 
+                <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up.            
+            </p>
+            <br />
+            <b>Website Toolbox Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="?forumSettingOption=1" style="text-decoration:underline">Change</a>
+        </div>
+        <br />
+        <div>
+            <span style="width:30%">
+                <b>Embed the forum               :                 
+                </span>
+            </b>
+         {{ forms.checkboxField({
+                label: "Yes"|t('app'),
+                id: 'forumEmbedded',
+                name: 'forumEmbedded',
+                checked: settings.forumEmbedded,
+                class : "embedded",
+                default:"checked"
+            })
+        }} 
+        
+        </div>
+        <div style="margin-left:20%;margin-top:2%">Enable this option to have your forum embedded in a page of your website.        
+            <br />Disable this option to have your forum load in a full-sized window. You can use the Layout section in your Website Toolbox account to         
+            <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank" style="text-decoration:underline">customize your forum layout to match your website</a> or         
+            <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" style="text-decoration:underline" target="_blank">contact Website Toolbox support to customize it for you</a>            
+        </div>
+    {% endif %}    
+    </div>
+         {{ forms.textField({
+            "id": "forumApiKey",
+            "name": "forumApiKey",
+            "value": settings.forumApiKey,
+            class: "classHide"
+           })
+         }} 
+         {{ forms.textField({
+            "id": "forumUrl",
+            "name": "forumUrl",
+            "value": settings.forumUrl,
+            class: "classHide"
+           })
+        }}       
+        <b>Be sure to specify your sign up, log in, and log out page addresses in the             
+            <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single%20Sign%20On" style="text-decoration:underline"> Single Sign On section </a>of Website Toolbox.
+        </b>
+</div>
+<style>
+#settings-forumEmbedded-field{
+    width: 80% !important;
+    float: right;
+    margin-top:0px;
+}
+.classHide{
+    display:none;
+}
 
-    var cmurl  = document.getElementById('settings-communityUrl');
-    cmurl.addEventListener('keyup', (event) => {
-        var letter = /^[a-z0-9\/\_-]+$/;
-        if(cmurl.value.match(letter) || cmurl.value == ''){
-            document.getElementById('settings-frmUrl').text = baseUrl+cmurl.value
-        }else{            
-            cmurl.value = cmurl.value.substring(0, cmurl.value.length - 1);             
-        }
-    });
-    function copyUrl(me){
-        var page = document.getElementById('settings-communityUrl').value;
-        if(page !== ''){
-            var copyText = document.getElementById('settings-frmUrl').text;
-            navigator.clipboard.writeText(copyText);            
-            me.text = '';
-            me.removeAttribute('data-icon');
-            setTimeout(function(){
-                me.text = ' Copied'
-                me.classList.add('success');
-                me.setAttribute('data-icon', 'check');
-            }, 200);
-        }else{
-            alert('Error: Please enter an embed page URL first.');
-        }     
-    }
-</script>
+</style>

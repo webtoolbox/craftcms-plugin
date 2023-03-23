@@ -1,14 +1,14 @@
 {
-    "name": "websitetoolbox/websitetoolboxcommunity",
-    "description": "The Easiest CraftCMS Community Plugin. Effortlessly Build a Beautiful Community Forum with Zero Coding, Seamless Embedding, Instant Setup, and Exceptional Support.",
+    "name": "websitetoolbox/websitetoolboxforum",
+    "description": "Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required",
     "type": "craft-plugin",
-    "version": "1.4.0",
+    "version": "1.3.0",
     "keywords": [
         "craft",
         "cms",
         "craftcms",
         "craft-plugin",
-        "websitetoolboxcommunity"
+        "websitetoolboxforum"
     ],
     "support": {
         "docs": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
@@ -20,29 +20,32 @@
             "name": "Website Toolbox",
             "homepage": "http://websitetoolbox.com"
         }
-    ],    
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0"
+    },
     "require-dev": {
-     "craftcms/cms": "^3.0.0|^4.0.0",
+      "craftcms/cms": "^3.2.0",
       "codeception/codeception": "^3.0",
       "vlucas/phpdotenv": "^3.0"
     },
     "autoload": {
         "psr-4": {
-          "websitetoolbox\\community\\": "src/"
+          "websitetoolbox\\websitetoolboxforum\\": "src/"
         }
     },
     "extra": {
-        "hasCpSettings": true,
-        "name": "Website Toolbox Community",
-        "handle": "websitetoolboxcommunity",
+         "hasCpSettings": true,
+        "name": "Website Toolbox Forum",
+        "handle": "websitetoolboxforum",
         "developer": "Website Toolbox",
         "hasCpSection": false,
         "developerUrl": "http://websitetoolbox.com",
         "documentationUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
         "changelogUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
-        "class": "websitetoolbox\\community\\Websitetoolboxcommunity",
+        "class": "websitetoolbox\\websitetoolboxforum\\Websitetoolboxforum",
         "components": {
-            "sso": "websitetoolbox\\community\\services\\Sso"
+            "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
         }
     }
   
