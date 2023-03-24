@@ -1,10 +1,10 @@
-# Website Toolbox Community plugin for Craft CMS 3+ or 4+
+# Website Toolbox Community plugin for Craft CMS 4+
 
 Single Sign On plugin for Website Toolbox Community and Craft CMS
 
 ## Requirements
 
-This plugin requires Craft CMS 3+ or 4+
+This plugin requires Craft CMS 4+
 
 ## Installation
 
