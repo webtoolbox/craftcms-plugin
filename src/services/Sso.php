@@ -42,7 +42,11 @@ class Sso extends Component{
                         setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
                         setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");    
                     }else{
-                        Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $result->message));
+                        if(isset($result->message)){
+                            Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $result->message));    
+                        }else{
+                            Websitetoolboxcommunity::getInstance()->afterSaveSettings();
+                        }
                     }
               }
           }         
@@ -192,7 +196,8 @@ class Sso extends Component{
    function renderJsScriptEmbedded($forumUrl,$userStatus){
         if(isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != ''){            
             $cookieForumLoginToken = $_COOKIE['forumLogInToken'];            
-            setcookie("forumLogInToken", '', time() - 3600,"/");            
+            setcookie("forumLogInToken", '', time() - 3600,"/"); 
+            $_COOKIE['forumLogInToken'] = '';      
             echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
         } 
         $js = <<<JS
