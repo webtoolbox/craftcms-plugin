@@ -1,14 +1,14 @@
 <?php
 /**
- * Website Toolbox Forum plugin for Craft CMS 3.x
+ * Website Toolbox Community plugin for Craft CMS 3.x
  * Single Sign On Cloud Based plugin for CraftCMS
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
  */
-namespace websitetoolbox\websitetoolboxforum;
-use websitetoolbox\websitetoolboxforum\services\Sso as SsoService;
-use websitetoolbox\websitetoolboxforum\models\Settings;
-use websitetoolbox\websitetoolboxforum\assetbundles\Websitetoolboxforum\WebsitetoolboxforumAsset;
+namespace websitetoolbox\websitetoolboxcommunity;
+use websitetoolbox\websitetoolboxcommunity\services\Sso as SsoService;
+use websitetoolbox\websitetoolboxcommunity\models\Settings;
+use websitetoolbox\websitetoolboxcommunity\assetbundles\Websitetoolboxcommunity\WebsitetoolboxforumAsset;
 use Craft;
 use craft\base\Plugin;
 use craft\web\twig\variables\CraftVariable;
@@ -31,13 +31,13 @@ use craft\base\Element;
 define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
 
 /**
- * Class Websitetoolboxforum
+ * Class Websitetoolboxcommunity
  * @author    Website Toolbox
- * @package   Websitetoolboxforum
+ * @package   Websitetoolboxcommunity
  * @since     3.0.0
  * @property  SsoService $sso
  */
-class Websitetoolboxforum extends Plugin
+class Websitetoolboxcommunity extends Plugin
 {
     public static $plugin;
     public static $craft31 = false;
@@ -58,7 +58,7 @@ class Websitetoolboxforum extends Plugin
         );                    
         self::$plugin = $this;
         $this->setComponents([
-            'sso' => \websitetoolbox\websitetoolboxforum\services\Sso::class,
+            'sso' => \websitetoolbox\websitetoolboxcommunity\services\Sso::class,
         ]);
         self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_BEFORE_SAVE_ELEMENT, function(Event $event) {
@@ -75,7 +75,7 @@ class Websitetoolboxforum extends Plugin
             Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
                     $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
                     echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';
-                    Websitetoolboxforum::getInstance()->sso->resetCookieOnLogout();
+                    Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
             });
         } 
  
@@ -83,7 +83,7 @@ class Websitetoolboxforum extends Plugin
             Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
                 $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
                 if(!$token){
-                    Websitetoolboxforum::getInstance()->sso->afterLogOut();
+                    Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
                 }
                 $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
                 $forumUrl   = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl'); 
@@ -91,39 +91,39 @@ class Websitetoolboxforum extends Plugin
                 if($forumType == 1){ 
                     $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
                     if( $token){
-                        $jsRender = Websitetoolboxforum::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedIn');
+                        $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedIn');
                     }else{
-                        $jsRender = Websitetoolboxforum::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedout');
+                        $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedout');
                     }
                  }else{ 
-                    $jsRender = Websitetoolboxforum::getInstance()->sso->renderJsScriptUnEmbedded();
+                    $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptUnEmbedded();
                 }
                 $view = Craft::$app->getView();
                 $view ->registerJs($jsRender);
             });
         }
         Event::on(\craft\services\Users::class, \craft\services\Users::EVENT_AFTER_ACTIVATE_USER, function(Event $event) {         
-                Websitetoolboxforum::getInstance()->sso->afterUserCreate($event);
+                Websitetoolboxcommunity::getInstance()->sso->afterUserCreate($event);
              
         });
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_AFTER_SAVE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {
                 if(isset($_POST['userId'])){
-                    Websitetoolboxforum::getInstance()->sso->afterUpdateUser();
+                    Websitetoolboxcommunity::getInstance()->sso->afterUpdateUser();
                 }
             }
         });
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_AFTER_DELETE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {                           
-                Websitetoolboxforum::getInstance()->sso->afterDeleteUser($event->element->username);
-                Websitetoolboxforum::getInstance()->sso->afterLogOut();
+                Websitetoolboxcommunity::getInstance()->sso->afterDeleteUser($event->element->username);
+                Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
             }
         });  
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {
-            Websitetoolboxforum::getInstance()->sso->afterLogin();
+            Websitetoolboxcommunity::getInstance()->sso->afterLogin();
         });
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {
-            Websitetoolboxforum::getInstance()->sso->afterLogOut();
+            Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
         });
 
 
@@ -170,7 +170,7 @@ class Websitetoolboxforum extends Plugin
         $loggedinUserId       = Craft::$app->getUser()->getIdentity()->id;
         $loggediUserName     = Craft::$app->getUser()->getIdentity()->username;
         $postData     = array('type'=>'json','apikey' => $result->forumApiKey, 'user' => $loggediUserName,'email'=>$loggedinUserEmail,'externalUserid'=>$loggedinUserId);
-        $result       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
+        $result       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
         setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
         setcookie("forumLoginUserid", $result->userid, time() + 3600,"/"); 
     }

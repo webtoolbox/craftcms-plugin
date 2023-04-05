@@ -1,13 +1,13 @@
 <?php
 /**
- * Website Toolbox Forum plugin for Craft CMS 3.x
+ * Website Toolbox Community plugin for Craft CMS 3.x
  * Single Sign On Cloud Based plugin for CraftCMS
  * @link      https://websitetoolbox.com/
  * @copyright Copyright (c) 2020 Website Toolbox
  */
-namespace websitetoolbox\websitetoolboxforum\services;
-use websitetoolbox\websitetoolboxforum\models\Settings;
-use websitetoolbox\websitetoolboxforum\Websitetoolboxforum;
+namespace websitetoolbox\websitetoolboxcommunity\services;
+use websitetoolbox\websitetoolboxcommunity\models\Settings;
+use websitetoolbox\websitetoolboxcommunity\Websitetoolboxcommunity;
 use Craft;
 use craft\base\Component;
 use craft\web\View;
@@ -15,7 +15,7 @@ use craft\services\Config;
 define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
 /**
  * @author    Website Toolbox
- * @package   Websitetoolboxforum
+ * @package   Websitetoolboxcommunity
  * @since     3.0.0
  */
 class Sso extends Component
@@ -32,7 +32,7 @@ class Sso extends Component
                     $userName     = Craft::$app->getUser()->getIdentity()->username;
                     $RequestUrl   = $forumUrl."/register/setauthtoken";
                     $postData     = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
-                    $result       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
+                    $result       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
                     setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
                     setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
               }
@@ -63,10 +63,10 @@ class Sso extends Component
                $postData['name'] .=  " ".$user->user->lastName;
             }        
             $RequestUrl           = $forumUrl . "/register/create_account/";
-            $result               = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');      
+            $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');      
             $RequestUrl           = $forumUrl."/register/setauthtoken";
             $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
-            $result               = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
+            $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
 
             setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
             setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");  
@@ -74,7 +74,7 @@ class Sso extends Component
     }
     function afterUpdateUser(){
       $emailToVerify  = $_SESSION['userEmailBeforeUpdate'];
-      $userId         = Websitetoolboxforum::getInstance()->sso->getUserid($emailToVerify);
+      $userId         = Websitetoolboxcommunity::getInstance()->sso->getUserid($emailToVerify);
       $userName       = $_POST['username'];
       $externalUserid = $_POST['userId'];
       $email          = $_POST['email'];
@@ -91,14 +91,14 @@ class Sso extends Component
                           "externalUserid" => $externalUserid,
                           "name"           => $fullName);
       $url            = WT_API_URL ."/users/$userId"; 
-      $response       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
+      $response       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
     }
     function getUserid($userEmail){    echo $userEmail;     
          if ($userEmail) {
             $data     = array(
                            "email" => $userEmail);
             $url      = WT_API_URL . "/users/";             
-            $response = Websitetoolboxforum::getInstance()->sso->sendApiRequest('GET', $url, $data,'json','forumApikey');          
+            $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('GET', $url, $data,'json','forumApikey');          
             if ($response->{'data'}[0]->{'userId'}) {
                  return $response->{'data'}[0]->{'userId'};
             } 
@@ -146,13 +146,13 @@ class Sso extends Component
                           'massaction'=> 'decline_mem',
                           'usernames' => $userName);
         $RequestUrl   =  $forumUrl."/register";
-        $result       = Websitetoolboxforum::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
+        $result       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
     }
     function afterLogOut(){  
       if(isset($_COOKIE['forumLogoutToken'])){
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
         echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].' border="0" width="0" height="0" alt="" id="imageTag">';   
-        //Websitetoolboxforum::getInstance()->sso->resetCookieOnLogout();  
+        //Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();  
       }
     }
     function resetCookieOnLogout(){

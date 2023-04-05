@@ -1,6 +1,6 @@
 {
-    "name": "websitetoolbox/websitetoolboxforum",
-    "description": "Your CraftCMS forum doesn’t need to be basic. Website Toolbox is a cloud-based forum plugin that allows you to easily add a powerful, intuitive, and maintenance-free forum to CraftCMS without slowing it down. No database, servers, or coding required",
+    "name": "websitetoolbox/websitetoolboxcommunity",
+    "description": "Your CraftCMS community doesn’t need to be basic. Website Toolbox is a cloud-based community plugin that allows you to easily add a powerful, intuitive, and maintenance-free community to CraftCMS without slowing it down. No database, servers, or coding required",
     "type": "craft-plugin",
     "version": "1.3.0",
     "keywords": [
@@ -8,11 +8,11 @@
         "cms",
         "craftcms",
         "craft-plugin",
-        "websitetoolboxforum"
+        "websitetoolboxcommunity"
     ],
     "support": {
-        "docs": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
-        "issues": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md"
+        "docs": "https://github.com/webtoolbox/craftcms-plugin/blob/v3/README.md",
+        "issues": "https://github.com/webtoolbox/craftcms-plugin/blob/v3/README.md"
     },
     "license": "MIT",
     "authors": [
@@ -31,21 +31,21 @@
     },
     "autoload": {
         "psr-4": {
-          "websitetoolbox\\websitetoolboxforum\\": "src/"
+          "websitetoolbox\\websitetoolboxcommunity\\": "src/"
         }
     },
     "extra": {
-         "hasCpSettings": true,
-        "name": "Website Toolbox Forum",
+        "hasCpSettings": true,
+        "name": "Website Toolbox Community",
         "handle": "websitetoolboxforum",
         "developer": "Website Toolbox",
         "hasCpSection": false,
         "developerUrl": "http://websitetoolbox.com",
-        "documentationUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
-        "changelogUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/master/README.md",
-        "class": "websitetoolbox\\websitetoolboxforum\\Websitetoolboxforum",
+        "documentationUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/v3/README.md",
+        "changelogUrl": "https://github.com/webtoolbox/craftcms-plugin/blob/v3/README.md",
+        "class": "websitetoolbox\\websitetoolboxcommunity\\Websitetoolboxcommunity",
         "components": {
-            "sso": "websitetoolbox\\websitetoolboxforum\\services\\Sso"
+            "sso": "websitetoolbox\\websitetoolboxcommunity\\services\\Sso"
         }
     }
   
