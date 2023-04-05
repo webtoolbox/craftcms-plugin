@@ -43,9 +43,7 @@ class Sso extends Component{
                         setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");    
                     }else{
                         if(isset($result->message)){
-                            Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $result->message));    
-                        }else{
-                            Websitetoolboxcommunity::getInstance()->afterSaveSettings();
+                            Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $result->message));
                         }
                     }
               }
