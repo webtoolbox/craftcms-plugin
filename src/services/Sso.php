@@ -21,34 +21,23 @@ define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
  */
 class Sso extends Component{   
     function afterLogin(){            
-          $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);           
-          if($token){                 
-               $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey');
-               $forumUrl    = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
-              if($forumApiKey){ 
-                    $myUserQuery  = \craft\elements\User::find();                    
-                    $userEmail    = Craft::$app->getUser()->getIdentity()->email;
-                    $userId       = Craft::$app->getUser()->getIdentity()->id;
-                    $userName     = Craft::$app->getUser()->getIdentity()->username;
-                    $image        = '';
-                    if(Craft::$app->getUser()->getIdentity()->photoId != ''){
-                        $image = Craft::$app->getUser()->getIdentity()->photo->url;    
-                    }
-                    $RequestUrl   = $forumUrl."/register/setauthtoken";                    
-                    $postData     = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId, 'avatarUrl' => $image);
-                    $result       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
-                    if(isset($result->authtoken) && $result->authtoken !=''){
-                        setcookie("forumLogInToken", $result->authtoken, time() + 3600,"/");
-                        setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-                        setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");    
-                    }else{
-                        if(isset($result->message)){
-                            Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $result->message));
-                        }
-                    }
-              }
-          }         
-     }
+        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);           
+        if($token){                 
+            $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey');
+            $forumUrl    = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
+            if($forumApiKey){ 
+                $myUserQuery  = \craft\elements\User::find();                    
+                $userEmail    = Craft::$app->getUser()->getIdentity()->email;
+                $userId       = Craft::$app->getUser()->getIdentity()->id;
+                $userName     = Craft::$app->getUser()->getIdentity()->username;
+                $image        = '';
+                if(Craft::$app->getUser()->getIdentity()->photoId != ''){
+                    $image = Craft::$app->getUser()->getIdentity()->photo->url;    
+                }
+                Websitetoolboxcommunity::getInstance()->setAuthToken($forumUrl, $forumApiKey);
+            }
+        }         
+    }
     function afterUserCreate($user){        
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
         $forumApiKey  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false); 
@@ -60,30 +49,23 @@ class Sso extends Component{
             if($user->user->email){
                 $userEmail = $user->user->email;
             }
-            $postData   = array( 
-                              'type'=>'json',
-                              'apikey'          => $forumApiKey,
-                              'member'          => $userName,
-                              'externalUserid'  => $userId, 
-                              'email'           => $userEmail);
+            $postData = array(
+                'type'=>'json',
+                'apikey' => $forumApiKey,
+                'ember' => $userName,
+                'externalUserid' => $userId, 
+                'email' => $userEmail
+            );
             if(isset($user->user->firstName)){
                $postData['name']  =  $user->user->firstName;
             }
             if(isset($user->user->lastName)){
                $postData['name'] .=  " ".$user->user->lastName;
-            }        
-            $RequestUrl           = $forumUrl . "/register/create_account/";
-            $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');                  
-            $RequestUrl           = $forumUrl."/register/setauthtoken";
-            $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
-            $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
-            if(isset($result->authtoken) && $result->authtoken !=''){
-                setcookie("forumLogInToken", $result->authtoken, time() + 3600,"/");
-                setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-                setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
-            }else{
-                Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $result->message));
-            }            
+            }
+            $RequestUrl = $forumUrl . "/register/create_account/";
+            $result = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
+            $userData = array('user' => $userName, 'email'=>$userEmail, 'externalUserid'=>$userId);
+            Websitetoolboxcommunity::getInstance()->setAuthToken($forumUrl, $forumApiKey, $userData);
         }
     }
     function afterUpdateUser(){
@@ -187,34 +169,34 @@ class Sso extends Component{
       setcookie('forumLogInToken', 0, time() - 3600, "/");
       setcookie('forumLogoutToken', 0, time() - 3600, "/");
       setcookie('forumLoginUserid', '', time() - 3600, "/");
-      setcookie('loginRemember', '', time() - 3600, "/");
+      setcookie('forumAddress', '', time() - 3600, "/");
       setcookie('logInForum', '', time() - 3600, "/");
    } 
       
-   function renderJsScriptEmbedded($forumUrl,$userStatus){
-        if(isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != ''){            
-            $cookieForumLoginToken = $_COOKIE['forumLogInToken'];            
+   function renderJsScriptEmbedded($forumUrl,$userStatus){        
+        if((isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != '')){
+            $cookieForumLoginToken = $_COOKIE['forumLogInToken'];
             setcookie("forumLogInToken", '', time() - 3600,"/"); 
-            $_COOKIE['forumLogInToken'] = '';      
+            $_COOKIE['forumLogInToken'] = '';
             echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
-        } 
+        }
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
           { var embedUrl  = "{$forumUrl}";
-            var userStatus = "{$userStatus}";            
+            var userStatus = "{$userStatus}";
             var wtbWrap = document.createElement('div');
             wtbWrap.id = "wtEmbedCode";            
             var embedScript = document.createElement('script');
             embedScript.id = "embedded_forum";
             embedScript.type = 'text/javascript'; 
-            embedUrl += "/js/mb/embed.js";                        
+            embedUrl += "/js/mb/embed.js";
             embedScript.src = embedUrl;
-            embedScript.setAttribute('data-version','1.1');
+            embedScript.setAttribute('data-version','1.1');            
             wtbWrap.appendChild(embedScript);
             if(document.getElementById('wtEmbedCode') != null){
                 document.getElementById('wtEmbedCode').innerHTML = '';
-                document.getElementById('wtEmbedCode').appendChild(embedScript);                  
+                document.getElementById('wtEmbedCode').appendChild(embedScript);  
             }
           })();
         JS;
@@ -264,7 +246,9 @@ class Sso extends Component{
             }
             if(embed == '' && document.getElementById('wtEmbedCode')){
                 document.getElementById('wtEmbedCode').innerHTML = '';
-                document.getElementById('wtLoadingIcon').remove();
+                if(document.getElementById('wtLoadingIcon')){
+                    document.getElementById('wtLoadingIcon').remove();
+                }
             }
         })();
 JS;
