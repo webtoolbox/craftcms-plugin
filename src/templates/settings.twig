@@ -61,6 +61,30 @@
             <td colspan='2'>
                 <p>Please                 
                     <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up.</p>
+                {% set url = craft.app.request.absoluteUrl %}
+                {% set host = url|replace({'https://':'','http://':''})|split('/')[0]|split('.') %}
+
+                {% if host|length > 2 %}
+                    {% set websiteDomain = host[host|length - 2] ~ '.' ~ host[host|length - 1] %}
+                {% else %}
+                    {% set websiteDomain = host|join('.') %}
+                {% endif %}
+
+                {% set community = craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"] %}
+                {% set cmHost = community|replace({'https://':'','http://':''})|split('/')[0]|split('.') %}
+
+                {% if cmHost|length > 2 %}
+                    {% set communityDomain = cmHost[cmHost|length - 2] ~ '.' ~ cmHost[cmHost|length - 1] %}
+                {% else %}
+                    {% set communityDomain = cmHost|join('.') %}
+                {% endif %}
+                {% if (communityDomain != websiteDomain) %} 
+                    <ul id="alerts" class="wt_alert">
+                        <li class="wt_li">
+                            Your forum needs to <a href= "https://www.websitetoolbox.com/tool/members/domain?tool=mb" target="_blank">use a subdomain</a> for it to appear as embedded instead of full-screen in the Safari browser.
+                        </li>
+                    </ul>
+                {% endif %}
             </td>
         </tr>
         <tr>

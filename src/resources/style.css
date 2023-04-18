@@ -61,6 +61,17 @@
 .success {
     color: green;
 }
+.wt_alert{
+    display: block;
+    height: 40px;
+    opacity: 1;
+    position: relative;
+    background-color: var(--yellow-050);
+    border-left: 6px solid var(--warning-color);
+}
+.wt_alert > .wt_li{
+    padding: 8px 0 0 5px;
+}
 @media screen and (min-width: 768px) {
     .input-communityUrl>.urlCopy {
         border-radius: 0 3px 3px 0;

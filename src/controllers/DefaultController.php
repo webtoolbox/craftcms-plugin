@@ -26,17 +26,20 @@ class DefaultController extends Controller
      */
     public function actionWebhook()
     {
-        $payload = file_get_contents('php://input');
-        $signature = @$_SERVER['HTTP_HMAC'];
-        $secretKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.secretKey');
-        if ($signature == $secretKey) {
-            if(isset($_REQUEST['forum_url'])){
-                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl', $_REQUEST['forum_url']);    
+        $secret = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.secretKey');
+        $postData = file_get_contents("php://input");
+        $signatureHeader = $_SERVER['HTTP_X_SIGNATURE'];
+        $signature = hash_hmac('sha256', $postData, $secret);
+        if ($signature == $signatureHeader) {
+            $data = json_decode($postData, true);
+            if(isset($data['forum_url'])){
+                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl', $data['forum_url']);    
                 $response = ['status' => 200, 'message' => 'Community host updated successfully.'];
             }else{
                 $response = ['status' => 301, 'message' => 'Invalid parameter received.'];
             }
-        }else{
+        }
+        else{
             $response = ['status' => 400, 'message' => 'You are not authorize user.'];
         }
         return json_encode($response, true);                
