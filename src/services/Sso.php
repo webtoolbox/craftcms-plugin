@@ -33,8 +33,10 @@ class Sso extends Component
                     $RequestUrl   = $forumUrl."/register/setauthtoken";
                     $postData     = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
                     $result       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
-                    setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-                    setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
+                    if(isset($result->authtoken) && $result->authtoken !=''){
+                        setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
+                        setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
+                    }
               }
           }         
      }
@@ -67,9 +69,10 @@ class Sso extends Component
             $RequestUrl           = $forumUrl."/register/setauthtoken";
             $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
             $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
-
-            setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-            setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");  
+            if(isset($result->authtoken)){
+                setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
+                setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");      
+            }  
         }
     }
     function afterUpdateUser(){
