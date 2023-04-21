@@ -1,10 +1,6 @@
 # Website Toolbox Community plugin for Craft CMS 3.x
 
-Single Sign On plugin for Website Toolbox Community/jsConnect and CraftCMS
-
-![Screenshot](./docs/img/plugin-logo.png)
-
-Related: [Website Toolbox Community for Craft 3.x](https://github.com/webtoolbox/craftcms-plugin)
+Single Sign On plugin for Website Toolbox Community and CraftCMS
 
 ## Requirements
 
@@ -18,11 +14,5 @@ To install Website Toolbox Community, follow these steps:
 2. Install the plugin via `./craft install/plugin websitetoolboxcommunity` via the CLI -or- in the Craft Control Panel under Settings > Plugins
 
 You can also install Website Toolbox Community via the **Plugin Store** in the Craft CP.
-
-Website Toolbox Community works on Craft 3.x.
-
-## Documentation
-
-Click here -> [Website Toolbox Community Documentation](https://websitetoolbox.com/plugins/websitetoolboxforum/documentation)
 
 Brought to you by [Website Toolbox](https://websitetoolbox.com)

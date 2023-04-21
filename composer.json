@@ -1,6 +1,6 @@
 {
     "name": "websitetoolbox/websitetoolboxcommunity",
-    "description": "Your CraftCMS community doesn’t need to be basic. Website Toolbox is a cloud-based community plugin that allows you to easily add a powerful, intuitive, and maintenance-free community to CraftCMS without slowing it down. No database, servers, or coding required",
+    "description": "The Easiest CraftCMS Community Plugin. Effortlessly Build a Beautiful Community Forum with Zero Coding, Seamless Embedding, Instant Setup, and Exceptional Support.",
     "type": "craft-plugin",
     "version": "1.3.0",
     "keywords": [
