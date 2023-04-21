@@ -191,8 +191,11 @@ class Sso extends Component
             embedUrl += "/js/mb/embed.js?authtoken=0";
         }
         embedScript.src = embedUrl; 
-        wtbWrap.appendChild(embedScript); 
-        document.getElementById('embedForum').appendChild(embedScript);
+        wtbWrap.appendChild(embedScript);
+        if(document.getElementById('wtEmbedCode') != null){
+            document.getElementById('wtEmbedCode').innerHTML = '';
+            document.getElementById('wtEmbedCode').appendChild(embedScript);  
+        }   
 
       })();
 JS;
