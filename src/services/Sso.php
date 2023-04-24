@@ -96,13 +96,13 @@ class Sso extends Component
       $url            = WT_API_URL ."/users/$userId"; 
       $response       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$url,$userDetails,'json','forumApikey');
     }
-    function getUserid($userEmail){    echo $userEmail;     
+    function getUserid($userEmail){
          if ($userEmail) {
             $data     = array(
                            "email" => $userEmail);
             $url      = WT_API_URL . "/users/";             
             $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('GET', $url, $data,'json','forumApikey');          
-            if ($response->{'data'}[0]->{'userId'}) {
+            if (isset($response->{'data'}[0]->{'userId'})) {
                  return $response->{'data'}[0]->{'userId'};
             } 
         }
