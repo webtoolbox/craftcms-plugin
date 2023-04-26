@@ -99,18 +99,14 @@ class Sso extends Component{
       }
     }
     function getUserid($userEmail){              
-         if (isset($_COOKIE['forumLoginUserid'])) {
+        if ($userEmail) {
             $data     = array(
-                           "email" => $userEmail,                           
-                       );
-            $userId = $_COOKIE['forumLoginUserid'];            
-            $url      = WT_API_URL . "/users/".$userId;                        
-            $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('GET', $url, $data,'json','forumApikey');                                    
-            if (isset($response->userId)) {
-                 return $response->userId;
+                           "email" => $userEmail);
+            $url      = WT_API_URL . "/users/";
+            $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('GET', $url, $data,'json','forumApikey');
+            if (isset($response->{'data'}[0]->{'userId'})) {
+                 return $response->{'data'}[0]->{'userId'};
             } 
-        }else{            
-            $this->afterLogin();            
         }
     }
     function sendApiRequest($method, $url, $requestData, $postType, $apiKey=''){                   

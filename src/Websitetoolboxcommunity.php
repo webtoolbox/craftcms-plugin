@@ -108,7 +108,7 @@ class Websitetoolboxcommunity extends Plugin{
                     function(RegisterUrlRulesEvent $event) {
                         $segement = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"];
                         $event->rules[$segement] = 'websitetoolboxforum/default/index';
-                        $event->rules['webhook'] = 'websitetoolboxforum/default/webhook';
+                        //$event->rules['webhook'] = 'websitetoolboxforum/default/webhook';
                     }
                 );
             }
@@ -171,7 +171,7 @@ class Websitetoolboxcommunity extends Plugin{
         $secretKey = '4af0e6a6fa7cd203cb2df48e21d01561'; //bin2hex(openssl_random_pseudo_bytes(16));
         $webHookPage = 'webhook';
         $siteUrl = UrlHelper::siteUrl();
-        $webhook = $siteUrl.$webHookPage;                
+        $webhook = $siteUrl.$webHookPage;
         if(strpos($siteUrl, 'index.php') >= 0){
             $pageTrigger = Craft::$app->getConfig()->general->pageTrigger;
             $webhook = $siteUrl.'?'.$pageTrigger.'='.$webHookPage;
