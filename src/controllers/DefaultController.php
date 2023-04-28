@@ -26,7 +26,7 @@ class DefaultController extends Controller
      */
     public function actionWebhook()
     {
-        $secret = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.secretKey');
+        $secret = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername');
         $postData = file_get_contents("php://input");
         $signatureHeader = $_SERVER['HTTP_X_SIGNATURE'];
         $signature = hash_hmac('sha256', $postData, $secret);

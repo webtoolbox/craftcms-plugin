@@ -168,16 +168,13 @@ class Websitetoolboxcommunity extends Plugin{
         );
     }
     public function afterSaveSettings(): void{
-        $secretKey = '4af0e6a6fa7cd203cb2df48e21d01561'; //bin2hex(openssl_random_pseudo_bytes(16));
         $webHookPage = 'webhook';
         $siteUrl = UrlHelper::siteUrl();
-        $webhook = $siteUrl.$webHookPage;
+        $webhookUrl = $siteUrl.'/'.$webHookPage;
         if(strpos($siteUrl, 'index.php') >= 0){
             $pageTrigger = Craft::$app->getConfig()->general->pageTrigger;
             $webhook = $siteUrl.'?'.$pageTrigger.'='.$webHookPage;
         }
-        Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.secretKey', $secretKey);
-        Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.secretKey');
         if(isset($_POST['settings']['forumUsername'])){ 
             $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);            
             $forumUrl  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
@@ -185,7 +182,7 @@ class Websitetoolboxcommunity extends Plugin{
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
             
-            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms');           
+            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'webhookUrl' => $webhookUrl);           
             $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');            
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -223,7 +220,7 @@ class Websitetoolboxcommunity extends Plugin{
             }else{
                 $embeddedPage = '';
             }
-            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms');            
+            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'webhookUrl' => $webhookUrl);            
             $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){

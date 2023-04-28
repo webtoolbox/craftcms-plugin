@@ -20,7 +20,10 @@
             "name": "Website Toolbox",
             "homepage": "http://websitetoolbox.com"
         }
-    ],    
+    ],
+    "require": {
+        "craftcms/cms": "^4.0.0"
+    },    
     "require-dev": {
      "craftcms/cms": "^4.0.0",
       "codeception/codeception": "^3.0",

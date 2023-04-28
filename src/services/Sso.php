@@ -232,13 +232,6 @@ class Sso extends Component{
             var link = document.querySelector('[href="'+forumLink+'"]');
             if(link != null){
                 link.setAttribute("href", forumHref);
-                if(document.getElementById('wtEmbedCode')){
-                    window.location.href = forumHref; 
-                }
-            }else{
-                if(document.getElementById('wtEmbedCode')){
-                    window.location.href = forumHref; 
-                }
             }
             if(embed == '' && document.getElementById('wtEmbedCode')){
                 document.getElementById('wtEmbedCode').innerHTML = '';
