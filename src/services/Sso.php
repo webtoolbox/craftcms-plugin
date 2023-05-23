@@ -68,14 +68,14 @@ class Sso extends Component
             }        
             $RequestUrl           = $forumUrl . "/register/create_account/";
             $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');      
-            /*$RequestUrl           = $forumUrl."/register/setauthtoken";
+            $RequestUrl           = $forumUrl."/register/setauthtoken";
             $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
             $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
             if(isset($result->authtoken)){
                 setcookie("forumLogInToken", $result->authtoken, time() + (86400 * 365),"/");
                 setcookie("forumLogoutToken",$result->authtoken, time() + (86400 * 365),"/");
                 setcookie("forumLoginUserid", $result->userid, time() + (86400 * 365),"/");    
-            }*/  
+            }  
         }
     }
     function afterUpdateUser(){
