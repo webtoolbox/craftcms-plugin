@@ -108,22 +108,25 @@ class Websitetoolboxcommunity extends Plugin{
                     function(RegisterUrlRulesEvent $event) {
                         $segement = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"];
                         $event->rules[$segement] = 'websitetoolboxforum/default/index';
-                        //$event->rules['webhook'] = 'websitetoolboxforum/default/webhook';
+                        $event->rules['webhook'] = 'websitetoolboxforum/default/webhook';
                     }
                 );
             }
             if(!isset($_COOKIE['forumAddress'])){
-                setcookie("forumAddress", Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"], time() + 3600,"/");
+                setcookie("forumAddress", Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"], time() + (86400 * 365),"/");
                 $_COOKIE['forumAddress'] = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
             }
             // if default host change from wt admin area
             if(!isset($_REQUEST['forum_url']) && isset($_COOKIE['forumAddress']) && $_COOKIE['forumAddress'] != Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"]){
                 $lastestForumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
                 $forumApiKey = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumApiKey"];
-                setcookie("forumAddress", $lastestForumUrl, time() + 3600,"/");
+                setcookie("forumAddress", $lastestForumUrl, time() + (86400 * 365),"/");
                 $_COOKIE['forumAddress'] = $lastestForumUrl;
-                Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
-                $this->setAuthToken($lastestForumUrl, $forumApiKey);
+                if(isset(Craft::$app->getUser()->getIdentity()->id))
+                {
+                    Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+                    $this->setAuthToken($lastestForumUrl, $forumApiKey);
+                } 
             }
 
         }
@@ -182,7 +185,7 @@ class Websitetoolboxcommunity extends Plugin{
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
             
-            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'webhookUrl' => $webhookUrl);           
+            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl);           
             $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');            
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -194,11 +197,19 @@ class Websitetoolboxcommunity extends Plugin{
                 Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
                 exit;
             }
-            $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
-            $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');
-            
-            $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
-            $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
+            if(isset($result->secretKey)){
+                $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
+                $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');
+                $deleteSecretKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.secretKey');
+
+                $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
+                $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
+                $affectedSecretKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.secretKey', $result->secretKey);
+            }else{
+                Craft::$app->getSession()->setNotice(Craft::t('websitetoolboxforum', 'Secret key is missing.'));
+                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
+                exit;
+            }
             if($forumUrl !='' && $forumType ==''){
                 $embeddedPage = '';
             }else{
@@ -220,7 +231,7 @@ class Websitetoolboxcommunity extends Plugin{
             }else{
                 $embeddedPage = '';
             }
-            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'webhookUrl' => $webhookUrl);            
+            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl);            
             $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -232,10 +243,19 @@ class Websitetoolboxcommunity extends Plugin{
                 Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
                 exit;
             }
-            $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
-            $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');      
-            $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
-            $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
+            if(isset($result->secretKey)){                
+                $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
+                $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');      
+                $deleteSecretKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.secretKey');
+
+                $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
+                $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
+                $affectedSecretKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.secretKey', $result->secretKey);
+            }else{
+                Craft::$app->getSession()->setNotice(Craft::t('websitetoolboxforum', 'Secret key is missing.'));
+                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
+                exit;
+            }
         }        
         $this->setAuthToken($result->forumAddress, $result->forumApiKey);
         // to set embedded url
@@ -288,9 +308,9 @@ class Websitetoolboxcommunity extends Plugin{
         );
         $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
         if(isset($response->authtoken) && $response->authtoken !=''){
-            setcookie("forumLogInToken", $response->authtoken, time() + 3600,"/");
-            setcookie("forumLogoutToken", $response->authtoken, time() + 3600,"/");
-            setcookie("forumLoginUserid", $response->userid, time() + 3600,"/");    
+            setcookie("forumLogInToken", $response->authtoken, time() + (86400 * 365),"/");
+            setcookie("forumLogoutToken", $response->authtoken, time() + (86400 * 365),"/");
+            setcookie("forumLoginUserid", $response->userid, time() + (86400 * 365),"/");    
         }else{
             if(isset($response->message)){
                 Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $response->message));    

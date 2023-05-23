@@ -7,6 +7,7 @@ use yii\web\Response;
 
 class DefaultController extends Controller
 {
+    public $enableCsrfValidation = false;
     protected array|bool|int $allowAnonymous = ['index', 'do-something', 'webhook'];
     // Front end action /your/route
     public function actionIndex(): Response
@@ -25,23 +26,28 @@ class DefaultController extends Controller
      * @param forum_url - latest domain 
      */
     public function actionWebhook()
-    {
-        $secret = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername');
+    {  
+        $secret =Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.secretKey',false);
         $postData = file_get_contents("php://input");
-        $signatureHeader = $_SERVER['HTTP_X_SIGNATURE'];
-        $signature = hash_hmac('sha256', $postData, $secret);
-        if ($signature == $signatureHeader) {
-            $data = json_decode($postData, true);
-            if(isset($data['forum_url'])){
-                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl', $data['forum_url']);    
-                $response = ['status' => 200, 'message' => 'Community host updated successfully.'];
+        $signatureHeader = @$_SERVER['HTTP_X_WTSIGNATURE'];
+        $signature = hash_hmac('sha256', $postData, $secret, true);
+        $signature = base64_encode($signature);
+        $data = json_decode($postData);
+        if ($signature == $signatureHeader) 
+        {
+            if(isset($data->communityAddress))
+            {
+                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl', $data->communityAddress);
+                $response = ['status' => 200, 'message' => 'Community host updated successfully for craft.'];
             }else{
                 $response = ['status' => 301, 'message' => 'Invalid parameter received.'];
             }
         }
-        else{
+        else
+        {
             $response = ['status' => 400, 'message' => 'You are not authorize user.'];
         }
-        return json_encode($response, true);                
+        $result = json_encode($response, true);
+        return json_encode($response, true);
     }
 }

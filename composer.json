@@ -2,7 +2,7 @@
     "name": "websitetoolbox/websitetoolboxcommunity",
     "description": "The Easiest CraftCMS Community Plugin. Effortlessly Build a Beautiful Community Forum with Zero Coding, Seamless Embedding, Instant Setup, and Exceptional Support.",
     "type": "craft-plugin",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "keywords": [
         "craft",
         "cms",
@@ -25,7 +25,6 @@
         "craftcms/cms": "^4.0.0"
     },    
     "require-dev": {
-     "craftcms/cms": "^4.0.0",
       "codeception/codeception": "^3.0",
       "vlucas/phpdotenv": "^3.0"
     },

@@ -116,6 +116,7 @@ class Sso extends Component{
         
         $curl         = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Website Toolbox CraftCMS Plugin');
         $forumApiKey  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false);        
         if($apiKey != ''){ 
             $headers = array(
@@ -162,17 +163,17 @@ class Sso extends Component{
       }
     }
     function resetCookieOnLogout(){
-      setcookie('forumLogInToken', 0, time() - 3600, "/");
-      setcookie('forumLogoutToken', 0, time() - 3600, "/");
-      setcookie('forumLoginUserid', '', time() - 3600, "/");
-      setcookie('forumAddress', '', time() - 3600, "/");
-      setcookie('logInForum', '', time() - 3600, "/");
+      setcookie('forumLogInToken', 0, time() - (86400 * 365), "/");
+      setcookie('forumLogoutToken', 0, time() - (86400 * 365), "/");
+      setcookie('forumLoginUserid', '', time() - (86400 * 365), "/");
+      setcookie('forumAddress', '', time() - (86400 * 365), "/");
+      setcookie('logInForum', '', time() - (86400 * 365), "/");
    } 
       
    function renderJsScriptEmbedded($forumUrl,$userStatus){        
         if((isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != '')){
             $cookieForumLoginToken = $_COOKIE['forumLogInToken'];
-            setcookie("forumLogInToken", '', time() - 3600,"/"); 
+            setcookie("forumLogInToken", '', time() - (86400 * 365),"/"); 
             $_COOKIE['forumLogInToken'] = '';
             echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
         }
