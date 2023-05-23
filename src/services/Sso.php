@@ -102,7 +102,7 @@ class Sso extends Component{
         if ($userEmail) {
             $data     = array(
                            "email" => $userEmail);
-            $url      = WT_API_URL . "/users/";
+            $url      = WT_API_URL . "/users/?email=".$userEmail;
             $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('GET', $url, $data,'json','forumApikey');
             if (isset($response->{'data'}[0]->{'userId'})) {
                  return $response->{'data'}[0]->{'userId'};
@@ -171,12 +171,14 @@ class Sso extends Component{
    } 
       
    function renderJsScriptEmbedded($forumUrl,$userStatus){        
-        if((isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != '')){
-            $cookieForumLoginToken = $_COOKIE['forumLogInToken'];
-            setcookie("forumLogInToken", '', time() - (86400 * 365),"/"); 
-            $_COOKIE['forumLogInToken'] = '';
-            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
-        }
+    $domainChange = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.isDomainChange');
+    if((isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != '')|| ($domainChange && isset($_COOKIE['forumLogoutToken']))){
+        $cookieForumLoginToken = isset($_COOKIE['forumLogInToken'])?$_COOKIE['forumLogInToken'] : $_COOKIE['forumLogoutToken'];
+        setcookie("forumLogInToken", '', time() - (86400 * 365),"/"); 
+        $_COOKIE['forumLogInToken'] = '';
+        Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.isDomainChange');
+        echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
+    }
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()

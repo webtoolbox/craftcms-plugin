@@ -77,8 +77,7 @@ class Websitetoolboxcommunity extends Plugin{
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
                 });
             }
-        }
- 
+        } 
         if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
             Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {  
                 $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
