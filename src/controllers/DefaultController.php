@@ -38,6 +38,7 @@ class DefaultController extends Controller
             if(isset($data->communityAddress))
             {
                 Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl', $data->communityAddress);
+                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.isDomainChange', 1);
                 $response = ['status' => 200, 'message' => 'Community host updated successfully for craft.'];
             }else{
                 $response = ['status' => 301, 'message' => 'Invalid parameter received.'];
