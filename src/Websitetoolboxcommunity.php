@@ -147,7 +147,7 @@ class Websitetoolboxcommunity extends Plugin
         if(isset($_POST['settings']['forumUsername'])){
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
+            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword,'plugin' => 'craft', 'websiteBuilder' => 'craftcms');
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -166,7 +166,7 @@ class Websitetoolboxcommunity extends Plugin
         } else{
             $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);;
             $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);;
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
+            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword,'plugin' => 'craft', 'websiteBuilder' => 'craftcms');
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json'); 
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -192,8 +192,9 @@ class Websitetoolboxcommunity extends Plugin
         $postData     = array('type'=>'json','apikey' => $result->forumApiKey, 'user' => $loggediUserName,'email'=>$loggedinUserEmail,'externalUserid'=>$loggedinUserId);
         $result       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
         if(isset($result->authtoken) && $result->authtoken !=''){
-            setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-            setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");   
+            setcookie("forumLogInToken", $result->authtoken, time() + (86400 * 365),"/");   
+            setcookie("forumLogoutToken", $result->authtoken, time() + (86400 * 365),"/");  
+            setcookie("forumLoginUserid", $result->userid, time() + (86400 * 365),"/");   
         }else{
             if(isset($response->message)){
                 Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $response->message));    

@@ -12,6 +12,7 @@ use Craft;
 use craft\base\Component;
 use craft\web\View;
 use craft\services\Config;
+use craft\helpers\UrlHelper;
 define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
 /**
  * @author    Website Toolbox
@@ -34,8 +35,9 @@ class Sso extends Component
                     $postData     = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
                     $result       = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
                     if(isset($result->authtoken) && $result->authtoken !=''){
-                        setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-                        setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");
+                        setcookie("forumLogInToken", $result->authtoken, time() + (86400 * 365),"/");
+                        setcookie("forumLogoutToken", $result->authtoken, time() + (86400 * 365),"/");
+                        setcookie("forumLoginUserid", $result->userid, time() + (86400 * 365),"/");
                     }
               }
           }         
@@ -66,13 +68,14 @@ class Sso extends Component
             }        
             $RequestUrl           = $forumUrl . "/register/create_account/";
             $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');      
-            $RequestUrl           = $forumUrl."/register/setauthtoken";
+            /*$RequestUrl           = $forumUrl."/register/setauthtoken";
             $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
             $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
             if(isset($result->authtoken)){
-                setcookie("forumLogoutToken", $result->authtoken, time() + 3600,"/");
-                setcookie("forumLoginUserid", $result->userid, time() + 3600,"/");      
-            }  
+                setcookie("forumLogInToken", $result->authtoken, time() + (86400 * 365),"/");
+                setcookie("forumLogoutToken",$result->authtoken, time() + (86400 * 365),"/");
+                setcookie("forumLoginUserid", $result->userid, time() + (86400 * 365),"/");    
+            }*/  
         }
     }
     function afterUpdateUser(){
@@ -154,79 +157,96 @@ class Sso extends Component
     function afterLogOut(){  
       if(isset($_COOKIE['forumLogoutToken'])){
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].' border="0" width="0" height="0" alt="" id="imageTag">';   
-        //Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();  
+        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].' border="0" width="0" height="0" alt="" id="imageTag">';    
       }
     }
     function resetCookieOnLogout(){
-      setcookie('forumLogoutToken', 0, time() - 3600, "/");
-      setcookie('forumLoginUserid', '', time() - 3600, "/");
-      setcookie('loginRemember', '', time() - 3600, "/");
+      setcookie('forumLogInToken', 0, time() - (86400 * 365), "/");
+      setcookie('forumLogoutToken', 0, time() - (86400 * 365), "/");
+      setcookie('forumLoginUserid', '', time() - (86400 * 365), "/");
+      setcookie('loginRemember', '', time() - (86400 * 365), "/");
+      setcookie('logInForum', '', time() - 3600, "/");
    }
    function renderJsScriptEmbedded($forumUrl,$userStatus){ 
-        if(isset($_COOKIE['forumLogoutToken'])){
-            $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
-        }else{
-            $cookieForumLogoutToken = 0;
+        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
+        $forumToken = @$_COOKIE['forumLogoutToken'];
+        if((isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != '')){
+            $cookieForumLoginToken = $_COOKIE['forumLogInToken'];            
+            setcookie("forumLogInToken", '', time() - (86400 * 365),"/"); 
+            $_COOKIE['forumLogInToken'] = '';
+            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
         }
         $js = <<<JS
-      (  
-       function renderEmbeddedHtmlWithAuthtoken()
-      {  var embedUrl  = "{$forumUrl}";   
-         var userStatus = "{$userStatus}";
-
-         var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
-        var wtbWrap = document.createElement('div');
-        wtbWrap.id = "wtEmbedCode";
-        var embedScript = document.createElement('script');
-        embedScript.id = "embedded_forum";
-        embedScript.type = 'text/javascript'; 
-        if(typeof cookieForumLogoutToken != 'undefined' && cookieForumLogoutToken != 0){ 
-            if(userStatus == 'loggedIn'){
-                embedUrl += "/js/mb/embed.js?authtoken="+cookieForumLogoutToken;
-            }else{
-                embedUrl += "/js/mb/embed.js?authtoken=0";
+          (  
+           function renderEmbeddedHtmlWithAuthtoken()
+          { var embedUrl  = "{$forumUrl}";
+            var userStatus = "{$userStatus}";
+            var forumToken = "{$forumToken}";
+            var token = "{$token}";
+            var wtbWrap = document.createElement('div');
+            wtbWrap.id = "wtEmbedCode";
+            var embedScript = document.createElement('script');
+            embedScript.id = "embedded_forum";
+            embedScript.type = 'text/javascript'; 
+            embedUrl += "/js/mb/embed.js";
+            embedScript.src = embedUrl;
+            embedScript.setAttribute('data-version','1.1'); 
+            wtbWrap.appendChild(embedScript);
+            if(document.getElementById('wtEmbedCode') != null){
+                document.getElementById('wtEmbedCode').innerHTML = '';
+                document.getElementById('wtEmbedCode').appendChild(embedScript);  
             }
-        } else{ 
-            embedUrl += "/js/mb/embed.js?authtoken=0";
+            if(!token && forumToken){
+                // for the case when website session time out but loggedin in forum 
+                location.reload();
+            }
+          })();
+        JS;
+        return $js;
+    }   
+  function renderJsScriptUnEmbedded(){
+    $baseUrl = UrlHelper::siteUrl();        
+    $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
+    $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);        
+    if(isset($_COOKIE['forumLogoutToken'])){
+        $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
+        if(!isset($_COOKIE['logInForum'])){
+            setcookie('logInForum', 1, time() + (3600),"/");                                
+            $_COOKIE['logInForum'] = 1;
+            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' width="0" height="0" border="0" alt="">'; 
         }
-        embedScript.src = embedUrl; 
-        wtbWrap.appendChild(embedScript);
-        if(document.getElementById('wtEmbedCode') != null){
+    }else{
+        $cookieForumLogoutToken = 0;
+    }         
+    $cmUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.communityUrl',false);
+    $embed = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
+    $js = <<<JS
+    (  
+     function renderEmbeddedUnHtmlWithAuthtoken()
+    {
+        var embed = "{$embed}";
+        var forumUrl = "{$forumUrl}";
+        var cmUrl = "{$cmUrl}";
+        var baseUrl = "{$baseUrl}";
+        var cookieForumLogoutToken = "{$cookieForumLogoutToken}";            
+        var authtokenStr = "?authtoken="+cookieForumLogoutToken;
+        var forumHref = forumUrl+authtokenStr;            
+        var forumLink = baseUrl+cmUrl;
+        if(baseUrl.match('index.php')){
+            forumLink = baseUrl+"?p="+cmUrl;
+        }
+        var link = document.querySelector('[href="'+forumLink+'"]');
+        if(link != null){
+            link.setAttribute("href", forumHref);
+        }
+        if(embed == '' && document.getElementById('wtEmbedCode')){
             document.getElementById('wtEmbedCode').innerHTML = '';
-            document.getElementById('wtEmbedCode').appendChild(embedScript);  
-        }   
-
-      })();
-JS;
-      return $js ;
-    }   
-  function renderJsScriptUnEmbedded(){  
-        if(isset($_COOKIE['forumLogoutToken'])){
-            $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
-        }else{
-            $cookieForumLogoutToken = 0;
-        } 
-        $js = <<<JS
-        (  
-         function renderEmbeddedUnHtmlWithAuthtoken()
-        { 
-        var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
-        var links = document.getElementsByTagName('a');
-        for(var i = 0; i< links.length; i++){
-          var str = links[i].href; 
-          for(var j = 0; j< str.length; j++){
-            var res = str.split("."); 
-            if(res[j] == 'websitetoolbox'){ 
-                var linkToChange = links[i]; 
-                if(typeof cookieForumLogoutToken != 'undefined' && cookieForumLogoutToken != 0){
-                    linkToChange.setAttribute("href", linkToChange+"?authtoken="+cookieForumLogoutToken);
-                }
-            }            
-          }
+            if(document.getElementById('wtLoadingIcon')){
+                document.getElementById('wtLoadingIcon').remove();
+            }
         }
-        })();
+    })();
 JS;
-        return $js ;
-    }   
+    return $js ;
+  }   
 }
