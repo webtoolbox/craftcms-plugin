@@ -148,7 +148,7 @@ class Websitetoolboxcommunity extends Plugin
         if(isset($_POST['settings']['forumUsername'])){
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
+            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'websiteBuilder' => 'craftcms');
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -167,7 +167,7 @@ class Websitetoolboxcommunity extends Plugin
         } else{
             $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
+            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'websiteBuilder' => 'craftcms');
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json'); 
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
