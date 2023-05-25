@@ -67,15 +67,17 @@ class Sso extends Component
                $postData['name'] .=  " ".$user->user->lastName;
             }        
             $RequestUrl           = $forumUrl . "/register/create_account/";
-            $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');      
-            $RequestUrl           = $forumUrl."/register/setauthtoken";
-            $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
             $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
-            if(isset($result->authtoken)){
-                setcookie("forumLogInToken", $result->authtoken, time() + (86400 * 365),"/");
-                setcookie("forumLogoutToken",$result->authtoken, time() + (86400 * 365),"/");
-                setcookie("forumLoginUserid", $result->userid, time() + (86400 * 365),"/");    
-            }  
+            if(Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam)){
+                $RequestUrl           = $forumUrl."/register/setauthtoken";
+                $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
+                $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
+                if(isset($result->authtoken)){
+                    setcookie("forumLogInToken", $result->authtoken, time() + (86400 * 365),"/");
+                    setcookie("forumLogoutToken",$result->authtoken, time() + (86400 * 365),"/");
+                    setcookie("forumLoginUserid", $result->userid, time() + (86400 * 365),"/");
+                }
+            }
         }
     }
     function afterUpdateUser(){
@@ -157,7 +159,10 @@ class Sso extends Component
     function afterLogOut(){  
       if(isset($_COOKIE['forumLogoutToken'])){
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].' border="0" width="0" height="0" alt="" id="imageTag">';    
+        $actualLink = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $logoutUrl = $forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'&redirect='.$actualLink;
+        Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+        header("Location:".$logoutUrl);exit;
       }
     }
     function resetCookieOnLogout(){
@@ -168,8 +173,6 @@ class Sso extends Component
       setcookie('logInForum', '', time() - 3600, "/");
    }
    function renderJsScriptEmbedded($forumUrl,$userStatus){ 
-        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
-        $forumToken = @$_COOKIE['forumLogoutToken'];
         if((isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != '')){
             $cookieForumLoginToken = $_COOKIE['forumLogInToken'];            
             setcookie("forumLogInToken", '', time() - (86400 * 365),"/"); 
@@ -181,8 +184,6 @@ class Sso extends Component
            function renderEmbeddedHtmlWithAuthtoken()
           { var embedUrl  = "{$forumUrl}";
             var userStatus = "{$userStatus}";
-            var forumToken = "{$forumToken}";
-            var token = "{$token}";
             var wtbWrap = document.createElement('div');
             wtbWrap.id = "wtEmbedCode";
             var embedScript = document.createElement('script');
@@ -195,10 +196,6 @@ class Sso extends Component
             if(document.getElementById('wtEmbedCode') != null){
                 document.getElementById('wtEmbedCode').innerHTML = '';
                 document.getElementById('wtEmbedCode').appendChild(embedScript);  
-            }
-            if(!token && forumToken){
-                // for the case when website session time out but loggedin in forum 
-                location.reload();
             }
           })();
         JS;

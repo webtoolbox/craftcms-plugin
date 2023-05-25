@@ -55,7 +55,7 @@ class Websitetoolboxcommunity extends Plugin
                 ['name' => $this->name]
             ),
             __METHOD__
-        );                    
+        );
         self::$plugin = $this;
         $this->setComponents([
             'sso' => \websitetoolbox\websitetoolboxcommunity\services\Sso::class,
@@ -70,15 +70,16 @@ class Websitetoolboxcommunity extends Plugin
                 }
             }
         });
-        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
-        if(!$token && isset($_COOKIE['forumLogoutToken'])){
-            Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
+        if(!Craft::$app->getRequest()->getIsConsoleRequest()){
+            $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
+            if(!$token && isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
+                Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
                     $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
                     echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="" id="imageTag">';
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
-            });
+                });
+            }
         } 
- 
         if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){           
             Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
                 $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
@@ -147,7 +148,7 @@ class Websitetoolboxcommunity extends Plugin
         if(isset($_POST['settings']['forumUsername'])){
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword,'plugin' => 'craft', 'websiteBuilder' => 'craftcms');
+            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -164,9 +165,9 @@ class Websitetoolboxcommunity extends Plugin
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
             $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
         } else{
-            $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);;
-            $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);;
-            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword,'plugin' => 'craft', 'websiteBuilder' => 'craftcms');
+            $userName               = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
+            $userPassword           = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
+            $postData               = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword);
             $result                 = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json'); 
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
