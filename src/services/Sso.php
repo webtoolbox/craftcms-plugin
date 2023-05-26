@@ -68,7 +68,7 @@ class Sso extends Component
             }        
             $RequestUrl           = $forumUrl . "/register/create_account/";
             $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
-            if(Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam)){
+            if(Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam) && isset(Craft::$app->getUser()->getIdentity()->email) && ($user->user->email == Craft::$app->getUser()->getIdentity()->email)){
                 $RequestUrl           = $forumUrl."/register/setauthtoken";
                 $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
                 $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
