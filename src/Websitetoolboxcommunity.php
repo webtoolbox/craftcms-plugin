@@ -28,6 +28,8 @@ use craft\elements\Entry;
 use craft\base\Element;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
+use craft\services\Plugins;
+use craft\events\PluginEvent;
 
 define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settings');
 /**
@@ -58,7 +60,18 @@ class Websitetoolboxcommunity extends Plugin{
         $this->setComponents([
             'sso' => \websitetoolbox\community\services\Sso::class,
         ]);
-        self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');        
+        self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
+        Event::on(Plugins::class, Plugins::EVENT_AFTER_ENABLE_PLUGIN,
+            function (PluginEvent $event) {
+                $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+                $forumApiKey = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumApiKey"];
+                if(isset(Craft::$app->getUser()->getIdentity()->id)){                    
+                    Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+                    $this->setAuthToken($forumUrl, $forumApiKey);  
+                    echo '<img src='.$forumUrl.'/register/dologin?authtoken='.@$_COOKIE['forumLogoutToken'].'  width="0" height="0" border="0" alt="">';
+                }
+            }
+        );
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_BEFORE_SAVE_ELEMENT, function(Event $event) {
             if ($event->element instanceof \craft\elements\User) {
                 if($event->element->id){
@@ -79,7 +92,7 @@ class Websitetoolboxcommunity extends Plugin{
             }
         } 
         if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
-            Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {  
+            Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
                 $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
                 if(!$token){
                     Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
@@ -127,7 +140,6 @@ class Websitetoolboxcommunity extends Plugin{
                     $this->setAuthToken($lastestForumUrl, $forumApiKey);
                 } 
             }
-
         }
         Event::on(\craft\services\Users::class, \craft\services\Users::EVENT_AFTER_ACTIVATE_USER, function(Event $event) {                         
                 Websitetoolboxcommunity::getInstance()->sso->afterUserCreate($event);
@@ -175,17 +187,15 @@ class Websitetoolboxcommunity extends Plugin{
         $webhookUrl = $siteUrl.'/'.$webHookPage;
         if(strpos($siteUrl, 'index.php') >= 0){
             $pageTrigger = Craft::$app->getConfig()->general->pageTrigger;
-            $webhook = $siteUrl.'?'.$pageTrigger.'='.$webHookPage;
+            $webhookUrl = $siteUrl.'?'.$pageTrigger.'='.$webHookPage;
         }
         if(isset($_POST['settings']['forumUsername'])){ 
-            $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);            
+            $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
             $forumUrl  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
-            
             $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl);           
-            $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');            
+            $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
                     $errorMessage = 'Authentication fail for Websitetoolboxcommunity';

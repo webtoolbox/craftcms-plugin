@@ -23,7 +23,7 @@ class DefaultController extends Controller
     }
     /**
      * @uses function to update plugin forum URL on change domain from wt admin(using webhook call)
-     * @param forum_url - latest domain 
+     * @param communityAddress - latest domain 
      */
     public function actionWebhook()
     {  

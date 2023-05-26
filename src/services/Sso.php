@@ -26,7 +26,7 @@ class Sso extends Component{
             $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey');
             $forumUrl    = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
             if($forumApiKey){ 
-                $myUserQuery  = \craft\elements\User::find();                    
+                $myUserQuery  = \craft\elements\User::find();
                 $userEmail    = Craft::$app->getUser()->getIdentity()->email;
                 $userId       = Craft::$app->getUser()->getIdentity()->id;
                 $userName     = Craft::$app->getUser()->getIdentity()->username;
@@ -98,7 +98,7 @@ class Sso extends Component{
         echo 'Community :: '.$response->error->message;
       }
     }
-    function getUserid($userEmail){              
+    function getUserid($userEmail){    
         if ($userEmail) {
             $data     = array(
                            "email" => $userEmail);
@@ -208,7 +208,7 @@ class Sso extends Component{
         if(isset($_COOKIE['forumLogoutToken'])){
             $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
             if(!isset($_COOKIE['logInForum'])){
-                setcookie('logInForum', 1, time() + 3600,"/");                                
+                setcookie('logInForum', 1, time() + (86400 * 365),"/");                                
                 $_COOKIE['logInForum'] = 1;
                 echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' width="0" height="0" border="0" alt="">'; 
             }
