@@ -65,7 +65,9 @@ class Sso extends Component{
             $RequestUrl = $forumUrl . "/register/create_account/";
             $result = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json'); 
             $userData = array('user' => $userName, 'email'=>$userEmail, 'externalUserid'=>$userId);
-            Websitetoolboxcommunity::getInstance()->setAuthToken($forumUrl, $forumApiKey, $userData);
+            if(Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam) && isset(Craft::$app->getUser()->getIdentity()->email) && ($user->user->email == Craft::$app->getUser()->getIdentity()->email)){
+                Websitetoolboxcommunity::getInstance()->setAuthToken($forumUrl, $forumApiKey, $userData);
+            }
         }
     }
     function afterUpdateUser(){
@@ -167,7 +169,7 @@ class Sso extends Component{
       setcookie('forumLogoutToken', 0, time() - (86400 * 365), "/");
       setcookie('forumLoginUserid', '', time() - (86400 * 365), "/");
       setcookie('forumAddress', '', time() - (86400 * 365), "/");
-      setcookie('logInForum', '', time() - (86400 * 365), "/");
+      setcookie('logInForum', '', time() - 3600, "/");
    } 
       
    function renderJsScriptEmbedded($forumUrl,$userStatus){        
@@ -208,7 +210,7 @@ class Sso extends Component{
         if(isset($_COOKIE['forumLogoutToken'])){
             $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
             if(!isset($_COOKIE['logInForum'])){
-                setcookie('logInForum', 1, time() + (86400 * 365),"/");                                
+                setcookie('logInForum', 1, time() + 3600,"/");                                
                 $_COOKIE['logInForum'] = 1;
                 echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' width="0" height="0" border="0" alt="">'; 
             }

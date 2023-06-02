@@ -120,6 +120,12 @@
             </div>
             </td>
         </tr>
+        <tr id='cmInstruction'>
+            <td></td>
+            <td>
+                <p>Copy the community url and add a link to it in the website’s navigation menu: <strong>{{settings.forumUrl}}</strong> <a href="javascript:void(0)" onClick="copyUrl(this, '{{settings.forumUrl}}')" class="copyLink">Copy URL</a></p>
+            </td>
+        </tr>
         <tr id='cmUrl'>
             <td class='form_label pt_20'><b class="pull_right valign">Embedded Page</b></td>
             <td class="pt_20">
@@ -147,7 +153,7 @@
                         })
                     }} 
                     <div class="urlCopy text">
-                        <a href='javascript:void(0);' class="test" onClick="copyUrl(this)">Copy URL</a>
+                        <a href='javascript:void(0);' class="copyLink" onClick="copyUrl(this)">Copy URL</a>
                     </div>
                 </div>                    
                 {{ _self.errorList(settings.getErrors('communityUrl')) }}
@@ -183,12 +189,25 @@
     var checkbox  = document.getElementById('settings-forumEmbedded');
     if(!checkbox.checked){        
        document.getElementById('settings-cmUrl').style.display = 'none';       
+    }else{
+        document.getElementById('settings-cmInstruction').style.display = 'none'; 
+    }
+    function resetCopyButtons(){
+        var cp = document.getElementsByClassName('copyLink');
+        cp[0].innerHTML = cp[1].innerHTML = 'Copy URL';
+        cp[0].classList.remove('success'); 
+        cp[1].classList.remove('success');
+        cp[0].removeAttribute('data-icon'); 
+        cp[1].removeAttribute('data-icon'); 
     }
     checkbox.addEventListener('change', (event) => {
         var chk = event.target;
+        resetCopyButtons();
         if (chk.checked) {
-            document.getElementById('settings-cmUrl').style.display = '';            
+            document.getElementById('settings-cmUrl').style.display = '';  
+            document.getElementById('settings-cmInstruction').style.display = 'none';          
         } else {
+            document.getElementById('settings-cmInstruction').style.display = '';
             document.getElementById('settings-cmUrl').style.display = 'none';            
         }
     });
@@ -202,11 +221,9 @@
             cmurl.value = cmurl.value.substring(0, cmurl.value.length - 1);             
         }
     });
-    function copyUrl(me){
-        var page = document.getElementById('settings-communityUrl').value;
-        if(page !== ''){
-            var copyText = document.getElementById('settings-frmUrl').text;
-            navigator.clipboard.writeText(copyText);            
+    function copyUrl(me, textToCopy=''){
+        if(textToCopy){
+            navigator.clipboard.writeText(textToCopy);
             me.text = '';
             me.removeAttribute('data-icon');
             setTimeout(function(){
@@ -215,7 +232,20 @@
                 me.setAttribute('data-icon', 'check');
             }, 200);
         }else{
-            alert('Error: Please enter an embed page URL first.');
-        }     
+            var page = document.getElementById('settings-communityUrl').value;
+            if(page !== ''){
+                var copyText = document.getElementById('settings-frmUrl').text;
+                navigator.clipboard.writeText(copyText);            
+                me.text = '';
+                me.removeAttribute('data-icon');
+                setTimeout(function(){
+                    me.text = ' Copied'
+                    me.classList.add('success');
+                    me.setAttribute('data-icon', 'check');
+                }, 200);
+            }else{
+                alert('Error: Please enter an embed page URL first.');
+            }    
+        } 
     }
 </script>
