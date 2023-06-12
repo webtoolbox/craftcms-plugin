@@ -206,18 +206,14 @@ class Websitetoolboxcommunity extends Plugin{
                 Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
                 exit;
             }
-            if(isset($result->secretKey)){
-                $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
-                $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');
-                $deleteSecretKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.secretKey');
+            $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
+            $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');            
 
-                $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
-                $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
+            $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
+            $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);            
+            if(isset($result->secretKey)){
+                $deleteSecretKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.secretKey');
                 $affectedSecretKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.secretKey', $result->secretKey);
-            }else{
-                Craft::$app->getSession()->setNotice(Craft::t('websitetoolboxforum', 'Secret key is missing.'));
-                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
-                exit;
             }
             if($forumUrl !='' && $forumType ==''){
                 $embeddedPage = '';
@@ -252,18 +248,14 @@ class Websitetoolboxcommunity extends Plugin{
                 Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
                 exit;
             }
-            if(isset($result->secretKey)){                
-                $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
-                $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');      
-                $deleteSecretKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.secretKey');
+            $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
+            $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');                  
 
-                $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
-                $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
+            $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
+            $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
+            if(isset($result->secretKey)){                
+                $deleteSecretKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.secretKey');
                 $affectedSecretKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.secretKey', $result->secretKey);
-            }else{
-                Craft::$app->getSession()->setNotice(Craft::t('websitetoolboxforum', 'Secret key is missing.'));
-                Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
-                exit;
             }
         }        
         $this->setAuthToken($result->forumAddress, $result->forumApiKey);
