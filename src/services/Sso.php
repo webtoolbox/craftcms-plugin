@@ -200,10 +200,8 @@ class Sso extends Component{
             embedScript.setAttribute('data-version','1.1');
             wtbWrap.appendChild(embedScript);
             if(document.getElementById('wtEmbedCode') != null){
-                document.getElementById('wtEmbedCode').innerHTML = '';
-                setTimeout(function(){
-                    document.getElementById('wtEmbedCode').appendChild(embedScript);
-                },800);
+                document.getElementById('wtEmbedCode').innerHTML = '';                
+                document.getElementById('wtEmbedCode').appendChild(embedScript);                
             }
           })();
         JS;
