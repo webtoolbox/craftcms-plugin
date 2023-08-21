@@ -172,40 +172,32 @@ class Sso extends Component{
       setcookie('logInForum', '', time() - 3600, "/");
    } 
       
-    function renderJsScriptEmbedded($forumUrl,$userStatus){        
-        $domainChange = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.isDomainChange');
-        $token = '';
-        if((isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != '')|| ($domainChange && isset($_COOKIE['forumLogoutToken']))){
-            $cookieForumLoginToken = isset($_COOKIE['forumLogInToken'])?$_COOKIE['forumLogInToken'] : $_COOKIE['forumLogoutToken'];
-            setcookie("forumLogInToken", '', time() - (86400 * 365),"/"); 
-            $_COOKIE['forumLogInToken'] = '';
-            Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.isDomainChange');
-            $token = '?authtoken='.$cookieForumLoginToken;
-            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
-        }
-        if($userStatus == 'loggedout'){
-            $token = '?authtoken=0';
-        }
+   function renderJsScriptEmbedded($forumUrl,$userStatus){        
+    $domainChange = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.isDomainChange');
+    if((isset($_COOKIE['forumLogInToken']) && $_COOKIE['forumLogInToken'] != '')|| ($domainChange && isset($_COOKIE['forumLogoutToken']))){
+        $cookieForumLoginToken = isset($_COOKIE['forumLogInToken'])?$_COOKIE['forumLogInToken'] : $_COOKIE['forumLogoutToken'];
+        setcookie("forumLogInToken", '', time() - (86400 * 365),"/"); 
+        $_COOKIE['forumLogInToken'] = '';
+        Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.isDomainChange');
+        echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
+    }
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
           { var embedUrl  = "{$forumUrl}";
             var userStatus = "{$userStatus}";
-            var authToken = "{$token}"; 
             var wtbWrap = document.createElement('div');
             wtbWrap.id = "wtEmbedCode";            
             var embedScript = document.createElement('script');
             embedScript.id = "embedded_forum";
             embedScript.type = 'text/javascript'; 
-            embedUrl += "/js/mb/embed.js?"+authToken
+            embedUrl += "/js/mb/embed.js";
             embedScript.src = embedUrl;
             embedScript.setAttribute('data-version','1.1');            
             wtbWrap.appendChild(embedScript);
             if(document.getElementById('wtEmbedCode') != null){
                 document.getElementById('wtEmbedCode').innerHTML = '';
-                setTimeout(function(){
-                    document.getElementById('wtEmbedCode').appendChild(embedScript);
-                },800);                
+                document.getElementById('wtEmbedCode').appendChild(embedScript);  
             }
           })();
         JS;
