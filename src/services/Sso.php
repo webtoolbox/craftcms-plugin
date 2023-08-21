@@ -183,9 +183,6 @@ class Sso extends Component{
             $token = '?authtoken='.$cookieForumLoginToken;
             echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
         }
-        if($userStatus == 'loggedout'){
-            $token = '?authtoken=0';
-        }
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
@@ -193,13 +190,14 @@ class Sso extends Component{
             var userStatus = "{$userStatus}";
             var authToken = "{$token}"; 
             var wtbWrap = document.createElement('div');
-            wtbWrap.id = "wtEmbedCode";            
+            wtbWrap.id = "wtEmbedCode";
             var embedScript = document.createElement('script');
             embedScript.id = "embedded_forum";
             embedScript.type = 'text/javascript'; 
-            embedUrl += "/js/mb/embed.js?"+authToken
+            embedUrl += "/js/mb/embed.js";
+            if(authToken != ''){ embedUrl += authToken; }
             embedScript.src = embedUrl;
-            embedScript.setAttribute('data-version','1.1');            
+            embedScript.setAttribute('data-version','1.1');
             wtbWrap.appendChild(embedScript);
             if(document.getElementById('wtEmbedCode') != null){
                 document.getElementById('wtEmbedCode').innerHTML = '';
