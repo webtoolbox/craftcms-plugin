@@ -161,7 +161,7 @@ class Sso extends Component{
       if(isset($_COOKIE['forumLogoutToken'])){
         $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$cookieForumLogoutToken.' border="0" width="0" height="0" alt="">'; 
+        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$cookieForumLogoutToken.' border="0" width="0" height="0" alt="" id="logout_img">'; 
       }
     }
     function resetCookieOnLogout(){
@@ -188,7 +188,8 @@ class Sso extends Component{
            function renderEmbeddedHtmlWithAuthtoken()
           { var embedUrl  = "{$forumUrl}";
             var userStatus = "{$userStatus}";
-            var authToken = "{$token}"; 
+            var authToken = "{$token}";
+            var userStatus = "{$userStatus}";
             var wtbWrap = document.createElement('div');
             wtbWrap.id = "wtEmbedCode";
             var embedScript = document.createElement('script');
@@ -200,13 +201,20 @@ class Sso extends Component{
             embedScript.setAttribute('data-version','1.1');
             wtbWrap.appendChild(embedScript);
             if(document.getElementById('wtEmbedCode') != null){
-                document.getElementById('wtEmbedCode').innerHTML = '';                
-                document.getElementById('wtEmbedCode').appendChild(embedScript);                
+                document.getElementById('wtEmbedCode').innerHTML = '';
+                if(userStatus == 'loggedout' && document.getElementById('logout_img') != null){
+                    var logoutImageTag = document.getElementById('logout_img');
+                    logoutImageTag.onload = function() {
+                        document.getElementById('wtEmbedCode').appendChild(embedScript);
+                    }
+                }else{
+                    document.getElementById('wtEmbedCode').appendChild(embedScript);
+                }
             }
           })();
         JS;
         return $js;
-   }   
+   }
   function renderJsScriptUnEmbedded(){    
         $baseUrl = UrlHelper::siteUrl();        
         $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
@@ -231,7 +239,7 @@ class Sso extends Component{
             var forumUrl = "{$forumUrl}";
             var cmUrl = "{$cmUrl}";
             var baseUrl = "{$baseUrl}";
-            var cookieForumLogoutToken = "{$cookieForumLogoutToken}";            
+            var cookieForumLogoutToken = "{$cookieForumLogoutToken}";   
             var authtokenStr = "?authtoken="+cookieForumLogoutToken;
             var forumHref = forumUrl+authtokenStr;            
             var forumLink = baseUrl+cmUrl;
