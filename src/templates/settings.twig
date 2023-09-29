@@ -160,6 +160,54 @@
                 <p>Copy the address above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="classHide">{{ baseUrl }}{{ settings.communityUrl }}</a></p>
             </td>
         </tr>
+        <tr>
+            <td class='form_label pt_20'><b class="pull_right valign">Single Sign On</b></td>
+            <td>
+                {% set select_all_user = '' %}
+                {% set select_no_users = '' %}
+                {% set select_groups = '' %}
+                {% set display_status = 'none' %}
+
+                {% if settings.ssoSetting %}
+                    {% if settings.ssoSetting == 'all_users' %}                         
+                        {% set select_all_user = 'checked' %}
+                    {% elseif settings.ssoSetting == 'no_users' %} 
+                        {% set select_no_users = 'checked' %}
+                    {% elseif settings.ssoSetting == 'selected_groups' %}
+                        {% set select_groups = 'checked' %}
+                        {% set display_status = 'block' %}
+                    {% endif %}
+                {% endif %}
+
+                <div class="btn_group" role="group">
+                    <input type="radio" class="btn_check" name="sso_setting" value="all_users" id="all_users" onClick="checkAll(this);" {{ select_all_user }} />
+                    <label class="sso_lable" for="all_users">All Users</label>
+                    <input type="radio" class="btn_check" name="sso_setting" value="no_users" id="no_users" onClick="unCheckAll(this);" {{ select_no_users }} />
+                    <label class="sso_lable" for="no_users">No Users</label>
+                    <input type="radio" class="btn_check" name="sso_setting" value="selected_groups" id="selected_roles" onClick="showOptions();" {{ select_groups }} />
+                    <label class="sso_lable" for="selected_roles">Selected User Group</label>
+                </div>
+                <div id="allOptions" style="display:{{ display_status }};">
+                    <input type="checkbox" value="0" id="user_roles[]" name="user_roles[]"  onclick="checkAll(this);" {{ select_all_user }} />Select/Deselect All Group
+                    <input type="text" name="hiddenUserRoles" id="hiddenUserRoles" value="{{ settings.userGroupsId }}">
+                    <fieldset class="group">
+                        <ul class="role_checkbox">
+                            {% for group in userGroups %}
+                                
+                                {% set selected = '' %}
+                                {% if group.id in settings.userGroupsId %}
+                                    {% set selected = 'checked' %}
+                                {% endif %}
+                                                                
+                                <li>
+                                    <input type="checkbox" id="user_roles[]" value="{{ group.id }}" name="user_roles[]" {{ selected }} />{{ group.name }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
         {% endif %}
         <tr>
             <td colspan='2' class='pt_20'>

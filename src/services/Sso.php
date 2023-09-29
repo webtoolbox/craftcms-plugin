@@ -20,9 +20,9 @@ define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
  * @since     4.0.0
  */
 class Sso extends Component{   
-    function afterLogin(){            
+    function afterLogin(){
         $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);           
-        if($token){                 
+        if($token){
             $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey');
             $forumUrl    = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
             if($forumApiKey){ 
@@ -171,7 +171,24 @@ class Sso extends Component{
       setcookie('forumAddress', '', time() - (86400 * 365), "/");
       setcookie('logInForum', '', time() - 3600, "/");
    } 
-      
+    function isValidUserGroup($userGroupId){
+        $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting',false);
+        $allowedGroupsId = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.userGroupsId',false);        
+        if(in_array($userGroupId, $allowedGroupsId)){
+            return true;
+        }
+        return false;
+    } 
+    function getLoggedInUserGroup(){
+        $user = Craft::$app->getUser()->getIdentity();
+        $userGroups = $user->getGroups();
+        $groupId = [];
+        foreach ($userGroups as $group) {
+            $groupId[] = $group->id;
+        }
+        $userGroupsId = implode(',', $groupId);        
+        return $userGroupsId;
+    }
     function renderJsScriptEmbedded($forumUrl,$userStatus){        
         $domainChange = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.isDomainChange');
         $token = '';

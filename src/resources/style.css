@@ -72,6 +72,38 @@
 .wt_alert > .wt_li{
     padding: 8px 0 0 5px;
 }
+.btn_group {
+    clear: both;
+    display: inline-block;
+}
+.btn_check {
+    position: absolute;
+    opacity: 0; /* Make the radio button invisible */
+}
+
+.btn_check + label {
+    float: left;
+    padding: 0.3em 1em;
+    cursor: pointer;
+    border: 1px solid #28608f;
+    margin-right: -1px;
+    color: #428bca;
+    background-color: #fff;
+}
+.role_checkbox li{
+    display: inline;
+}
+.btn_check + label:first-of-type {
+    border-radius: 0.2em 0 0 0.2em;
+}
+
+.btn_check + label:last-of-type {
+    border-radius: 0 0.2em 0.2em 0;
+}
+.btn_check:checked + label {
+    color: #fff;
+    background-color: #3277b3;
+}
 @media screen and (min-width: 768px) {
     .input-communityUrl>.urlCopy {
         border-radius: 0 3px 3px 0;

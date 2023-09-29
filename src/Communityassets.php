@@ -20,6 +20,10 @@ class Communityassets extends AssetBundle
         $this->css = [
             'style.css',
         ];
+        
+        $this->js = [
+            'websitetoolbox.js',
+        ];
 
         parent::init();
     }

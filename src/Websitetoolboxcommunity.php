@@ -172,12 +172,14 @@ class Websitetoolboxcommunity extends Plugin{
     protected function settingsHtml(): ?string{        
         $hashTypes = hash_algos();
         $hashTypes = array_combine($hashTypes, $hashTypes);
+        $userGroups = Craft::$app->userGroups->getAllGroups();
         Craft::$app->view->registerAssetBundle(Communityassets::class);
         return Craft::$app->view->renderTemplate(
             'websitetoolboxforum/settings',
             [
                 'settings'  => $this->getSettings(),
                 'hashTypes' => $hashTypes,
+                'userGroups' => $userGroups
             ]
         );
     }
@@ -189,9 +191,10 @@ class Websitetoolboxcommunity extends Plugin{
             $pageTrigger = Craft::$app->getConfig()->general->pageTrigger;
             $webhookUrl = $siteUrl.'?'.$pageTrigger.'='.$webHookPage;
         }
-        if(isset($_POST['settings']['forumUsername'])){ 
+        if(isset($_POST['settings']['forumUsername'])){
             $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
             $forumUrl  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
+            $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting',false);
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
             $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl);           
@@ -220,11 +223,17 @@ class Websitetoolboxcommunity extends Plugin{
             }else{
                 $embeddedPage = 'community';
             }
-            
-        } else{            
+            if($ssoSetting == ''){                
+                $this->setUserGroupAccess('all_users');
+            }
+        } else{
             $userName = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
             $embedOption = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
+            if(isset($_POST['settings']['sso_setting'])){
+                $ssoSetting = trim($_POST['settings']['sso_setting']);
+                $this->setUserGroupAccess($ssoSetting);
+            }
             if(isset($_POST['settings']['communityUrl']) && $_POST['settings']['forumEmbedded'] == 1){
                 $embeddedPage = $_POST['settings']['communityUrl'];
                 if($_POST['settings']['communityUrl'] == ''){
@@ -317,5 +326,45 @@ class Websitetoolboxcommunity extends Plugin{
                 Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $response->message));    
             }
         }
+    }
+    public function getAllUserGroups($returnIdsOnly = ''){
+        $userGroups = Craft::$app->userGroups->getAllGroups();
+        $groupData = [];
+        foreach ($userGroups as $group) {
+            $groupData[] = [
+                'id' => $group->id,
+                'name' => $group->name,
+            ];
+        }
+        if($returnIdsOnly == 'getOnlyIds'){
+            $allGroupsIdArray = array_column($groupData, 'id');
+            $allGroupsId = implode(',', $allGroupsIdArray);
+            return $allGroupsId;
+        }
+        return $groupData;
+    }
+    private function setUserGroupAccess($ssoSetting){
+        if(isset($_POST['settings']['user_roles']) && !empty($_POST['settings']['user_roles'])){
+            $allGroupsId = $this->getAllUserGroups('getOnlyIds');
+            $allGroupsIdArray = explode(',', $allGroupsId);            
+            $selectedGroup = $_POST['settings']['user_roles'];
+            $selectedGroupCount = count($_POST['settings']['user_roles']);
+            $selectGroupList = [];
+
+            if($selectedGroupCount > 0){
+                for( $i = 0; $i <= $selectedGroupCount; $i++){
+                    if(isset($selectedGroup[$i]) && in_array($selectedGroup[$i], $allGroupsIdArray)){
+                        $selectGroupList[] = $selectedGroup[$i];
+                    }
+                }
+            }
+            $userGroupsId = implode(',', $selectGroupList);
+        }else if($ssoSetting == 'all_users'){
+            $userGroupsId = $this->getAllUserGroups('getOnlyIds');            
+        }else{
+            $userGroupsId = '';
+        }
+        Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.ssoSetting', $ssoSetting);
+        Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.userGroupsId', $userGroupsId);
     }
 }
