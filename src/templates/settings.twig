@@ -189,7 +189,7 @@
                 </div>
                 <div id="allOptions" style="display:{{ display_status }};">
                     <input type="checkbox" value="0" id="user_roles[]" name="user_roles[]"  onclick="checkAll(this);" {{ select_all_user }} />Select/Deselect All Group
-                    <input type="text" name="hiddenUserRoles" id="hiddenUserRoles" value="{{ settings.userGroupsId }}">
+                    <input type="hidden" name="hiddenUserRoles" id="hiddenUserRoles" value="{{ settings.userGroupsId }}">
                     <fieldset class="group">
                         <ul class="role_checkbox">
                             {% for group in userGroups %}

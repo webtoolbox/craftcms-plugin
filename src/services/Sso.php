@@ -21,7 +21,7 @@ define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
  */
 class Sso extends Component{   
     function afterLogin(){
-        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);           
+        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
         if($token){
             $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey');
             $forumUrl    = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');

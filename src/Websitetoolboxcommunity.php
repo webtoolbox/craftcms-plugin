@@ -158,9 +158,11 @@ class Websitetoolboxcommunity extends Plugin{
                 Websitetoolboxcommunity::getInstance()->sso->afterDeleteUser($event->element->username);
                 Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
             }
-        });  
+        });
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {
-            Websitetoolboxcommunity::getInstance()->sso->afterLogin();
+            if($this->checkGroupPermission()){
+                Websitetoolboxcommunity::getInstance()->sso->afterLogin();
+            }            
         });
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {
             Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
@@ -327,25 +329,22 @@ class Websitetoolboxcommunity extends Plugin{
             }
         }
     }
-    public function getAllUserGroups($returnIdsOnly = ''){
+    /**
+     * Function to get all usergroup ids
+     */
+    public function getAllUserGroups(){
         $userGroups = Craft::$app->userGroups->getAllGroups();
-        $groupData = [];
-        foreach ($userGroups as $group) {
-            $groupData[] = [
-                'id' => $group->id,
-                'name' => $group->name,
-            ];
-        }
-        if($returnIdsOnly == 'getOnlyIds'){
-            $allGroupsIdArray = array_column($groupData, 'id');
-            $allGroupsId = implode(',', $allGroupsIdArray);
-            return $allGroupsId;
-        }
-        return $groupData;
+        $allGroupsIdArray = array_column($userGroups, 'id');
+        $allGroupsId = implode(',', $allGroupsIdArray);
+        return $allGroupsId;
     }
+    /**
+     * Function to save seletected sso setting to plugin config
+     * @param - ssoSetting - string - selected sso option
+     */
     private function setUserGroupAccess($ssoSetting){
         if(isset($_POST['settings']['user_roles']) && !empty($_POST['settings']['user_roles'])){
-            $allGroupsId = $this->getAllUserGroups('getOnlyIds');
+            $allGroupsId = $this->getAllUserGroups();
             $allGroupsIdArray = explode(',', $allGroupsId);            
             $selectedGroup = $_POST['settings']['user_roles'];
             $selectedGroupCount = count($_POST['settings']['user_roles']);
@@ -360,11 +359,52 @@ class Websitetoolboxcommunity extends Plugin{
             }
             $userGroupsId = implode(',', $selectGroupList);
         }else if($ssoSetting == 'all_users'){
-            $userGroupsId = $this->getAllUserGroups('getOnlyIds');            
+            $userGroupsId = $this->getAllUserGroups();            
         }else{
             $userGroupsId = '';
         }
         Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.ssoSetting', $ssoSetting);
         Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.userGroupsId', $userGroupsId);
+    }
+    /**
+     * @uses function to check if user group allow to do sso or not
+     */
+    
+     public function checkGroupPermission(){
+        if($this->getAllUserGroups()){
+            $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting');
+            $allowedGroupsId = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.userGroupsId');
+
+            switch ($ssoSetting) {
+                case 'all_users':
+                    return true;
+                case 'no_users':
+                    return false;
+                case 'selected_groups':
+                    // get identity of logged in user
+                    $user = Craft::$app->getUser()->getIdentity();
+                    if ($user) {
+                        $groups = $user->getGroups();
+                        $groupIds = [];
+                        foreach ($groups as $group) {
+                            $groupIds[] = $group->id;
+                        }
+                        $allowedGroupsIdArray = explode(',', $allowedGroupsId);
+                        $commonGroup = array_intersect($allowedGroupsIdArray, $groupIds);
+                        if (empty($commonGroup)) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                    break;
+                default:
+                    // if admin defined user groups but not sso setting option is not set yet
+                    return true;
+            }
+        }else{
+            //in case admin didn't set user group for website user.
+            return true;
+        }       
     }
 }
