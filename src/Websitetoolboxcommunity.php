@@ -56,7 +56,6 @@ class Websitetoolboxcommunity extends Plugin{
             __METHOD__
         );                    
         self::$plugin = $this;
-
         $this->setComponents([
             'sso' => \websitetoolbox\community\services\Sso::class,
         ]);
@@ -67,8 +66,8 @@ class Websitetoolboxcommunity extends Plugin{
                 $forumApiKey = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumApiKey"];
                 if(isset(Craft::$app->getUser()->getIdentity()->id)){                    
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
-                    $this->setAuthToken($forumUrl, $forumApiKey);  
-                    echo '<img src='.$forumUrl.'/register/dologin?authtoken='.@$_COOKIE['forumLogoutToken'].'  width="0" height="0" border="0" alt="">';
+                    $this->setAuthToken($forumUrl, $forumApiKey);
+                    $this->loginUsingImgTag($_COOKIE['forumLogoutToken']);                    
                 }
             }
         );
@@ -81,14 +80,20 @@ class Websitetoolboxcommunity extends Plugin{
                 }
             }
         });
-        if(!Craft::$app->getRequest()->getIsConsoleRequest()){
-            $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
+        if(!Craft::$app->getRequest()->getIsConsoleRequest()){           
+            $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);            
             if(!$token && isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
                 Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
                     $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
                     echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="">';
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
                 });
+            }
+            // If user is already logged in and admin remove user group from plugin setting 
+            else if($token && isset($_COOKIE['forumLogoutToken']) && !$this->checkGroupPermission()){
+                $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+                echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="1" height="1" alt="">';
+                Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
             }
         } 
         if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
@@ -147,7 +152,7 @@ class Websitetoolboxcommunity extends Plugin{
         });
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_AFTER_SAVE_ELEMENT, function(Event $event) {            
             if ($event->element instanceof \craft\elements\User) {
-                if(isset($_POST['userId'])){                    
+                if(isset($_POST['userId']) && $this->checkGroupPermission()){
                     Websitetoolboxcommunity::getInstance()->sso->afterUpdateUser();
                 }
             }
@@ -159,6 +164,7 @@ class Websitetoolboxcommunity extends Plugin{
                 Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
             }
         });
+          
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {
             if($this->checkGroupPermission()){
                 Websitetoolboxcommunity::getInstance()->sso->afterLogin();
@@ -366,10 +372,25 @@ class Websitetoolboxcommunity extends Plugin{
         Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.ssoSetting', $ssoSetting);
         Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.userGroupsId', $userGroupsId);
     }
+    public function loginUsingImgTag($authToken){
+        if($this->checkGroupPermission()){
+            $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$authToken.'  width="1" height="1" border="0" alt="">';
+        }else{
+            $user = Craft::$app->getUser()->getIdentity();
+            if ($user) {
+                $groups = $user->getGroups();
+                $groupIds = [];
+                foreach ($groups as $group) {
+                    $groupIds[] = $group->id;
+                }
+            }
+            print_r($groupIds);
+        }
+    }
     /**
      * @uses function to check if user group allow to do sso or not
-     */
-    
+     */    
      public function checkGroupPermission(){
         if($this->getAllUserGroups()){
             $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting');

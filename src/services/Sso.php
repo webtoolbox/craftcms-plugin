@@ -19,7 +19,7 @@ define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
  * @package   Websitetoolboxcommunity
  * @since     4.0.0
  */
-class Sso extends Component{   
+class Sso extends Component{
     function afterLogin(){
         $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
         if($token){
@@ -32,11 +32,11 @@ class Sso extends Component{
                 $userName     = Craft::$app->getUser()->getIdentity()->username;
                 $image        = '';
                 if(Craft::$app->getUser()->getIdentity()->photoId != ''){
-                    $image = Craft::$app->getUser()->getIdentity()->photo->url;    
+                    $image = Craft::$app->getUser()->getIdentity()->photo->url;
                 }
                 Websitetoolboxcommunity::getInstance()->setAuthToken($forumUrl, $forumApiKey);
             }
-        }         
+        }
     }
     function afterUserCreate($user){        
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
@@ -146,7 +146,7 @@ class Sso extends Component{
         curl_close($curl);        
         return json_decode($response);
     }
-   function afterDeleteUser($userName){        
+   function afterDeleteUser($userName){
         $forumApiKey  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false);
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
         $postData     = array(
@@ -171,14 +171,9 @@ class Sso extends Component{
       setcookie('forumAddress', '', time() - (86400 * 365), "/");
       setcookie('logInForum', '', time() - 3600, "/");
    } 
-    function isValidUserGroup($userGroupId){
-        $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting',false);
-        $allowedGroupsId = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.userGroupsId',false);        
-        if(in_array($userGroupId, $allowedGroupsId)){
-            return true;
-        }
-        return false;
-    } 
+   /**
+    * @uses function to get user groups ids of logged in user.
+    */
     function getLoggedInUserGroup(){
         $user = Craft::$app->getUser()->getIdentity();
         $userGroups = $user->getGroups();
@@ -198,8 +193,8 @@ class Sso extends Component{
             $_COOKIE['forumLogInToken'] = '';
             Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.isDomainChange');
             $token = '?authtoken='.$cookieForumLoginToken;
-            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
-        }
+            Websitetoolboxcommunity::getInstance()->loginUsingImgTag($cookieForumLoginToken);
+        }  
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
@@ -241,7 +236,7 @@ class Sso extends Component{
             if(!isset($_COOKIE['logInForum'])){
                 setcookie('logInForum', 1, time() + 3600,"/");                                
                 $_COOKIE['logInForum'] = 1;
-                echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' width="0" height="0" border="0" alt="">'; 
+                Websitetoolboxcommunity::getInstance()->loginUsingImgTag($cookieForumLogoutToken);
             }
         }else{
             $cookieForumLogoutToken = 0;

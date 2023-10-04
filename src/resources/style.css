@@ -11,6 +11,9 @@
 .valign {
     margin-bottom: 37px;
 }
+.valign.sso {
+    margin-bottom: 20px;
+}
 .pull_right {
     float: right;
     text-align: right;
@@ -80,7 +83,16 @@
     position: absolute;
     opacity: 0; /* Make the radio button invisible */
 }
-
+ul.role_checkbox{
+    max-width: 400px;
+    width: 100%;
+    float: left;
+}
+ul.role_checkbox li{
+    min-width: 200px;
+    float: left;
+    margin-bottom: 5px;
+}
 .btn_check + label {
     float: left;
     padding: 0.3em 1em;
@@ -89,9 +101,6 @@
     margin-right: -1px;
     color: #428bca;
     background-color: #fff;
-}
-.role_checkbox li{
-    display: inline;
 }
 .btn_check + label:first-of-type {
     border-radius: 0.2em 0 0 0.2em;
