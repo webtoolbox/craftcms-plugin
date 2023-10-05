@@ -1,7 +1,9 @@
+
+
 wtbx.setting = {
 
     checkAll: function(e){
-        document.getElementById('settings-allOptions').style.display = "none";
+        document.getElementById('settings-allOptions').classList.add('d_none');
         document.getElementById('settings-all_users').checked = true;
         var checkboxes = document.getElementsByName('settings[user_roles][]');
         if (e.checked) {
@@ -17,7 +19,7 @@ wtbx.setting = {
     },
     
     unCheckAll: function(e){    
-        document.getElementById('settings-allOptions').style.display = "none";
+        document.getElementById('settings-allOptions').classList.add('d_none');
         var checkboxes = document.getElementsByName('settings[user_roles][]');
         if (e.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
@@ -37,7 +39,7 @@ wtbx.setting = {
                     checkboxes[i].checked = false;
                 }
             }
-        document.getElementById('settings-allOptions').style.display = "block";    
+        document.getElementById('settings-allOptions').classList.remove('d_none');    
     },
 
     copyUrl: function(me, textToCopy='') {
@@ -68,7 +70,7 @@ wtbx.setting = {
         }
     },
 
-    resetCopyButtons: function() {
+    resetCopyButtons: function() {        
         var cp = document.getElementsByClassName('copyLink');
         cp[0].innerHTML = cp[1].innerHTML = 'Copy URL';
         cp[0].classList.remove('success'); 
@@ -86,6 +88,43 @@ wtbx.setting = {
                 document.getElementById('settings-cmInstruction').style.display = 'none';
             }
         }
-    }
+    },
 
+    validateCommunityUrl: function() {
+        var cmurl  = document.getElementById('settings-communityUrl');
+        cmurl.addEventListener('keyup', (event) => {            
+            var letter = /^[a-z0-9\/\_-]+$/;
+            if(cmurl.value.match(letter) || cmurl.value == ''){
+                document.getElementById('settings-frmUrl').text = baseUrl+cmurl.value
+            }else{            
+                cmurl.value = cmurl.value.substring(0, cmurl.value.length - 1);
+            }
+        });
+    },
+
+    toggleCommunityUrl: function() {
+        var checkbox = document.getElementById('settings-forumEmbedded');        
+        if (checkbox) {
+            if (!checkbox.checked) {
+                document.getElementById('settings-cmInstruction').style.display = 'table-row';
+            } else {
+                document.getElementById('settings-cmUrl').style.display = 'table-row';
+                
+            }
+        }
+        checkbox.addEventListener('change', (event) => {
+            var chk = event.target;
+            wtbx.setting.resetCopyButtons();
+            if (chk.checked) {
+                document.getElementById('settings-cmInstruction').style.display = 'none';
+                document.getElementById('settings-cmUrl').style.display = 'table-row';   
+            } else {
+                document.getElementById('settings-cmUrl').style.display = 'none';
+                document.getElementById('settings-cmInstruction').style.display = 'table-row';                         
+            }
+        });
+    }
 };
+
+wtbx.setting.toggleCommunityUrl();
+wtbx.setting.validateCommunityUrl();

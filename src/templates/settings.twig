@@ -20,15 +20,15 @@
     var wtbx = {};
     var baseUrl = "{{ baseUrl }}"; 
 </script>
-<table style='width:100%;'>
+<table class='wt_setting_table'>
     {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('communitySettingOption') == 1)  %}     
         <tr>
             <td>                
                 <b>Please log in to your Website Toolbox account.</b>
                 <p>Not a Website Toolbox Community owner?  
-                    <a href="https://www.websitetoolbox.com/tool/members/signup?tool=mb" target="_blank" style="text-decoration:underline">Create a Community Now!</a>
+                    <a href="https://www.websitetoolbox.com/tool/members/signup?tool=mb" target="_blank">Create a Community Now!</a>
                 </p>
-                <p>Please <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up. 
+                <p>Please <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" target="_blank">Contact Customer Support</a> if you need help getting set up. 
                 </p>
                 {{ _self.errorList(settings.getErrors('communityUrl')) }}
             </td>
@@ -64,7 +64,7 @@
         <tr>
             <td colspan='2'>
                 <p>Please                 
-                    <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" style="text-decoration:underline" target="_blank">Contact Customer Support</a> if you need help getting set up.</p>
+                    <a href="https://www.websitetoolbox.com/contact?subject=CraftCMS+Plugin+Setup+Help" target="_blank">Contact Customer Support</a> if you need help getting set up.</p>
                 {% set url = craft.app.request.absoluteUrl %}
                 {% set host = url|replace({'https://':'','http://':''})|split('/')[0]|split('.') %}
 
@@ -96,7 +96,7 @@
                 <b class="pull_right">Account</b> 
             </td>
             <td class='pt_20'>                
-                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}&nbsp;&nbsp;<a href="{{ craft.app.request.absoluteUrl }}&communitySettingOption=1" style="text-decoration:underline">Change</a>
+                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}<a href="{{ craft.app.request.absoluteUrl }}&communitySettingOption=1" class="edit_setting">Change</a>
             </td>
         </tr>
         <tr>
@@ -119,18 +119,18 @@
             <td>
                 <div>Enable this option to have your community embedded in a page of your website.        
                 <br />Disable this option to have your community load in a full-sized window. You can use the Layout section in your Website Toolbox account to         
-                <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank" style="text-decoration:underline">customize your community layout to match your website</a> or         
-                <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" style="text-decoration:underline" target="_blank">contact Website Toolbox support to customize it for you</a>            
+                <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank">customize your community layout to match your website</a> or         
+                <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" target="_blank">contact Website Toolbox support to customize it for you</a>            
             </div>
             </td>
         </tr>
-        <tr id='cmInstruction'>
+        <tr id='cmInstruction' class='d_none'>
             <td></td>
             <td>
                 <p>Copy the community url and add a link to it in the website’s navigation menu: <strong>{{settings.forumUrl}}</strong> <a href="javascript:void(0)" onClick="wtbx.setting.copyUrl(this, '{{settings.forumUrl}}')" class="copyLink">Copy URL</a></p>
             </td>
         </tr>
-        <tr id='cmUrl'>
+        <tr id='cmUrl' class='d_none'>
             <td class='form_label pt_20'><b class="pull_right valign">Embedded Page</b></td>
             <td class="pt_20">
                 {% if('index.php?' in craft.app.request.absoluteUrl) %}                        
@@ -161,7 +161,7 @@
                     </div>
                 </div>                    
                 {{ _self.errorList(settings.getErrors('communityUrl')) }}
-                <p>Copy the address above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="classHide">{{ baseUrl }}{{ settings.communityUrl }}</a></p>
+                <span>Copy the address above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="d_none">{{ baseUrl }}{{ settings.communityUrl }}</a></span>
             </td>
         </tr>
         {% if userGroups|length > 0 %} 
@@ -171,7 +171,7 @@
                     {% set select_all_user = '' %}
                     {% set select_no_users = '' %}
                     {% set select_groups = '' %}
-                    {% set display_status = 'none' %}
+                    {% set display_status = 'd_none' %}
 
                     {% if settings.ssoSetting %}
                         {% if settings.ssoSetting == 'all_users' %}                         
@@ -180,7 +180,7 @@
                             {% set select_no_users = 'checked' %}
                         {% elseif settings.ssoSetting == 'selected_groups' %}
                             {% set select_groups = 'checked' %}
-                            {% set display_status = 'block' %}
+                            {% set display_status = '' %}
                         {% endif %}
                     {% endif %}
 
@@ -192,15 +192,13 @@
                         <input type="radio" class="btn_check" name="sso_setting" value="selected_groups" id="selected_roles" onClick="wtbx.setting.showOptions();" {{ select_groups }} />
                         <label class="sso_lable" for="selected_roles">Selected User Group</label>
                     </div>
-                                
-                                   
                 </td>
             </tr>
             <tr>
                 <td>
                 </td>
                 <td>
-                    <div id="allOptions" style="display:{{ display_status }};">
+                    <div id="allOptions" class='{{ display_status }}' >
                         {% set key = 0 %}
                         <div class="input ltr">                        
                             <input type="checkbox" id="user_roles[{{ key }}]" class="group_checkbox checkbox" name="user_roles[{{ key }}]" value="0" onclick="wtbx.setting.checkAll(this);" {{ select_all_user }} />
@@ -238,7 +236,7 @@
                     "id": "baseUrl",
                     "name": "baseUrl",
                     "value": baseUrl,
-                    class: "classHide"
+                    class: "d_none"
                 })
             }} 
             {{ 
@@ -246,7 +244,7 @@
                     "id": "forumApiKey",
                     "name": "forumApiKey",
                     "value": settings.forumApiKey,
-                    class: "classHide"
+                    class: "d_none"
                 })
             }} 
             {{ 
@@ -255,41 +253,10 @@
                     "id": "forumUrl",
                     "name": "forumUrl",
                     "value": settings.forumUrl,
-                    class: "classHide"
+                    class: "d_none"
                 })
             }}
-            <b>Be sure to specify your sign up, log in, and log out page addresses in the <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single Sign On" style="text-decoration:underline"> Single Sign On section </a>of Website Toolbox.</b>
+            <b>Be sure to specify your sign up, log in, and log out page addresses in the <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single Sign On"> Single Sign On section </a>of Website Toolbox.</b>
         </td>
     </tr>
 </table>
-<script type="text/javascript">       
-    var checkbox = document.getElementById('settings-forumEmbedded');        
-    if (checkbox) {
-        if (!checkbox.checked) {
-            document.getElementById('settings-cmUrl').style.display = 'none';
-        } else {
-            document.getElementById('settings-cmInstruction').style.display = 'none';
-        }
-        checkbox.addEventListener('change', (event) => {
-            var chk = event.target;
-            wtbx.setting.resetCopyButtons();
-            if (chk.checked) {
-                document.getElementById('settings-cmUrl').style.display = '';  
-                document.getElementById('settings-cmInstruction').style.display = 'none';          
-            } else {
-                document.getElementById('settings-cmInstruction').style.display = '';
-                document.getElementById('settings-cmUrl').style.display = 'none';            
-            }
-        });
-
-        var cmurl  = document.getElementById('settings-communityUrl');
-        cmurl.addEventListener('keyup', (event) => {
-            var letter = /^[a-z0-9\/\_-]+$/;
-            if(cmurl.value.match(letter) || cmurl.value == ''){
-                document.getElementById('settings-frmUrl').text = baseUrl+cmurl.value
-            }else{            
-                cmurl.value = cmurl.value.substring(0, cmurl.value.length - 1);
-            }
-        });
-    }
-</script>
