@@ -1,5 +1,3 @@
-
-
 wtbx.setting = {
 
     checkAll: function(e){
@@ -17,7 +15,7 @@ wtbx.setting = {
             }
         }
     },
-    
+
     unCheckAll: function(e){    
         document.getElementById('settings-allOptions').classList.add('d_none');
         var checkboxes = document.getElementsByName('settings[user_roles][]');
@@ -27,7 +25,7 @@ wtbx.setting = {
             }
         }
     },
-    
+
     showOptions: function(){    
         var userRoles = document.getElementById('settings-hiddenUserRoles').value;
         var arrayUserRoles = userRoles.split(",");

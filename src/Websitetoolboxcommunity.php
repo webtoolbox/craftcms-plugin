@@ -312,26 +312,28 @@ class Websitetoolboxcommunity extends Plugin{
     * @param forumApiKey - sting - Community api key 
     */
     public function setAuthToken($forumUrl, $forumApiKey, array $userData = null){
-        $RequestUrl        = $forumUrl."/register/setauthtoken";
-        $myUserQuery       = \craft\elements\User::find();
-        $loggedinUserEmail = isset($userData['email']) ? $userData['email'] : Craft::$app->getUser()->getIdentity()->email;
-        $loggedinUserId    = isset($userData['externalUserid']) ? $userData['externalUserid'] : Craft::$app->getUser()->getIdentity()->id;
-        $loggediUserName   = isset($userData['user']) ? $userData['user'] : Craft::$app->getUser()->getIdentity()->username;
-        $postData = array(
-            'type'=>'json',
-            'apikey' => $forumApiKey,
-            'user' => $loggediUserName,
-            'email'=>$loggedinUserEmail,
-            'externalUserid'=>$loggedinUserId
-        );
-        $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
-        if(isset($response->authtoken) && $response->authtoken !=''){
-            setcookie("forumLogInToken", $response->authtoken, time() + (86400 * 365),"/");
-            setcookie("forumLogoutToken", $response->authtoken, time() + (86400 * 365),"/");
-            setcookie("forumLoginUserid", $response->userid, time() + (86400 * 365),"/");    
-        }else{
-            if(isset($response->message)){
-                Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $response->message));    
+        if($this->checkGroupPermission()){
+            $RequestUrl        = $forumUrl."/register/setauthtoken";
+            $myUserQuery       = \craft\elements\User::find();
+            $loggedinUserEmail = isset($userData['email']) ? $userData['email'] : Craft::$app->getUser()->getIdentity()->email;
+            $loggedinUserId    = isset($userData['externalUserid']) ? $userData['externalUserid'] : Craft::$app->getUser()->getIdentity()->id;
+            $loggediUserName   = isset($userData['user']) ? $userData['user'] : Craft::$app->getUser()->getIdentity()->username;
+            $postData = array(
+                'type'=>'json',
+                'apikey' => $forumApiKey,
+                'user' => $loggediUserName,
+                'email'=>$loggedinUserEmail,
+                'externalUserid'=>$loggedinUserId
+            );
+            $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
+            if(isset($response->authtoken) && $response->authtoken !=''){
+                setcookie("forumLogInToken", $response->authtoken, time() + (86400 * 365),"/");
+                setcookie("forumLogoutToken", $response->authtoken, time() + (86400 * 365),"/");
+                setcookie("forumLoginUserid", $response->userid, time() + (86400 * 365),"/");    
+            }else{
+                if(isset($response->message)){
+                    Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $response->message));    
+                }
             }
         }
     }
@@ -349,7 +351,7 @@ class Websitetoolboxcommunity extends Plugin{
      * @param - ssoSetting - string - selected sso option
      */
     private function setUserGroupAccess($ssoSetting){
-        if(isset($_POST['settings']['user_roles']) && !empty($_POST['settings']['user_roles'])){
+        if(isset($_POST['settings']['user_roles']) && !empty($_POST['settings']['user_roles']) && $ssoSetting == 'selected_groups'){
             $allGroupsId = $this->getAllUserGroups();
             $allGroupsIdArray = explode(',', $allGroupsId);            
             $selectedGroup = $_POST['settings']['user_roles'];
@@ -376,16 +378,6 @@ class Websitetoolboxcommunity extends Plugin{
         if($this->checkGroupPermission()){
             $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
             echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$authToken.'  width="1" height="1" border="0" alt="">';
-        }else{
-            $user = Craft::$app->getUser()->getIdentity();
-            if ($user) {
-                $groups = $user->getGroups();
-                $groupIds = [];
-                foreach ($groups as $group) {
-                    $groupIds[] = $group->id;
-                }
-            }
-            print_r($groupIds);
         }
     }
     /**

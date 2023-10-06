@@ -27,6 +27,7 @@ class Sso extends Component{
             $forumUrl    = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
             if($forumApiKey){ 
                 $myUserQuery  = \craft\elements\User::find();
+                
                 $userEmail    = Craft::$app->getUser()->getIdentity()->email;
                 $userId       = Craft::$app->getUser()->getIdentity()->id;
                 $userName     = Craft::$app->getUser()->getIdentity()->username;
@@ -194,7 +195,7 @@ class Sso extends Component{
             Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.isDomainChange');
             $token = '?authtoken='.$cookieForumLoginToken;
             Websitetoolboxcommunity::getInstance()->loginUsingImgTag($cookieForumLoginToken);
-        }  
+        }
         $js = <<<JS
           (  
            function renderEmbeddedHtmlWithAuthtoken()
