@@ -67,7 +67,7 @@ class Websitetoolboxcommunity extends Plugin{
                 if(isset(Craft::$app->getUser()->getIdentity()->id)){                    
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
                     $this->setAuthToken($forumUrl, $forumApiKey);
-                    $this->loginUsingImgTag($_COOKIE['forumLogoutToken']);                    
+                    $this->loginUsingImgTag($_COOKIE['forumLogoutToken']);
                 }
             }
         );
@@ -80,12 +80,12 @@ class Websitetoolboxcommunity extends Plugin{
                 }
             }
         });
-        if(!Craft::$app->getRequest()->getIsConsoleRequest()){           
-            $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);            
+        if(!Craft::$app->getRequest()->getIsConsoleRequest()){
+            $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
             if(!$token && isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
                 Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
                     $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-                    echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="1" height="1" alt="">';
+                    echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="">';
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
                 });
             }
@@ -199,7 +199,7 @@ class Websitetoolboxcommunity extends Plugin{
             $pageTrigger = Craft::$app->getConfig()->general->pageTrigger;
             $webhookUrl = $siteUrl.'?'.$pageTrigger.'='.$webHookPage;
         }
-        if(isset($_POST['settings']['forumUsername'])){
+        if(isset($_POST['settings']['forumUsername'])){ 
             $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
             $forumUrl  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
             $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting',false);
