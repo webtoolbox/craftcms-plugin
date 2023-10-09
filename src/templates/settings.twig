@@ -190,7 +190,7 @@
                         <input type="radio" class="btn_check" name="sso_setting" value="no_users" id="no_users" onClick="wtbx.setting.unCheckAll(this);" {{ select_no_users }} />
                         <label class="sso_lable" for="no_users">No Users</label>
                         <input type="radio" class="btn_check" name="sso_setting" value="selected_groups" id="selected_roles" onClick="wtbx.setting.showOptions();" {{ select_groups }} />
-                        <label class="sso_lable" for="selected_roles">Selected User Group</label>
+                        <label class="sso_lable" for="selected_roles">Selected User Groups</label>
                     </div>
                 </td>
             </tr>
@@ -202,7 +202,7 @@
                         {% set key = 0 %}
                         <div class="input ltr">                        
                             <input type="checkbox" id="user_roles[{{ key }}]" class="group_checkbox checkbox" name="user_roles[{{ key }}]" value="0" onclick="wtbx.setting.checkAll(this);" {{ select_all_user }} />
-                            <label for="user_roles[{{ key }}]">Select/Deselect All Group</label>
+                            <label for="user_roles[{{ key }}]">Select/Deselect All Groups</label>
                         </div>
                         <input type="hidden" name="hiddenUserRoles" id="hiddenUserRoles" value="{{ settings.userGroupsId }}">
                         <fieldset class="group">                            
