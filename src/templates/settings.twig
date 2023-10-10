@@ -201,7 +201,7 @@
                     <div id="allOptions" class='{{ display_status }}' >
                         {% set key = 0 %}
                         <div class="input ltr">                        
-                            <input type="checkbox" id="user_roles[{{ key }}]" class="group_checkbox checkbox" name="user_roles[{{ key }}]" value="0" onclick="wtbx.setting.checkAll(this);" {{ select_all_user }} />
+                            <input type="checkbox" id="user_roles[{{ key }}]" class="group_checkbox checkbox" name="user_roles[]" value="0" onclick="wtbx.setting.checkAll(this);" {{ select_all_user }} />
                             <label for="user_roles[{{ key }}]">Select/Deselect All Groups</label>
                         </div>
                         <input type="hidden" name="hiddenUserRoles" id="hiddenUserRoles" value="{{ settings.userGroupsId }}">
@@ -217,7 +217,7 @@
                                                                     
                                     <li>
                                         <div class="input ltr">
-                                            <input type="checkbox" id="user_roles[{{ key }}]" class="group_checkbox checkbox" name="user_roles[{{ key }}]" value="{{ group.id }}" {{ isChecked }}/>
+                                            <input type="checkbox" id="user_roles[{{ key }}]" class="group_checkbox checkbox" name="user_roles[]" value="{{ group.id }}" {{ isChecked }}/>
                                             <label for="user_roles[{{ key }}]">{{ group.name }}</label>
                                         </div>
                                     </li>

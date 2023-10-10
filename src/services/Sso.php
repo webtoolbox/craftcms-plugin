@@ -39,7 +39,7 @@ class Sso extends Component{
             }
         }
     }
-    function afterUserCreate($user){        
+    function afterUserCreate($user){
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
         $forumApiKey  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false); 
         $userId =  $user->user->id;

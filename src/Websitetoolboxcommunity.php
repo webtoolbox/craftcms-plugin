@@ -95,6 +95,28 @@ class Websitetoolboxcommunity extends Plugin{
                 echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="1" height="1" alt="">';
                 Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
             }
+
+            $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
+            // Log the user in immidiate, when user group allow by admin for sso.
+            if(!isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getUser()->getIdentity()->id) && $this->checkGroupPermission()){
+                $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false);            
+                if($forumUrl && $forumApiKey){
+                    $this->setAuthToken($forumUrl, $forumApiKey);
+                }
+            }
+            // Logout the user immidiate, when user group disallow by admin for sso.
+            if(isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getUser()->getIdentity()->id) && !$this->checkGroupPermission()){            
+                $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
+                if($token){
+                    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+                    $host = $_SERVER['HTTP_HOST'];
+                    $path = $_SERVER['REQUEST_URI'];                                
+                    $fullUrl = $protocol . "://" . $host . $path;
+                    Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+                    header('location:'.$forumUrl.'/register/logout?authtoken='.$token.'&redirect='.$fullUrl);
+                    exit;
+                }
+            }
         } 
         if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
             Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
@@ -330,6 +352,9 @@ class Websitetoolboxcommunity extends Plugin{
                 setcookie("forumLogInToken", $response->authtoken, time() + (86400 * 365),"/");
                 setcookie("forumLogoutToken", $response->authtoken, time() + (86400 * 365),"/");
                 setcookie("forumLoginUserid", $response->userid, time() + (86400 * 365),"/");    
+                $_COOKIE['forumLogInToken'] = $response->authtoken;
+                $_COOKIE['forumLogoutToken'] = $response->authtoken;
+                $_COOKIE['forumLoginUserid'] = $response->userid;
             }else{
                 if(isset($response->message)){
                     Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $response->message));    
