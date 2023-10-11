@@ -86,12 +86,8 @@ wtbx.setting = {
         var cmurl = document.getElementById('settings-community-url');
         if(cmurl){
             cmurl.addEventListener('keyup', (event) => {
-                var letter = /^[a-z0-9\/\_-]+$/;
-                if(cmurl.value.match(letter) || cmurl.value == ''){
-                    document.getElementById('settings-frmUrl').text = baseUrl+cmurl.value
-                }else{
-                    cmurl.value = cmurl.value.substring(0, cmurl.value.length - 1);
-                }
+                cmurl.value = cmurl.value.replace(/[^a-zA-Z0-9\-_]/g, '');
+                document.getElementById('settings-frmUrl').text = baseUrl+cmurl.value
             });
         }
     },
