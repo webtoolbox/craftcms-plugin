@@ -1,23 +1,23 @@
 wtbx.setting = {
 
-    checkAll: function(e){
-        document.getElementById('settings-allOptions').classList.add('d_none');
-        document.getElementById('settings-all_users').checked = true;
+    checkAllGroups: function(e){
+        document.getElementById('settings-user-group-list').classList.add('d_none');
+        document.getElementById('settings-all-users').checked = true;
         var checkboxes = document.getElementsByName('settings[user_roles][]');
         if (e.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
                 checkboxes[i].checked = true;
             }
         }else{
-            document.getElementById('settings-no_users').checked = true;                
+            document.getElementById('settings-no-users').checked = true;
             for (var i = 0; i < checkboxes.length; i++) {
                 checkboxes[i].checked = false;
             }
         }
     },
 
-    unCheckAll: function(e){    
-        document.getElementById('settings-allOptions').classList.add('d_none');
+    unCheckAllGroups: function(e){
+        document.getElementById('settings-user-group-list').classList.add('d_none');
         var checkboxes = document.getElementsByName('settings[user_roles][]');
         if (e.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
@@ -26,49 +26,43 @@ wtbx.setting = {
         }
     },
 
-    showOptions: function(){    
-        var userRoles = document.getElementById('settings-hiddenUserRoles').value;
-        var arrayUserRoles = userRoles.split(",");
+    showUserGroupList: function(){
+        var selectedUserGroups = document.getElementById('settings-hidden-user-groups').value;
+        var selectedUserGroupArray = selectedUserGroups.split(",");
         var checkboxes = document.getElementsByName('settings[user_roles][]');
         for (var i = 0; i < checkboxes.length; i++) {
-                if(arrayUserRoles.includes(checkboxes[i].value) != ''){
-                    checkboxes[i].checked = true;
-                }else{
-                    checkboxes[i].checked = false;
-                }
+            if(selectedUserGroupArray.includes(checkboxes[i].value) != ''){
+                checkboxes[i].checked = true;                
+            }else{
+                checkboxes[i].checked = false;
             }
-        document.getElementById('settings-allOptions').classList.remove('d_none');    
+        }        
+        document.getElementById('settings-user-group-list').classList.remove('d_none');
     },
 
-    copyUrl: function(me, textToCopy='') {
+    copyUrl: function(element, textToCopy='') {
         if(textToCopy){
-            navigator.clipboard.writeText(textToCopy);
-            me.text = '';
-            me.removeAttribute('data-icon');
-            setTimeout(function(){
-                me.text = ' Copied'
-                me.classList.add('success');
-                me.setAttribute('data-icon', 'check');
-            }, 200);
+            var copyText = textToCopy;
         }else{
-            var page = document.getElementById('settings-communityUrl').value;
-            if(page !== ''){
+            var communityPage = document.getElementById('settings-community-url');
+            if(communityPage && communityPage.value !== ''){
                 var copyText = document.getElementById('settings-frmUrl').text;
-                navigator.clipboard.writeText(copyText);            
-                me.text = '';
-                me.removeAttribute('data-icon');
-                setTimeout(function(){
-                    me.text = ' Copied'
-                    me.classList.add('success');
-                    me.setAttribute('data-icon', 'check');
-                }, 200);
             }else{
                 alert('Error: Please enter an embed page URL first.');
-            }    
+                return;
+            }
         }
+        navigator.clipboard.writeText(copyText);
+        element.text = '';
+        element.removeAttribute('data-icon');
+        setTimeout(function(){
+            element.text = ' Copied'
+            element.classList.add('success');
+            element.setAttribute('data-icon', 'check');
+        }, 200);
     },
 
-    resetCopyButtons: function() {        
+    resetCopyButtons: function() {
         var cp = document.getElementsByClassName('copyLink');
         cp[0].innerHTML = cp[1].innerHTML = 'Copy URL';
         cp[0].classList.remove('success'); 
@@ -88,14 +82,14 @@ wtbx.setting = {
         }
     },
 
-    validateCommunityUrl: function() {
-        var cmurl  = document.getElementById('settings-communityUrl');
+    sanitizeCommunityURLInput: function() {
+        var cmurl = document.getElementById('settings-community-url');
         if(cmurl){
             cmurl.addEventListener('keyup', (event) => {
                 var letter = /^[a-z0-9\/\_-]+$/;
                 if(cmurl.value.match(letter) || cmurl.value == ''){
                     document.getElementById('settings-frmUrl').text = baseUrl+cmurl.value
-                }else{            
+                }else{
                     cmurl.value = cmurl.value.substring(0, cmurl.value.length - 1);
                 }
             });
@@ -116,7 +110,7 @@ wtbx.setting = {
                 wtbx.setting.resetCopyButtons();
                 if (chk.checked) {
                     document.getElementById('settings-cmInstruction').style.display = 'none';
-                    document.getElementById('settings-cmUrl').style.display = 'table-row';   
+                    document.getElementById('settings-cmUrl').style.display = 'table-row'; 
                 } else {
                     document.getElementById('settings-cmUrl').style.display = 'none';
                     document.getElementById('settings-cmInstruction').style.display = 'table-row';
@@ -127,4 +121,4 @@ wtbx.setting = {
 };
 
 wtbx.setting.toggleCommunityUrl();
-wtbx.setting.validateCommunityUrl();
+wtbx.setting.sanitizeCommunityURLInput();

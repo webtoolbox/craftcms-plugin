@@ -150,7 +150,7 @@
                     </div>
                     {{ 
                         forms.textField({
-                        "id": "communityUrl",
+                        "id": "community-url",
                         "name": "communityUrl",
                         "value": cmUrl,
                         "required": true
@@ -185,12 +185,12 @@
                     {% endif %}
 
                     <div class="btn_group" role="group">
-                        <input type="radio" class="btn_check" name="sso_setting" value="all_users" id="all_users" onClick="wtbx.setting.checkAll(this);" {{ select_all_user }} />
-                        <label class="sso_lable" for="all_users">All Users</label>
-                        <input type="radio" class="btn_check" name="sso_setting" value="no_users" id="no_users" onClick="wtbx.setting.unCheckAll(this);" {{ select_no_users }} />
-                        <label class="sso_lable" for="no_users">No Users</label>
-                        <input type="radio" class="btn_check" name="sso_setting" value="selected_groups" id="selected_roles" onClick="wtbx.setting.showOptions();" {{ select_groups }} />
-                        <label class="sso_lable" for="selected_roles">Selected User Groups</label>
+                        <input type="radio" class="btn_check" name="sso_setting" value="all_users" id="all-users" onClick="wtbx.setting.checkAllGroups(this);" {{ select_all_user }} />
+                        <label class="sso_lable" for="all-users">All Users</label>
+                        <input type="radio" class="btn_check" name="sso_setting" value="no_users" id="no-users" onClick="wtbx.setting.unCheckAllGroups(this);" {{ select_no_users }} />
+                        <label class="sso_lable" for="no-users">No Users</label>
+                        <input type="radio" class="btn_check" name="sso_setting" value="selected_groups" id="selected-groups" onClick="wtbx.setting.showUserGroupList();" {{ select_groups }} />
+                        <label class="sso_lable" for="selected-groups">Selected User Groups</label>
                     </div>
                 </td>
             </tr>
@@ -198,13 +198,13 @@
                 <td>
                 </td>
                 <td>
-                    <div id="allOptions" class='{{ display_status }}' >
+                    <div id="user-group-list" class='{{ display_status }}' >
                         {% set key = 0 %}
                         <div class="input ltr">                        
-                            <input type="checkbox" id="user_roles[{{ key }}]" class="group_checkbox checkbox" name="user_roles[]" value="0" onclick="wtbx.setting.checkAll(this);" {{ select_all_user }} />
+                            <input type="checkbox" id="user_roles[{{ key }}]" class="group_checkbox checkbox" name="user_roles[]" value="0" onclick="wtbx.setting.checkAllGroups(this);" {{ select_all_user }} />
                             <label for="user_roles[{{ key }}]">Select/Deselect All Groups</label>
                         </div>
-                        <input type="hidden" name="hiddenUserRoles" id="hiddenUserRoles" value="{{ settings.userGroupsId }}">
+                        <input type="hidden" name="hiddenUserRoles" id="hidden-user-groups" value="{{ settings.userGroupsId }}">
                         <fieldset class="group">                            
                             <ul class="role_checkbox">
                                 
