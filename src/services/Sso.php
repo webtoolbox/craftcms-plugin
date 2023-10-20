@@ -194,7 +194,7 @@ class Sso extends Component{
             $_COOKIE['forumLogInToken'] = '';
             Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.isDomainChange');
             $token = '?authtoken='.$cookieForumLoginToken;
-            Websitetoolboxcommunity::getInstance()->loginUsingImgTag($cookieForumLoginToken);
+            Websitetoolboxcommunity::getInstance()->printLoginImgTag($cookieForumLoginToken);
         }
         $js = <<<JS
           (  
@@ -237,7 +237,7 @@ class Sso extends Component{
             if(!isset($_COOKIE['logInForum'])){
                 setcookie('logInForum', 1, time() + 3600,"/");                                
                 $_COOKIE['logInForum'] = 1;
-                Websitetoolboxcommunity::getInstance()->loginUsingImgTag($cookieForumLogoutToken);
+                Websitetoolboxcommunity::getInstance()->printLoginImgTag($cookieForumLogoutToken);
             }
         }else{
             $cookieForumLogoutToken = 0;

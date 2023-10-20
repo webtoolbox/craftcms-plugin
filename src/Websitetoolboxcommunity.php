@@ -67,7 +67,7 @@ class Websitetoolboxcommunity extends Plugin{
                 if(isset(Craft::$app->getUser()->getIdentity()->id)){                    
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
                     $this->setAuthToken($forumUrl, $forumApiKey);
-                    $this->loginUsingImgTag($_COOKIE['forumLogoutToken']);
+                    $this->printLoginImgTag($_COOKIE['forumLogoutToken']);
                 }
             }
         );
@@ -399,7 +399,7 @@ class Websitetoolboxcommunity extends Plugin{
         Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.ssoSetting', $ssoSetting);
         Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.userGroupsId', $userGroupsId);
     }
-    public function loginUsingImgTag($authToken){
+    public function printLoginImgTag($authToken){
         if($this->checkGroupPermission()){
             $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
             echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$authToken.'  width="1" height="1" border="0" alt="">';

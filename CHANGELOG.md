@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 2.0.3 - 2023-10-10
+## 2.0.3 - 2023-10-25
 ### Added
-- Added single sign on option in plugin setting.
+- Introduce a single sign-on option that enables the choice to enable single sign-on for either all user groups or specific user groups.
 
 ## 2.0.2 - 2023-08-21
 ### Added
