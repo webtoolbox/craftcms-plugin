@@ -19,26 +19,27 @@ define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
  * @package   Websitetoolboxcommunity
  * @since     4.0.0
  */
-class Sso extends Component{   
-    function afterLogin(){            
-        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);           
-        if($token){                 
+class Sso extends Component{
+    function afterLogin(){
+        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
+        if($token){
             $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey');
             $forumUrl    = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
             if($forumApiKey){ 
                 $myUserQuery  = \craft\elements\User::find();
+                
                 $userEmail    = Craft::$app->getUser()->getIdentity()->email;
                 $userId       = Craft::$app->getUser()->getIdentity()->id;
                 $userName     = Craft::$app->getUser()->getIdentity()->username;
                 $image        = '';
                 if(Craft::$app->getUser()->getIdentity()->photoId != ''){
-                    $image = Craft::$app->getUser()->getIdentity()->photo->url;    
+                    $image = Craft::$app->getUser()->getIdentity()->photo->url;
                 }
                 Websitetoolboxcommunity::getInstance()->setAuthToken($forumUrl, $forumApiKey);
             }
-        }         
+        }
     }
-    function afterUserCreate($user){        
+    function afterUserCreate($user){
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
         $forumApiKey  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false); 
         $userId =  $user->user->id;
@@ -146,7 +147,7 @@ class Sso extends Component{
         curl_close($curl);        
         return json_decode($response);
     }
-   function afterDeleteUser($userName){        
+   function afterDeleteUser($userName){
         $forumApiKey  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false);
         $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
         $postData     = array(
@@ -171,7 +172,19 @@ class Sso extends Component{
       setcookie('forumAddress', '', time() - (86400 * 365), "/");
       setcookie('logInForum', '', time() - 3600, "/");
    } 
-      
+   /**
+    * @uses function to get user groups ids of logged in user.
+    */
+    function getLoggedInUserGroup(){
+        $user = Craft::$app->getUser()->getIdentity();
+        $userGroups = $user->getGroups();
+        $groupId = [];
+        foreach ($userGroups as $group) {
+            $groupId[] = $group->id;
+        }
+        $userGroupsId = implode(',', $groupId);        
+        return $userGroupsId;
+    }
     function renderJsScriptEmbedded($forumUrl,$userStatus){        
         $domainChange = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.isDomainChange');
         $token = '';
@@ -181,7 +194,7 @@ class Sso extends Component{
             $_COOKIE['forumLogInToken'] = '';
             Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.isDomainChange');
             $token = '?authtoken='.$cookieForumLoginToken;
-            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLoginToken.'  width="0" height="0" border="0" alt="">';
+            Websitetoolboxcommunity::getInstance()->printLoginImgTag($cookieForumLoginToken);
         }
         $js = <<<JS
           (  
@@ -224,7 +237,7 @@ class Sso extends Component{
             if(!isset($_COOKIE['logInForum'])){
                 setcookie('logInForum', 1, time() + 3600,"/");                                
                 $_COOKIE['logInForum'] = 1;
-                echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$cookieForumLogoutToken.' width="0" height="0" border="0" alt="">'; 
+                Websitetoolboxcommunity::getInstance()->printLoginImgTag($cookieForumLogoutToken);
             }
         }else{
             $cookieForumLogoutToken = 0;

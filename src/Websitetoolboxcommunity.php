@@ -56,7 +56,6 @@ class Websitetoolboxcommunity extends Plugin{
             __METHOD__
         );                    
         self::$plugin = $this;
-
         $this->setComponents([
             'sso' => \websitetoolbox\community\services\Sso::class,
         ]);
@@ -67,8 +66,8 @@ class Websitetoolboxcommunity extends Plugin{
                 $forumApiKey = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumApiKey"];
                 if(isset(Craft::$app->getUser()->getIdentity()->id)){                    
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
-                    $this->setAuthToken($forumUrl, $forumApiKey);  
-                    echo '<img src='.$forumUrl.'/register/dologin?authtoken='.@$_COOKIE['forumLogoutToken'].'  width="0" height="0" border="0" alt="">';
+                    $this->setAuthToken($forumUrl, $forumApiKey);
+                    $this->printLoginImgTag($_COOKIE['forumLogoutToken']);
                 }
             }
         );
@@ -89,6 +88,34 @@ class Websitetoolboxcommunity extends Plugin{
                     echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="">';
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
                 });
+            }
+            // If user is already logged in and admin remove user group from plugin setting 
+            else if($token && isset($_COOKIE['forumLogoutToken']) && !$this->checkGroupPermission()){
+                $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+                echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="1" height="1" alt="">';
+                Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+            }
+
+            $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
+            // Log the user in immidiate, when user group allow by admin for sso.
+            if(!isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getUser()->getIdentity()->id) && $this->checkGroupPermission()){
+                $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey',false);            
+                if($forumUrl && $forumApiKey){
+                    $this->setAuthToken($forumUrl, $forumApiKey);
+                }
+            }
+            // Logout the user immidiate, when user group disallow by admin for sso.
+            if(isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getUser()->getIdentity()->id) && !$this->checkGroupPermission()){            
+                $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
+                if($token){
+                    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+                    $host = $_SERVER['HTTP_HOST'];
+                    $path = $_SERVER['REQUEST_URI'];                                
+                    $fullUrl = $protocol . "://" . $host . $path;
+                    Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+                    header('location:'.$forumUrl.'/register/logout?authtoken='.$token.'&redirect='.$fullUrl);
+                    exit;
+                }
             }
         } 
         if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
@@ -147,7 +174,7 @@ class Websitetoolboxcommunity extends Plugin{
         });
         Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_AFTER_SAVE_ELEMENT, function(Event $event) {            
             if ($event->element instanceof \craft\elements\User) {
-                if(isset($_POST['userId'])){                    
+                if(isset($_POST['userId']) && $this->checkGroupPermission()){
                     Websitetoolboxcommunity::getInstance()->sso->afterUpdateUser();
                 }
             }
@@ -158,9 +185,12 @@ class Websitetoolboxcommunity extends Plugin{
                 Websitetoolboxcommunity::getInstance()->sso->afterDeleteUser($event->element->username);
                 Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
             }
-        });  
+        });
+          
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {
-            Websitetoolboxcommunity::getInstance()->sso->afterLogin();
+            if($this->checkGroupPermission()){
+                Websitetoolboxcommunity::getInstance()->sso->afterLogin();
+            }            
         });
         Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {
             Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
@@ -172,12 +202,14 @@ class Websitetoolboxcommunity extends Plugin{
     protected function settingsHtml(): ?string{        
         $hashTypes = hash_algos();
         $hashTypes = array_combine($hashTypes, $hashTypes);
+        $userGroups = Craft::$app->userGroups->getAllGroups();
         Craft::$app->view->registerAssetBundle(Communityassets::class);
         return Craft::$app->view->renderTemplate(
             'websitetoolboxforum/settings',
             [
                 'settings'  => $this->getSettings(),
                 'hashTypes' => $hashTypes,
+                'userGroups' => $userGroups
             ]
         );
     }
@@ -192,6 +224,7 @@ class Websitetoolboxcommunity extends Plugin{
         if(isset($_POST['settings']['forumUsername'])){ 
             $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
             $forumUrl  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
+            $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting',false);
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
             $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl);           
@@ -220,11 +253,17 @@ class Websitetoolboxcommunity extends Plugin{
             }else{
                 $embeddedPage = 'community';
             }
-            
-        } else{            
+            if($ssoSetting == ''){                
+                $this->setUserGroupAccess('all_users');
+            }
+        } else{
             $userName = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
             $userPassword = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
             $embedOption = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
+            if(isset($_POST['settings']['sso_setting'])){
+                $ssoSetting = trim($_POST['settings']['sso_setting']);
+                $this->setUserGroupAccess($ssoSetting);
+            }
             if(isset($_POST['settings']['communityUrl']) && $_POST['settings']['forumEmbedded'] == 1){
                 $embeddedPage = $_POST['settings']['communityUrl'];
                 if($_POST['settings']['communityUrl'] == ''){
@@ -295,27 +334,115 @@ class Websitetoolboxcommunity extends Plugin{
     * @param forumApiKey - sting - Community api key 
     */
     public function setAuthToken($forumUrl, $forumApiKey, array $userData = null){
-        $RequestUrl        = $forumUrl."/register/setauthtoken";
-        $myUserQuery       = \craft\elements\User::find();
-        $loggedinUserEmail = isset($userData['email']) ? $userData['email'] : Craft::$app->getUser()->getIdentity()->email;
-        $loggedinUserId    = isset($userData['externalUserid']) ? $userData['externalUserid'] : Craft::$app->getUser()->getIdentity()->id;
-        $loggediUserName   = isset($userData['user']) ? $userData['user'] : Craft::$app->getUser()->getIdentity()->username;
-        $postData = array(
-            'type'=>'json',
-            'apikey' => $forumApiKey,
-            'user' => $loggediUserName,
-            'email'=>$loggedinUserEmail,
-            'externalUserid'=>$loggedinUserId
-        );
-        $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
-        if(isset($response->authtoken) && $response->authtoken !=''){
-            setcookie("forumLogInToken", $response->authtoken, time() + (86400 * 365),"/");
-            setcookie("forumLogoutToken", $response->authtoken, time() + (86400 * 365),"/");
-            setcookie("forumLoginUserid", $response->userid, time() + (86400 * 365),"/");    
-        }else{
-            if(isset($response->message)){
-                Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $response->message));    
+        if($this->checkGroupPermission()){
+            $RequestUrl        = $forumUrl."/register/setauthtoken";
+            $myUserQuery       = \craft\elements\User::find();
+            $loggedinUserEmail = isset($userData['email']) ? $userData['email'] : Craft::$app->getUser()->getIdentity()->email;
+            $loggedinUserId    = isset($userData['externalUserid']) ? $userData['externalUserid'] : Craft::$app->getUser()->getIdentity()->id;
+            $loggediUserName   = isset($userData['user']) ? $userData['user'] : Craft::$app->getUser()->getIdentity()->username;
+            $postData = array(
+                'type'=>'json',
+                'apikey' => $forumApiKey,
+                'user' => $loggediUserName,
+                'email'=>$loggedinUserEmail,
+                'externalUserid'=>$loggedinUserId
+            );
+            $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
+            if(isset($response->authtoken) && $response->authtoken !=''){
+                setcookie("forumLogInToken", $response->authtoken, time() + (86400 * 365),"/");
+                setcookie("forumLogoutToken", $response->authtoken, time() + (86400 * 365),"/");
+                setcookie("forumLoginUserid", $response->userid, time() + (86400 * 365),"/");    
+                $_COOKIE['forumLogInToken'] = $response->authtoken;
+                $_COOKIE['forumLogoutToken'] = $response->authtoken;
+                $_COOKIE['forumLoginUserid'] = $response->userid;
+            }else{
+                if(isset($response->message)){
+                    Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $response->message));    
+                }
             }
         }
+    }
+    /**
+     * Function to get all usergroup ids
+     */
+    public function getAllUserGroups(){
+        $userGroups = Craft::$app->userGroups->getAllGroups();
+        $allGroupsIdArray = array_column($userGroups, 'id');
+        $allGroupsId = implode(',', $allGroupsIdArray);
+        return $allGroupsId;
+    }
+    /**
+     * Function to save seletected sso setting to plugin config
+     * @param - ssoSetting - string - selected sso option
+     */
+    private function setUserGroupAccess($ssoSetting){
+        if(isset($_POST['settings']['user_roles']) && !empty($_POST['settings']['user_roles']) && $ssoSetting == 'selected_groups'){
+            $allGroupsId = $this->getAllUserGroups();
+            $allGroupsIdArray = explode(',', $allGroupsId);            
+            $selectedGroup = $_POST['settings']['user_roles'];
+            $selectedGroupCount = count($_POST['settings']['user_roles']);
+            $selectGroupList = [];
+
+            if($selectedGroupCount > 0){
+                for( $i = 0; $i <= $selectedGroupCount; $i++){
+                    if(isset($selectedGroup[$i]) && in_array($selectedGroup[$i], $allGroupsIdArray)){
+                        $selectGroupList[] = $selectedGroup[$i];
+                    }
+                }
+            }
+            $userGroupsId = implode(',', $selectGroupList);
+        }else if($ssoSetting == 'all_users'){
+            $userGroupsId = $this->getAllUserGroups();            
+        }else{
+            $userGroupsId = '';
+        }
+        Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.ssoSetting', $ssoSetting);
+        Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.userGroupsId', $userGroupsId);
+    }
+    public function printLoginImgTag($authToken){
+        if($this->checkGroupPermission()){
+            $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+            echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$authToken.'  width="1" height="1" border="0" alt="">';
+        }
+    }
+    /**
+     * @uses function to check if user group allow to do sso or not
+     */    
+     public function checkGroupPermission(){
+        if($this->getAllUserGroups()){
+            $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting');
+            $allowedGroupsId = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.userGroupsId');
+
+            switch ($ssoSetting) {
+                case 'all_users':
+                    return true;
+                case 'no_users':
+                    return false;
+                case 'selected_groups':
+                    // get identity of logged in user
+                    $user = Craft::$app->getUser()->getIdentity();
+                    if ($user) {
+                        $groups = $user->getGroups();
+                        $groupIds = [];
+                        foreach ($groups as $group) {
+                            $groupIds[] = $group->id;
+                        }
+                        $allowedGroupsIdArray = explode(',', $allowedGroupsId);
+                        $commonGroup = array_intersect($allowedGroupsIdArray, $groupIds);
+                        if (empty($commonGroup)) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                    break;
+                default:
+                    // if admin defined user groups but not sso setting option is not set yet
+                    return true;
+            }
+        }else{
+            //in case admin didn't set user group for website user.
+            return true;
+        }       
     }
 }

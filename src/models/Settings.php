@@ -25,7 +25,8 @@ class Settings extends Model{
     public $forumApiKey           = '';
     public $forumUrl              = '';  
     public $communityUrl          = 'community';  
-  
+    public $ssoSetting            = '';
+    public $userGroupsId          = '';
     // Public Methods
     protected function makeUrl($page){
         $siteUrl = UrlHelper::siteUrl();                

@@ -1,4 +1,4 @@
-.classHide {
+.d_none {
     display: none;
 }
 .pt_20 {
@@ -10,6 +10,15 @@
 }
 .valign {
     margin-bottom: 37px;
+}
+.valign.sso {
+    margin-bottom: 20px;
+}
+.wt_setting_table{
+    width: 100%;
+}
+.edit_setting{ 
+    margin-left: 10px;
 }
 .pull_right {
     float: right;
@@ -28,7 +37,7 @@
     border-radius: 3px 0 0 3px;
     border-right: none;
 }
-.input-communityUrl>#settings-communityUrl-field {
+.input-communityUrl>#settings-community-url-field {
     max-width: calc(60% - 100px);
     width: 100%;
 }
@@ -40,7 +49,7 @@
 .input-communityUrl>.input.ltr {
     width: 100%;
 }
-.input-communityUrl>#settings-communityUrl-field .input.ltr>input {
+.input-communityUrl>#settings-community-url-field .input.ltr>input {
     width: 100%;
     border-radius: 0;
 }
@@ -71,6 +80,44 @@
 }
 .wt_alert > .wt_li{
     padding: 8px 0 0 5px;
+}
+.btn_group {
+    clear: both;
+    display: inline-block;
+}
+.btn_check {
+    position: absolute;
+    opacity: 0; /* Make the radio button invisible */
+}
+ul.role_checkbox{
+    max-width: 400px;
+    width: 100%;
+    float: left;
+}
+ul.role_checkbox li{
+    min-width: 200px;
+    float: left;
+    margin-bottom: 5px;
+}
+.btn_check + label {
+    float: left;
+    padding: 0.3em 1em;
+    cursor: pointer;
+    border: 1px solid #28608f;
+    margin-right: -1px;
+    color: #428bca;
+    background-color: #fff;
+}
+.btn_check + label:first-of-type {
+    border-radius: 0.2em 0 0 0.2em;
+}
+
+.btn_check + label:last-of-type {
+    border-radius: 0 0.2em 0.2em 0;
+}
+.btn_check:checked + label {
+    color: #fff;
+    background-color: #3277b3;
 }
 @media screen and (min-width: 768px) {
     .input-communityUrl>.urlCopy {
