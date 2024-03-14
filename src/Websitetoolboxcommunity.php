@@ -84,16 +84,12 @@ class Websitetoolboxcommunity extends Plugin{
             $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
             if(!$token && isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
                 Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
-                    $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-                    echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="0" height="0" alt="">';
-                    Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+                    $this->printLogoutImage($_COOKIE['forumLogoutToken']);
                 });
             }
             // If user is already logged in and admin remove user group from plugin setting 
             else if($token && isset($_COOKIE['forumLogoutToken']) && !$this->checkGroupPermission()){
-                $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-                echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="1" height="1" alt="">';
-                Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+                $this->printLogoutImage($_COOKIE['forumLogoutToken']);
             }
 
             $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
@@ -117,55 +113,56 @@ class Websitetoolboxcommunity extends Plugin{
                     exit;
                 }
             }
-        } 
-        if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
-            Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
-                $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
-                if(!$token){
-                    Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
-                }
-                $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
-                $forumUrl   = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
-                if($forumType == 1){                    
+        
+            if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
+                Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
                     $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
-                    if( $token){             
-                        $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedIn');
-                    }else{                        
-                        $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedout');
+                    if(!$token){
+                        Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
                     }
-                 }else{                    
-                    $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptUnEmbedded();
-                }                                
-                $view = Craft::$app->getView();
-                $view->registerJs($jsRender);
-            });
-            if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"])){
-                // Register site url route for community
-                Event::on(
-                    \craft\web\UrlManager::class,
-                    \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-                    function(RegisterUrlRulesEvent $event) {
-                        $segement = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"];
-                        $event->rules[$segement] = 'websitetoolboxforum/default/index';
-                        $event->rules['webhook'] = 'websitetoolboxforum/default/webhook';
-                    }
-                );
-            }
-            if(!isset($_COOKIE['forumAddress'])){
-                setcookie("forumAddress", Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"], time() + (86400 * 365),"/");
-                $_COOKIE['forumAddress'] = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-            }
-            // if default host change from wt admin area
-            if(!isset($_REQUEST['forum_url']) && isset($_COOKIE['forumAddress']) && $_COOKIE['forumAddress'] != Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"]){
-                $lastestForumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-                $forumApiKey = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumApiKey"];
-                setcookie("forumAddress", $lastestForumUrl, time() + (86400 * 365),"/");
-                $_COOKIE['forumAddress'] = $lastestForumUrl;
-                if(isset(Craft::$app->getUser()->getIdentity()->id))
-                {
-                    Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
-                    $this->setAuthToken($lastestForumUrl, $forumApiKey);
-                } 
+                    $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
+                    $forumUrl   = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl');
+                    if($forumType == 1){                    
+                        $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
+                        if( $token){             
+                            $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedIn');
+                        }else{                        
+                            $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedout');
+                        }
+                    }else{                    
+                        $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptUnEmbedded();
+                    }                                
+                    $view = Craft::$app->getView();
+                    $view->registerJs($jsRender);
+                });
+                if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"])){
+                    // Register site url route for community
+                    Event::on(
+                        \craft\web\UrlManager::class,
+                        \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+                        function(RegisterUrlRulesEvent $event) {
+                            $segement = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"];
+                            $event->rules[$segement] = 'websitetoolboxforum/default/index';
+                            $event->rules['webhook'] = 'websitetoolboxforum/default/webhook';
+                        }
+                    );
+                }
+                if(!isset($_COOKIE['forumAddress'])){
+                    setcookie("forumAddress", Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"], time() + (86400 * 365),"/");
+                    $_COOKIE['forumAddress'] = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+                }
+                // if default host change from wt admin area
+                if(!isset($_REQUEST['forum_url']) && isset($_COOKIE['forumAddress']) && $_COOKIE['forumAddress'] != Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"]){
+                    $lastestForumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+                    $forumApiKey = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumApiKey"];
+                    setcookie("forumAddress", $lastestForumUrl, time() + (86400 * 365),"/");
+                    $_COOKIE['forumAddress'] = $lastestForumUrl;
+                    if(isset(Craft::$app->getUser()->getIdentity()->id))
+                    {
+                        Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+                        $this->setAuthToken($lastestForumUrl, $forumApiKey);
+                    } 
+                }
             }
         }
         Event::on(\craft\services\Users::class, \craft\services\Users::EVENT_AFTER_ACTIVATE_USER, function(Event $event) {                         
@@ -444,5 +441,17 @@ class Websitetoolboxcommunity extends Plugin{
             //in case admin didn't set user group for website user.
             return true;
         }       
+    }
+    /**
+     * @uses function to print logout image tag
+     * @param token - string - authtoken
+     */
+    public function printLogoutImage($token){
+        $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+        ob_start();
+        echo '<img src="'.$forumUrl.'/register/logout?authtoken='.$token.'" border="0" width="0" height="0" alt="">';
+        $logoutImageResult = ob_get_clean();
+        echo $logoutImageResult;
+        Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
     }
 }
