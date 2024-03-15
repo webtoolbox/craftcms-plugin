@@ -100,19 +100,6 @@ class Websitetoolboxcommunity extends Plugin{
                     $this->setAuthToken($forumUrl, $forumApiKey);
                 }
             }
-            // Logout the user immidiate, when user group disallow by admin for sso.
-            if(isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getUser()->getIdentity()->id) && !$this->checkGroupPermission()){            
-                $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
-                if($token){
-                    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-                    $host = $_SERVER['HTTP_HOST'];
-                    $path = $_SERVER['REQUEST_URI'];                                
-                    $fullUrl = $protocol . "://" . $host . $path;
-                    Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
-                    header('location:'.$forumUrl.'/register/logout?authtoken='.$token.'&redirect='.$fullUrl);
-                    exit;
-                }
-            }
         
             if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
                 Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
@@ -447,11 +434,8 @@ class Websitetoolboxcommunity extends Plugin{
      * @param token - string - authtoken
      */
     public function printLogoutImage($token){
-        $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-        ob_start();
+        $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];        
         echo '<img src="'.$forumUrl.'/register/logout?authtoken='.$token.'" border="0" width="0" height="0" alt="">';
-        $logoutImageResult = ob_get_clean();
-        echo $logoutImageResult;
         Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
     }
 }
