@@ -161,8 +161,7 @@ class Sso extends Component{
     function afterLogOut(){
       if(isset($_COOKIE['forumLogoutToken'])){
         $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
-        $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$cookieForumLogoutToken.' border="0" width="0" height="0" alt="" id="logout_img">'; 
+        Websitetoolboxcommunity::getInstance()->printLogoutImgTag($cookieForumLogoutToken);
       }
     }
     function resetCookieOnLogout(){
