@@ -83,11 +83,11 @@ class Websitetoolboxcommunity extends Plugin{
         if(!Craft::$app->getRequest()->getIsConsoleRequest()){
             $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
             if(!$token && isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
-                $this->performLogoutRedirect($_COOKIE['forumLogoutToken']);
+                $this->printLogoutImgTag($_COOKIE['forumLogoutToken']);
             }
             // If user is already logged in and admin remove user group from plugin setting 
             else if($token && isset($_COOKIE['forumLogoutToken']) && !$this->checkGroupPermission()){
-                $this->performLogoutRedirect($_COOKIE['forumLogoutToken']);
+                $this->printLogoutImgTag($_COOKIE['forumLogoutToken']);
             }
 
             $forumUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
@@ -432,7 +432,7 @@ class Websitetoolboxcommunity extends Plugin{
      * @uses function to print logout image tag
      * @param token - string - authtoken
      */
-    public function performLogoutRedirect($token){
+    public function printLogoutImgTag($token){
         ob_start();
         $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
         echo '<img src='.$forumUrl.'/register/logout?authtoken='.$token.'" border="0" width="1" height="1" alt="" id="logout_img">';

@@ -161,7 +161,7 @@ class Sso extends Component{
     function afterLogOut(){
       if(isset($_COOKIE['forumLogoutToken'])){
         $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
-        Websitetoolboxcommunity::getInstance()->performLogoutRedirect($cookieForumLogoutToken);
+        Websitetoolboxcommunity::getInstance()->printLogoutImgTag($cookieForumLogoutToken);
       }
     }
     function resetCookieOnLogout(){
