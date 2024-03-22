@@ -83,7 +83,9 @@ class Websitetoolboxcommunity extends Plugin{
         if(!Craft::$app->getRequest()->getIsConsoleRequest()){
             $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
             if(!$token && isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
-                $this->printLogoutImgTag($_COOKIE['forumLogoutToken']);
+                Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
+                    $this->printLogoutImgTag($_COOKIE['forumLogoutToken']);
+                });
             }
             // If user is already logged in and admin remove user group from plugin setting 
             else if($token && isset($_COOKIE['forumLogoutToken']) && !$this->checkGroupPermission()){
@@ -174,9 +176,6 @@ class Websitetoolboxcommunity extends Plugin{
                 Websitetoolboxcommunity::getInstance()->sso->afterLogin();
             }            
         });
-        Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGOUT, function(Event $event) {
-            Websitetoolboxcommunity::getInstance()->sso->afterLogOut();
-        });        
     }
     protected function createSettingsModel(): ?\craft\base\Model{        
         return new Settings();
