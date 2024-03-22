@@ -83,11 +83,7 @@ class Websitetoolboxcommunity extends Plugin{
         if(!Craft::$app->getRequest()->getIsConsoleRequest()){
             $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);
             if(!$token && isset($_COOKIE['forumLogoutToken']) && isset(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
-                Event::on(View::class, View::EVENT_END_BODY, function(Event $event) {
-                    $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-                    echo '<img src='.$forumUrl.'/register/logout?authtoken='.$_COOKIE['forumLogoutToken'].'" border="0" width="1" height="1" alt="">';
-                    Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
-                });
+                $this->performLogoutRedirect($_COOKIE['forumLogoutToken']);
             }
             // If user is already logged in and admin remove user group from plugin setting 
             else if($token && isset($_COOKIE['forumLogoutToken']) && !$this->checkGroupPermission()){
@@ -437,15 +433,9 @@ class Websitetoolboxcommunity extends Plugin{
      * @param token - string - authtoken
      */
     public function performLogoutRedirect($token){
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-            $host = $_SERVER['HTTP_HOST'];
-            $path = $_SERVER['REQUEST_URI'];
-            $fullUrl = $protocol . "://" . $host . $path;
-            Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();        
-            header('Location:'.$forumUrl.'/register/logout?authtoken='.$token.'&redirect='.$fullUrl);
-            exit;
-        }
+        ob_start();
+        $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$token.'" border="0" width="1" height="1" alt="" id="logout_img">';
+        Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
     }
 }

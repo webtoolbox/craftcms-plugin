@@ -53,7 +53,7 @@ class Sso extends Component{
             $postData = array(
                 'type'=>'json',
                 'apikey' => $forumApiKey,
-                'ember' => $userName,
+                'member' => $userName,
                 'externalUserid' => $userId, 
                 'email' => $userEmail
             );
@@ -214,7 +214,7 @@ class Sso extends Component{
             wtbWrap.appendChild(embedScript);
             if(document.getElementById('wtEmbedCode') != null){
                 document.getElementById('wtEmbedCode').innerHTML = '';
-                if(userStatus == 'loggedout' && document.getElementById('logout_img') != null){
+                if(document.getElementById('logout_img') != null){
                     var logoutImageTag = document.getElementById('logout_img');
                     logoutImageTag.onload = function() {
                         document.getElementById('wtEmbedCode').appendChild(embedScript);
