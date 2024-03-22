@@ -53,7 +53,7 @@ class Sso extends Component{
             $postData = array(
                 'type'=>'json',
                 'apikey' => $forumApiKey,
-                'ember' => $userName,
+                'member' => $userName,
                 'externalUserid' => $userId, 
                 'email' => $userEmail
             );
@@ -161,8 +161,7 @@ class Sso extends Component{
     function afterLogOut(){
       if(isset($_COOKIE['forumLogoutToken'])){
         $cookieForumLogoutToken = $_COOKIE['forumLogoutToken'];
-        $forumUrl     = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-        echo '<img src='.$forumUrl.'/register/logout?authtoken='.$cookieForumLogoutToken.' border="0" width="0" height="0" alt="" id="logout_img">'; 
+        Websitetoolboxcommunity::getInstance()->printLogoutImgTag($cookieForumLogoutToken);
       }
     }
     function resetCookieOnLogout(){
@@ -215,7 +214,7 @@ class Sso extends Component{
             wtbWrap.appendChild(embedScript);
             if(document.getElementById('wtEmbedCode') != null){
                 document.getElementById('wtEmbedCode').innerHTML = '';
-                if(userStatus == 'loggedout' && document.getElementById('logout_img') != null){
+                if(document.getElementById('logout_img') != null){
                     var logoutImageTag = document.getElementById('logout_img');
                     logoutImageTag.onload = function() {
                         document.getElementById('wtEmbedCode').appendChild(embedScript);
