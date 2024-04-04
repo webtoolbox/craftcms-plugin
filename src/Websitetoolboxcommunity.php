@@ -289,7 +289,6 @@ class Websitetoolboxcommunity extends Plugin{
      */
     public function updateEmbeddedUrl($forumUserName, $forumApiKey, $embeddedPage){
         if($embeddedPage != ''){
-            $altEmbedParam = 1;
             $siteUrl = UrlHelper::siteUrl();
             $embedUrl = $siteUrl.'/'.$embeddedPage;
             if(strpos($siteUrl, 'index.php') > 0){
@@ -297,7 +296,6 @@ class Websitetoolboxcommunity extends Plugin{
                 $embedUrl = $siteUrl.'?'.$pageTrigger.'='.$embeddedPage;
             }
         }else{
-            $altEmbedParam = 0;
             $embedUrl = '';
         }
         $fields = array(
@@ -305,7 +303,7 @@ class Websitetoolboxcommunity extends Plugin{
             'forumUsername' => $forumUserName,
             'forumApikey' => $forumApiKey,
             'embed_page_url' => $embedUrl,
-            'altEmbedParam' => $altEmbedParam,
+            'altEmbedParam' => 1,
             'plugin' => 'craft'
         );  
         $response = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$fields,'json');
