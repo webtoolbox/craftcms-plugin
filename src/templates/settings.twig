@@ -22,6 +22,7 @@
 </script>
 <table class='wt_setting_table'>
     {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('communitySettingOption') == 1)  %}     
+        {% set afterSettingSavedPage = 0 %}
         <tr>
             <td>                
                 <b>Please log in to your Website Toolbox account.</b>
@@ -82,8 +83,9 @@
                 {% else %}
                     {% set communityDomain = cmHost|join('.') %}
                 {% endif %}
+                {% set afterSettingSavedPage = 1 %}
                 {% if (communityDomain != websiteDomain) %} 
-                    <ul id="alerts" class="wt_alert">
+                    <ul id="alerts" class="wt_alert {{ settings.forumEmbedded ? '' : 'hidden' }}" >
                         <li class="wt_li">
                             Your forum needs to <a href= "https://www.websitetoolbox.com/tool/members/domain?tool=mb" target="_blank">use a subdomain</a> for it to appear as embedded instead of full-screen in the Safari browser.
                         </li>
@@ -92,11 +94,11 @@
             </td>
         </tr>
         <tr>
-            <td class='form_label pt_20'>
+            <td class='form_label'>
                 <b class="pull_right">Account</b> 
             </td>
-            <td class='pt_20'>                
-                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}<a href="{{ craft.app.request.absoluteUrl }}&communitySettingOption=1" class="edit_setting">Change</a>
+            <td>                
+                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}<a href="{{ craft.app.request.absoluteUrl }}&communitySettingOption=1" class="change_link">Change</a>
             </td>
         </tr>
         <tr>
@@ -114,38 +116,30 @@
             }} 
             </td>
         </tr>
-        <tr>
-            <td></td>
-            <td>
-                <div>Enable this option to have your community embedded in a page of your website.        
-                <br />Disable this option to have your community load in a full-sized window. You can use the Layout section in your Website Toolbox account to         
-                <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank">customize your community layout to match your website</a> or         
-                <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" target="_blank">contact Website Toolbox support to customize it for you</a>            
-            </div>
-            </td>
-        </tr>
-        <tr id='cmInstruction' class='d_none'>
-            <td></td>
-            <td>
-                <p>Copy the community url and add a link to it in the website’s navigation menu: <strong>{{settings.forumUrl}}</strong> <a href="javascript:void(0)" onClick="wtbx.setting.copyUrl(this, '{{settings.forumUrl}}')" class="copyLink">Copy URL</a></p>
-            </td>
-        </tr>
-        <tr id='cmUrl' class='d_none'>
-            <td class='form_label pt_20'><b class="pull_right valign">Embedded Page</b></td>
+        <tr id='cmUrl'>
+            <td class='form_label pt_20'><b class="pull_right valign">Community Address</b></td>
             <td class="pt_20">
-                {% if('index.php?' in craft.app.request.absoluteUrl) %}                        
+                {% set hideCommunityAddress = "" %}
+                {% set hideCommunityWebAddress = "" %}
+
+                {% if settings.forumEmbedded %}
+                    {% set hideCommunityAddress = "hidden" %}
+                {% else %}
+                    {% set hideCommunityWebAddress = "hidden" %}
+                {% endif %}
+                {% if('index.php?' in craft.app.request.absoluteUrl) %}
                     {% set index = 'index.php?p=' %}
                     {% set baseUrl = baseUrl ~ index %}
                 {% endif %}
-                
+
                 {% if settings.communityUrl %}
                     {% set cmUrl = settings.communityUrl %}
                 {% else %}
                     {% set cmUrl = 'community' %}
                 {% endif %}
                 
-                <div class='input-communityUrl'>
-                    <div class="inputUrl text" title='{{ baseUrl }}'>
+                <div class='input-communityUrl {{ hideCommunityWebAddress }}' id="communityWebAddress">
+                    <div class="inputUrl text" title='{{ settings.forumUrl }}'>
                         <p>{{ baseUrl }}</p>
                     </div>
                     {{ 
@@ -155,16 +149,26 @@
                         "value": cmUrl,
                         "required": true
                         })
-                    }} 
+                    }}
                     <div class="urlCopy text">
-                        <a href='javascript:void(0);' class="copyLink" onClick="wtbx.setting.copyUrl(this)">Copy URL</a>
+                        <a class="copyLink" onClick="wtbx.setting.copyUrl(this)">Copy</a>
+                    </div> 
+                </div>
+                <div class='input-communityUrl {{ hideCommunityAddress }}' id="forumAddress">
+                    <div class="inputUrl text border-right" title='{{ settings.forumUrl }}'>
+                        <p>{{ settings.forumUrl }}</p>
                     </div>
-                </div>                    
+                
+                    <div class="urlCopy text">
+                        <a class="copyLink" onClick="wtbx.setting.copyUrl(this, '{{settings.forumUrl}}')">Copy</a>
+                    </div>
+                    <a href="{{ settings.forumUrl }}/tool/members/domain?tool=mb" class="change_link mt_5">Change</a> 
+                </div>
                 {{ _self.errorList(settings.getErrors('communityUrl')) }}
                 <span>Copy the address above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="d_none">{{ baseUrl }}{{ settings.communityUrl }}</a></span>
             </td>
         </tr>
-        {% if userGroups|length > 0 %} 
+        {% if userGroups|length >= 0 %} 
             <tr>            
                 <td class='form_label pt_20'><b class="pull_right valign sso">Single Sign On</b></td>
                 <td>
@@ -224,10 +228,10 @@
                                 {% endfor %}
                             </ul>
                         </fieldset>
-                    </div> 
+                    </div>
                 </td>
             </tr>
-        {% endif %}
+        {% endif %}       
     {% endif %}
     <tr>
         <td colspan='2' class='pt_20'>
@@ -256,7 +260,9 @@
                     class: "d_none"
                 })
             }}
-            <b>Be sure to specify your sign up, log in, and log out page addresses in the <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single Sign On"> Single Sign On section </a>of Website Toolbox.</b>
+            {% if (afterSettingSavedPage)  %}
+                <b>Be sure to specify your sign up, log in, and log out page addresses in the <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single Sign On"> Single Sign On section </a>of Website Toolbox.</b>
+            {% endif %}
         </td>
     </tr>
 </table>

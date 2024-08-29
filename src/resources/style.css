@@ -1,6 +1,9 @@
 .d_none {
     display: none;
 }
+.mt_5 {
+    margin-top: 5px;
+}
 .pt_20 {
     padding-top: 20px !important;
 }
@@ -17,7 +20,7 @@
 .wt_setting_table{
     width: 100%;
 }
-.edit_setting{ 
+.change_link{ 
     margin-left: 10px;
 }
 .pull_right {
@@ -37,9 +40,12 @@
     border-radius: 3px 0 0 3px;
     border-right: none;
 }
+.input-communityUrl>.border-right {
+    border-right: 1px solid rgba(96,125,159,.25);
+}
 .input-communityUrl>#settings-community-url-field {
     max-width: calc(60% - 100px);
-    width: 100%;
+    width: 55%;
 }
 .input-communityUrl>.inputUrl p {
     white-space: nowrap;
