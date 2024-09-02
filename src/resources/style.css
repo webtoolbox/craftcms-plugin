@@ -17,10 +17,10 @@
 .valign.sso {
     margin-bottom: 20px;
 }
-.wt_setting_table{
+.wt_setting_table {
     width: 100%;
 }
-.change_link{ 
+.change_link {
     margin-left: 10px;
 }
 .pull_right {
@@ -35,17 +35,18 @@
     margin: 0;
 }
 .input-communityUrl>.inputUrl {
-    max-width: 40%;
+    max-width: 80%;
     background: #ebf2fa;
     border-radius: 3px 0 0 3px;
     border-right: none;
+    display: grid;
 }
 .input-communityUrl>.border-right {
-    border-right: 1px solid rgba(96,125,159,.25);
+    border-right: 1px solid rgba(96, 125, 159, .25);
 }
 .input-communityUrl>#settings-community-url-field {
-    max-width: calc(60% - 100px);
-    width: 55%;
+    max-width: calc(24% - 34px);
+    width: 300px;
 }
 .input-communityUrl>.inputUrl p {
     white-space: nowrap;
@@ -69,6 +70,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 6px 6px;
+}
+.input-communityUrl>.urlCopy {
+    padding: 0;
 }
 .input-communityUrl>.urlCopy>a:before {
     margin-right: 3px;
@@ -76,16 +81,15 @@
 .success {
     color: green;
 }
-.wt_alert{
+.wt_alert {
     display: block;
-    height: 40px;
     opacity: 1;
     position: relative;
     background-color: var(--yellow-050);
     border-left: 6px solid var(--warning-color);
 }
-.wt_alert > .wt_li{
-    padding: 8px 0 0 5px;
+.wt_alert>.wt_li {
+    padding: 10px 5px 10px 5px;
 }
 .btn_group {
     clear: both;
@@ -95,17 +99,17 @@
     position: absolute;
     opacity: 0; /* Make the radio button invisible */
 }
-ul.role_checkbox{
+ul.role_checkbox {
     max-width: 400px;
     width: 100%;
     float: left;
 }
-ul.role_checkbox li{
+ul.role_checkbox li {
     min-width: 200px;
     float: left;
     margin-bottom: 5px;
 }
-.btn_check + label {
+.btn_check+label {
     float: left;
     padding: 0.3em 1em;
     cursor: pointer;
@@ -113,15 +117,17 @@ ul.role_checkbox li{
     margin-right: -1px;
     color: #428bca;
     background-color: #fff;
+    margin-bottom: 2px;
+    margin-top: 2px;
 }
-.btn_check + label:first-of-type {
+.btn_check+label:first-of-type {
     border-radius: 0.2em 0 0 0.2em;
 }
 
-.btn_check + label:last-of-type {
+.btn_check+label:last-of-type {
     border-radius: 0 0.2em 0.2em 0;
 }
-.btn_check:checked + label {
+.btn_check:checked+label {
     color: #fff;
     background-color: #3277b3;
 }
@@ -131,25 +137,72 @@ ul.role_checkbox li{
         border-left: none;
     }
 }
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .input-communityUrl>#settings-community-url-field {
+        max-width: calc(50% - 150px);
+        width: auto;
+    }
+
+    .input-communityUrl>.inputUrl {
+        max-width: 60%;
+    }
+}
+
 @media screen and (max-width: 767px) {
     .input-communityUrl {
         display: block;
         float: left;
     }
-        .input-communityUrl>.inputUrl {
-        float: left;
-        display: grid;
-    }
-        .input-communityUrl>#settings-communityUrl-field {
+    .input-communityUrl>#settings-communityUrl-field {
         max-width: 60%;
         float: left;
         display: grid;
     }
-        .input-communityUrl>.urlCopy {
-        float: left;
+    .input-communityUrl>.urlCopy {
         margin-top: 5px;
     }
-        #settings-cmUrl .valign {
+    #settings-cmUrl .valign {
         margin-bottom: 60px;
+    }
+}
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .input-communityUrl>.urlCopy {
+        margin-top: 0;
+        float: left;
+    }
+
+    .input-communityUrl>#settings-community-url-field {
+        max-width: 22%;
+        float: left;
+    }
+
+    .input-communityUrl>.inputUrl {
+        max-width: 50%;
+        float: left;
+    }
+
+    .change_link {
+        display: inline-block;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .input-communityUrl>#settings-community-url-field {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .urlCopy+.change_link {
+        margin-left: 0;
+    }
+
+    .input-communityUrl>.inputUrl {
+        max-width: 100%;
+        margin-bottom: 6px;
+        border-right: 1px solid rgba(96, 125, 159, .25);
+    }
+
+    .input-communityUrl>#settings-community-url-field {
+        max-width: 100%;
     }
 }
