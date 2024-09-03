@@ -127,11 +127,12 @@
                 {% else %}
                     {% set hideCommunityWebAddress = "hidden" %}
                 {% endif %}
+
                 {% if('index.php?' in craft.app.request.absoluteUrl) %}
                     {% set index = 'index.php?p=' %}
                     {% set baseUrl = baseUrl ~ index %}
                 {% endif %}
-
+                
                 {% if settings.communityUrl %}
                     {% set cmUrl = settings.communityUrl %}
                 {% else %}
@@ -168,7 +169,7 @@
                 <span>Copy the address above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="d_none">{{ baseUrl }}{{ settings.communityUrl }}</a></span>
             </td>
         </tr>
-        {% if userGroups|length >= 0 %} 
+        {% if userGroups|length > 0 %} 
             <tr>            
                 <td class='form_label pt_20'><b class="pull_right valign sso">Single Sign On</b></td>
                 <td>
@@ -231,7 +232,7 @@
                     </div>
                 </td>
             </tr>
-        {% endif %}       
+        {% endif %}
     {% endif %}
     <tr>
         <td colspan='2' class='pt_20'>

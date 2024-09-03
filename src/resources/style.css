@@ -123,7 +123,6 @@ ul.role_checkbox li {
 .btn_check+label:first-of-type {
     border-radius: 0.2em 0 0 0.2em;
 }
-
 .btn_check+label:last-of-type {
     border-radius: 0 0.2em 0.2em 0;
 }
@@ -142,12 +141,10 @@ ul.role_checkbox li {
         max-width: calc(50% - 150px);
         width: auto;
     }
-
     .input-communityUrl>.inputUrl {
         max-width: 60%;
     }
 }
-
 @media screen and (max-width: 767px) {
     .input-communityUrl {
         display: block;
@@ -170,38 +167,31 @@ ul.role_checkbox li {
         margin-top: 0;
         float: left;
     }
-
     .input-communityUrl>#settings-community-url-field {
         max-width: 22%;
         float: left;
     }
-
     .input-communityUrl>.inputUrl {
         max-width: 50%;
         float: left;
     }
-
     .change_link {
         display: inline-block;
     }
 }
-
 @media screen and (max-width: 575px) {
     .input-communityUrl>#settings-community-url-field {
         width: 100%;
         max-width: 100%;
     }
-
     .urlCopy+.change_link {
         margin-left: 0;
     }
-
     .input-communityUrl>.inputUrl {
         max-width: 100%;
         margin-bottom: 6px;
         border-right: 1px solid rgba(96, 125, 159, .25);
     }
-
     .input-communityUrl>#settings-community-url-field {
         max-width: 100%;
     }

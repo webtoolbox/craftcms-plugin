@@ -55,11 +55,12 @@ wtbx.setting = {
         navigator.clipboard.writeText(copyText);
         element.text = '';
         element.removeAttribute('data-icon');
+        element.text = ' Copied';
+        element.classList.add('success');
+        element.setAttribute('data-icon', 'check');
         setTimeout(function(){
-            element.text = ' Copied'
-            element.classList.add('success');
-            element.setAttribute('data-icon', 'check');
-        }, 200);
+            wtbx.setting.resetCopyButtons();
+        }, 1500);
     },
 
     resetCopyButtons: function() {
