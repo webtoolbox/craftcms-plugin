@@ -281,6 +281,7 @@ class Websitetoolboxcommunity extends Plugin{
         $this->setAuthToken($result->forumAddress, $result->forumApiKey);
         // to set embedded url
         $this->updateEmbeddedUrl($userName, $result->forumApiKey, $embeddedPage);
+        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
     }
     /**
      * @uses function to add/edit emebedded URL
