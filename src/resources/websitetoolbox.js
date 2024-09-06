@@ -99,11 +99,11 @@ wtbx.setting = {
                     if(forumAddressElement) forumAddressElement.classList.remove("hidden");
                     if(communityWebAddressElement) communityWebAddressElement.classList.add("hidden");
                 }
-                wtbx.setting.submitSettignPageForm();
+                wtbx.setting.submitSettingPageForm();
             });
         }
     }, 
-    submitSettignPageForm: function() {
+    submitSettingPageForm: function() {
         const settingForm = document.getElementById("main-form");
         if (settingForm) {
             const submitButton = settingForm.querySelector('[type="submit"]');
