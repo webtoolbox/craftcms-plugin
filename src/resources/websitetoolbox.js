@@ -98,8 +98,18 @@ wtbx.setting = {
                     if(subDomainMsg) subDomainMsg.classList.add('hidden');
                     if(forumAddressElement) forumAddressElement.classList.remove("hidden");
                     if(communityWebAddressElement) communityWebAddressElement.classList.add("hidden");
-                } 
+                }
+                wtbx.setting.submitSettignPageForm();
             });
+        }
+    }, 
+    submitSettignPageForm: function() {
+        const settingForm = document.getElementById("main-form");
+        if (settingForm) {
+            const submitButton = settingForm.querySelector('[type="submit"]');
+            if (submitButton) {
+                submitButton.click();
+            }
         }
     }
 };
