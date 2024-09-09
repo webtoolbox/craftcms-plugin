@@ -130,13 +130,13 @@ ul.role_checkbox li {
     color: #fff;
     background-color: #3277b3;
 }
+#settings-cmUrl .valign {
+    margin-bottom: 20px;
+}
 @media screen and (min-width: 768px) {
     .input-communityUrl>.urlCopy {
         border-radius: 0 3px 3px 0;
         border-left: none;
-    }
-    .cm-mt {
-        margin-top: -5px;
     }
 }
 @media (min-width: 992px) and (max-width: 1499.98px) {
@@ -165,9 +165,6 @@ ul.role_checkbox li {
     }
     .input-communityUrl>.urlCopy {
         margin-top: 5px;
-    }
-    #settings-cmUrl .valign {
-        margin-bottom: 60px;
     }
 }
 @media (min-width: 576px) and (max-width: 767.98px) {
