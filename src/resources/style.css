@@ -201,3 +201,31 @@ ul.role_checkbox li {
         max-width: 100%;
     }
 }
+@media (max-device-width: 575.98px) {
+    .form_label {
+        width: 100%;
+    }
+    
+    .form_label .pull_right {
+        float: none;
+    }
+    
+    .form_label ~ td {
+        padding-left: 0 !important;padding-top: 0 !important;
+    }
+    
+    .wt_setting_table tr {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .input-communityUrl > #settings-community-url-field {
+        width: calc(100% - 100px - 10px);
+        float: left;
+    }
+    .input-communityUrl > .urlCopy {
+        margin-left: 10px;
+        float: left;
+        margin-top: 0;
+    }
+}
