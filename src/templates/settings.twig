@@ -131,6 +131,10 @@
                 {% if('index.php?' in craft.app.request.absoluteUrl) %}
                     {% set index = 'index.php?p=' %}
                     {% set baseUrl = baseUrl ~ index %}
+                    {% set backwardSlashVisibility = "hidden" %}
+                {% else %}
+                    {% set baseUrl = baseUrl|slice(0, -1) %}
+                    {% set backwardSlashVisibility = "" %}
                 {% endif %}
                 
                 {% if settings.communityUrl %}
@@ -140,9 +144,10 @@
                 {% endif %}
                 
                 <div class='input-communityUrl {{ hideCommunityWebAddress }}' id="communityWebAddress">
-                    <div class="inputUrl text" title='{{ settings.forumUrl }}'>
+                    <div class="inputUrl text">
                         <p>{{ baseUrl }}</p>
                     </div>
+                    <span class="forwardSlash {{ backwardSlashVisibility }}">/</span>
                     {{ 
                         forms.textField({
                         "id": "community-url",
@@ -156,7 +161,7 @@
                     </div> 
                 </div>
                 <div class='input-communityUrl {{ hideCommunityAddress }}' id="forumAddress">
-                    <div class="inputUrl text border-right" title='{{ settings.forumUrl }}'>
+                    <div class="inputUrl text border-right">
                         <p>{{ settings.forumUrl }}</p>
                     </div>
                 
@@ -166,7 +171,7 @@
                     <a href="{{ settings.forumUrl }}/tool/members/domain?tool=mb" class="change_link mt_5">Change</a> 
                 </div>
                 {{ _self.errorList(settings.getErrors('communityUrl')) }}
-                <span>Copy the address above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="d_none">{{ baseUrl }}{{ settings.communityUrl }}</a></span>
+                <span><a id="copyLinkText">Copy the address</a> above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="d_none">{{ baseUrl }}{{ settings.communityUrl }}</a></span>
             </td>
         </tr>
         {% if userGroups|length > 0 %} 

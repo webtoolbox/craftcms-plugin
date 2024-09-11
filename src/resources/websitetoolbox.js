@@ -111,7 +111,22 @@ wtbx.setting = {
                 submitButton.click();
             }
         }
+    },
+    bindCopyTextClick: function() {
+        var copyLinkText = document.getElementById("settings-copyLinkText");
+        var embedCheckbox = document.getElementById("settings-forumEmbedded");        
+        if(copyLinkText) {
+            copyLinkText.addEventListener('click', function() {
+                var copyLinkButton = document.querySelectorAll('.copyLink');
+                if (embedCheckbox && embedCheckbox.checked) {
+                    copyLinkButton[0].click()
+                } else{
+                    copyLinkButton[1].click()
+                }
+            });
+        }
     }
 };
 wtbx.setting.toggleCommunityUrl();
 wtbx.setting.sanitizeCommunityURLInput();
+wtbx.setting.bindCopyTextClick();
