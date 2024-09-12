@@ -157,7 +157,7 @@
                         })
                     }}
                     <div class="urlCopy text">
-                        <a class="copyLink" onClick="wtbx.setting.copyUrl(this)">Copy</a>
+                        <a class="copyLink" onClick="wtbx.setting.copyUrl(this)"><span class="hide-on-mobile">Copy</span><span class="hide-on-desktop">C</span></a>
                     </div> 
                 </div>
                 <div class='input-communityUrl {{ hideCommunityAddress }}' id="forumAddress">
@@ -166,7 +166,7 @@
                     </div>
                 
                     <div class="urlCopy text">
-                        <a class="copyLink" onClick="wtbx.setting.copyUrl(this, '{{settings.forumUrl}}')">Copy</a>
+                        <a class="copyLink" onClick="wtbx.setting.copyUrl(this, '{{settings.forumUrl}}')"><span class="hide-on-mobile">Copy</span><span class="hide-on-desktop">C</span></a>
                     </div>
                     <a href="{{ settings.forumUrl }}/tool/members/domain?tool=mb" class="change_link mt_5">Change</a> 
                 </div>
@@ -174,7 +174,7 @@
                 <span><a id="copyLinkText">Copy the address</a> above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="d_none">{{ baseUrl }}{{ settings.communityUrl }}</a></span>
             </td>
         </tr>
-        {% if userGroups|length > 0 %} 
+        {% if userGroups|length > 0 %}
             <tr>            
                 <td class='form_label pt_20'><b class="pull_right valign sso">Single Sign On</b></td>
                 <td>
@@ -184,7 +184,7 @@
                     {% set display_status = 'd_none' %}
 
                     {% if settings.ssoSetting %}
-                        {% if settings.ssoSetting == 'all_users' %}                         
+                        {% if settings.ssoSetting == 'all_users' %}
                             {% set select_all_user = 'checked' %}
                         {% elseif settings.ssoSetting == 'no_users' %} 
                             {% set select_no_users = 'checked' %}
