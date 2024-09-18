@@ -30,6 +30,7 @@
 .input-communityUrl {
     width: 100%;
     display: flex;
+    align-items: center;
 }
 .field {
     margin: 0;
@@ -41,12 +42,16 @@
     border-right: none;
     display: grid;
 }
+.inputUrl.text.inputWithBorder {
+    border-right: 1px solid rgba(96, 125, 159, .25);
+}
 .input-communityUrl>.border-right {
     border-right: 1px solid rgba(96, 125, 159, .25);
 }
 .input-communityUrl>#settings-community-url-field {
     max-width: calc(24% - 34px);
     width: 300px;
+    height: 35px;
 }
 .input-communityUrl>.inputUrl p {
     white-space: nowrap;
@@ -59,6 +64,7 @@
 .input-communityUrl>#settings-community-url-field .input.ltr>input {
     width: 100%;
     border-radius: 0;
+    height: 100%;
 }
 .input-communityUrl>.urlCopy {
     width: 100px;
@@ -72,11 +78,18 @@
     align-items: center;
     padding: 6px 6px;
 }
+.input-communityUrl>.urlCopy>a .hide-on-mobile {
+    line-height: 1;
+}
 .input-communityUrl>.urlCopy {
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .input-communityUrl>.urlCopy>a:before {
     margin-right: 3px;
+    height: 12px;
 }
 .success {
     color: green;
@@ -139,6 +152,11 @@ ul.role_checkbox li {
 .hide-on-desktop {
     display: none;
 }
+.forwardSlash {
+    display: flex;
+    align-items: center;
+    margin: 0 3px;
+}
 @media screen and (min-width: 768px) {
     .input-communityUrl>.urlCopy {
         border-radius: 0 3px 3px 0;
@@ -160,10 +178,6 @@ ul.role_checkbox li {
     }
 }
 @media screen and (max-width: 767px) {
-    .input-communityUrl {
-        display: block;
-        float: left;
-    }
     .input-communityUrl>#settings-communityUrl-field {
         max-width: 60%;
         float: left;
@@ -177,6 +191,9 @@ ul.role_checkbox li {
     .input-communityUrl>.urlCopy {
         margin-top: 0;
         float: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .input-communityUrl>#settings-community-url-field {
         max-width: 22%;
@@ -192,19 +209,37 @@ ul.role_checkbox li {
 }
 @media screen and (max-width: 575px) {
     .input-communityUrl>#settings-community-url-field {
-        width: 100%;
         max-width: 100%;
+        width: 100% !important;
     }
     .urlCopy+.change_link {
-        margin-left: 0;
+        margin-left: 5px;
+        margin-top: 0;
     }
     .input-communityUrl>.inputUrl {
         max-width: 100%;
         margin-bottom: 6px;
         border-right: 1px solid rgba(96, 125, 159, .25);
     }
-    .input-communityUrl>#settings-community-url-field {
-        max-width: 100%;
+    .input-communityUrl {
+	    display: flex;
+        align-items: center;
+        height: 35px;
+        margin: 0 0 5px;
+    }
+    .input-communityUrl .inputUrl.text {
+        margin-bottom: 0;
+    }
+    .btn_group {
+        display: flex;
+    }
+    .btn_check + label {
+        font-size: 12px;
+        padding: 0.3em 0.5em;
+    }
+    .input-communityUrl>.urlCopy>a:before {
+        margin-right: 0;
+        height: 12px;
     }
 }
 @media (max-device-width: 575.98px) {
@@ -233,6 +268,13 @@ ul.role_checkbox li {
         margin-left: 10px;
         float: left;
         margin-top: 0;
+        width: auto;
+        display: flex;
+        align-items: center;
+    }
+    .input-communityUrl > .urlCopy svg {
+        height: 15px;
+        width: 15px;
     }
     .hide-on-desktop {
         display: block;

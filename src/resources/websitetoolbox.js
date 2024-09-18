@@ -58,7 +58,7 @@ wtbx.setting = {
             childElement.textContent = ' Copied';
         } else{
             const childElement = element.querySelector(".hide-on-desktop"); 
-            childElement.textContent = '';
+            childElement.classList.add("hidden");
         }
         element.classList.add('success');
         element.setAttribute('data-icon', 'check');
@@ -72,7 +72,7 @@ wtbx.setting = {
         cp.forEach(function(element) {
             if(window.screen.width < 575){
                 const childElement = element.querySelector(".hide-on-desktop"); 
-                childElement.textContent = 'C';
+                childElement.classList.remove("hidden");
             } else{
                 const childElement = element.querySelector(".hide-on-mobile");
                 childElement.textContent = 'Copy';
