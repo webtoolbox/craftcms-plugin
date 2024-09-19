@@ -53,7 +53,8 @@ wtbx.setting = {
         }
         navigator.clipboard.writeText(copyText);
         element.removeAttribute('data-icon');
-        if(window.screen.width >= 575){
+        var displayStatus = element ? window.getComputedStyle(element.querySelector(".hide-on-desktop")).display : null;
+        if(element.querySelector(".hide-on-desktop") && displayStatus == 'none'){
             const childElement = element.querySelector(".hide-on-mobile");
             childElement.textContent = ' Copied';
         } else{
