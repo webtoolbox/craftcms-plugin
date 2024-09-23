@@ -1,6 +1,7 @@
 wtbx.setting = {
     checkAllGroups: function(e){
         document.getElementById('settings-user-group-list').classList.add('d_none');
+        document.getElementById('settings-user-group-row').classList.add('d_none');
         document.getElementById('settings-all-users').checked = true;
         var checkboxes = document.getElementsByName('settings[user_roles][]');
         if (e.checked) {
@@ -17,6 +18,7 @@ wtbx.setting = {
 
     unCheckAllGroups: function(e){
         document.getElementById('settings-user-group-list').classList.add('d_none');
+        document.getElementById('settings-user-group-row').classList.add('d_none');
         var checkboxes = document.getElementsByName('settings[user_roles][]');
         if (e.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
@@ -37,6 +39,7 @@ wtbx.setting = {
             }
         }        
         document.getElementById('settings-user-group-list').classList.remove('d_none');
+        document.getElementById('settings-user-group-row').classList.remove('d_none');
     },
 
     copyUrl: function(element, textToCopy='') {
