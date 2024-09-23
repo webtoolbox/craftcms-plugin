@@ -1,5 +1,5 @@
 .d_none {
-    display: none;
+    display: none !important;
 }
 .mt_5 {
     margin-top: 5px;
@@ -46,12 +46,12 @@
     border-right: 1px solid rgba(96, 125, 159, .25);
 }
 .input-communityUrl>.border-right {
-    border-right: 1px solid rgba(96, 125, 159, .25);
+    border-right: 1px solid rgba(96, 125, 159, .25) !important;
 }
 .input-communityUrl>#settings-community-url-field {
     max-width: calc(24% - 34px);
     width: 300px;
-    height: 35px;
+    height: 34px;
 }
 .input-communityUrl>.inputUrl p {
     white-space: nowrap;
@@ -163,9 +163,10 @@ ul.role_checkbox li {
         border-left: none;
     }
 }
-@media (min-width: 992px) and (max-width: 1499.98px) {
+@media (min-width: 768px) and (max-width: 1499.98px) {
     .form_label {
-        width: 16%;
+        width: 21%;
+        font-size: 14px;
     }
 }
 @media (min-width: 768px) and (max-width: 991.98px) {
@@ -183,8 +184,30 @@ ul.role_checkbox li {
         float: left;
         display: grid;
     }
-    .input-communityUrl>.urlCopy {
-        margin-top: 5px;
+    #settings-forumAddress .urlCopy {
+        margin-left: -1px;
+        border-radius: 0;
+    }
+    .wt_setting_table tr {
+        display: flex;
+        flex-direction: column;
+    }
+    .wt_setting_table tr .form_label {
+        width: 100%;
+    }
+    .form_label .pull_right {
+        float: none;
+    }
+    .form_label ~ td {
+        padding-left: 0 !important;padding-top: 0 !important;
+    }    
+    .input-communityUrl > #settings-community-url-field {
+        width: calc(100% - 100px - 10px);
+        float: left;
+    }
+    .urlCopy+.change_link {
+        margin-left: 5px;
+        margin-top: 0;
     }
 }
 @media (min-width: 576px) and (max-width: 767.98px) {
@@ -198,6 +221,7 @@ ul.role_checkbox li {
     .input-communityUrl>#settings-community-url-field {
         max-width: 22%;
         float: left;
+        margin-right: -1px;
     }
     .input-communityUrl>.inputUrl {
         max-width: 50%;
@@ -210,15 +234,14 @@ ul.role_checkbox li {
 @media screen and (max-width: 575px) {
     .input-communityUrl>#settings-community-url-field {
         max-width: 100%;
-        width: 100% !important;
-    }
-    .urlCopy+.change_link {
-        margin-left: 5px;
-        margin-top: 0;
+        width: 80% !important;
     }
     .input-communityUrl>.inputUrl {
         max-width: 100%;
         margin-bottom: 6px;
+        border-right: 0;
+    }
+    .inputUrl.text.inputWithBorder {
         border-right: 1px solid rgba(96, 125, 159, .25);
     }
     .input-communityUrl {
@@ -229,6 +252,7 @@ ul.role_checkbox li {
     }
     .input-communityUrl .inputUrl.text {
         margin-bottom: 0;
+        width: 100%;
     }
     .btn_group {
         display: flex;
@@ -243,27 +267,6 @@ ul.role_checkbox li {
     }
 }
 @media (max-device-width: 575.98px) {
-    .form_label {
-        width: 100%;
-    }
-    
-    .form_label .pull_right {
-        float: none;
-    }
-    
-    .form_label ~ td {
-        padding-left: 0 !important;padding-top: 0 !important;
-    }
-    
-    .wt_setting_table tr {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .input-communityUrl > #settings-community-url-field {
-        width: calc(100% - 100px - 10px);
-        float: left;
-    }
     .input-communityUrl > .urlCopy {
         margin-left: 10px;
         float: left;
