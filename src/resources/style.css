@@ -67,7 +67,6 @@
     height: 100%;
 }
 .input-communityUrl>.urlCopy {
-    width: 100px;
     background: #ebf2fa;
 }
 .input-communityUrl>.urlCopy>a {
@@ -77,6 +76,8 @@
     justify-content: center;
     align-items: center;
     padding: 6px 6px;
+    width: 100px;
+    height: 33px;
 }
 .input-communityUrl>.urlCopy>a .hide-on-mobile {
     line-height: 1;
@@ -267,6 +268,9 @@ ul.role_checkbox li {
     }
 }
 @media (max-device-width: 575.98px) {
+    .input-communityUrl>.urlCopy>a {
+        width: auto;
+    }
     .input-communityUrl > .urlCopy {
         margin-left: 10px;
         float: left;
