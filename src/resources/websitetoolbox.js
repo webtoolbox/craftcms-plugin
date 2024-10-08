@@ -113,19 +113,10 @@ wtbx.setting = {
                     if(forumAddressElement) forumAddressElement.classList.remove("hidden");
                     if(communityWebAddressElement) communityWebAddressElement.classList.add("hidden");
                 }
-                wtbx.setting.submitSettingPageForm();
             });
         }
-    }, 
-    submitSettingPageForm: function() {
-        const settingForm = document.getElementById("main-form");
-        if (settingForm) {
-            const submitButton = settingForm.querySelector('[type="submit"]');
-            if (submitButton) {
-                submitButton.click();
-            }
-        }
     },
+
     bindCopyTextClick: function() {
         var copyLinkText = document.getElementById("settings-copyLinkText");
         var embedCheckbox = document.getElementById("settings-forumEmbedded");        

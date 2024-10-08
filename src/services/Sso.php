@@ -268,10 +268,11 @@ class Sso extends Component{
                 if(document.getElementById('wtLoadingIcon')){
                     document.getElementById('wtLoadingIcon').remove();
                 }
+                window.location.href = forumUrl;
             }
         })();
 JS;
         return $js ;
     
-  }   
+  }
 }
