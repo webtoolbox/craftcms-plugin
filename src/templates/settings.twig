@@ -179,7 +179,7 @@
                     <a href="{{ settings.forumUrl }}/tool/members/domain?tool=mb" class="change_link mt_5">Change</a> 
                 </div>
                 {{ _self.errorList(settings.getErrors('communityUrl')) }}
-                <span><a id="copyLinkText">Copy the address</a> above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="d_none">{{ baseUrl }}{{ settings.communityUrl }}</a></span>
+                <span><a id="copyLinkText">Copy the address</a> above and add a link to it in the website’s navigation menu.<a id="frmUrl" href="#" class="d_none">{{ baseUrl }}{% if backwardSlashVisibility == '' %}/{% endif %}{{ settings.communityUrl }}</a></span>
             </td>
         </tr>
         {% if userGroups|length > 0 %}

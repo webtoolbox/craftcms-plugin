@@ -291,7 +291,10 @@ class Websitetoolboxcommunity extends Plugin{
     public function updateEmbeddedUrl($forumUserName, $forumApiKey, $embeddedPage){
         if($embeddedPage != ''){
             $siteUrl = UrlHelper::siteUrl();
-            $embedUrl = $siteUrl.'/'.$embeddedPage;
+            if (substr($siteUrl, -1) !== '/' && strpos($siteUrl, 'index.php') == -1) {
+                $siteUrl .= '/';
+            }
+            $embedUrl = $siteUrl.$embeddedPage;
             if(strpos($siteUrl, 'index.php') > 0){
                 $pageTrigger = Craft::$app->getConfig()->general->pageTrigger;
                 $embedUrl = $siteUrl.'?'.$pageTrigger.'='.$embeddedPage;

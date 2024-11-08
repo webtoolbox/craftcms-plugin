@@ -68,6 +68,7 @@
 }
 .input-communityUrl>.urlCopy {
     background: #ebf2fa;
+    cursor: pointer;
 }
 .input-communityUrl>.urlCopy>a {
     text-decoration: none;
