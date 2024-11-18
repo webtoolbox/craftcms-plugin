@@ -197,8 +197,9 @@ ul.role_checkbox li {
     .wt_setting_table tr .form_label {
         width: 100%;
     }
-    .form_label .pull_right {
+    .wt_setting_table .form_label .pull_right {
         float: none;
+        text-align: left;
     }
     .form_label ~ td {
         padding-left: 0 !important;padding-top: 0 !important;
