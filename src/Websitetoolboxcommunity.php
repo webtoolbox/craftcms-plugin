@@ -281,6 +281,7 @@ class Websitetoolboxcommunity extends Plugin{
         $this->setAuthToken($result->forumAddress, $result->forumApiKey);
         // to set embedded url
         $this->updateEmbeddedUrl($userName, $result->forumApiKey, $embeddedPage);
+        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
     }
     /**
      * @uses function to add/edit emebedded URL
@@ -290,7 +291,10 @@ class Websitetoolboxcommunity extends Plugin{
     public function updateEmbeddedUrl($forumUserName, $forumApiKey, $embeddedPage){
         if($embeddedPage != ''){
             $siteUrl = UrlHelper::siteUrl();
-            $embedUrl = $siteUrl.'/'.$embeddedPage;
+            if (substr($siteUrl, -1) !== '/' && strpos($siteUrl, 'index.php') == -1) {
+                $siteUrl .= '/';
+            }
+            $embedUrl = $siteUrl.$embeddedPage;
             if(strpos($siteUrl, 'index.php') > 0){
                 $pageTrigger = Craft::$app->getConfig()->general->pageTrigger;
                 $embedUrl = $siteUrl.'?'.$pageTrigger.'='.$embeddedPage;

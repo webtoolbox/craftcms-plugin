@@ -251,9 +251,10 @@ class Sso extends Component{
             var forumUrl = "{$forumUrl}";
             var cmUrl = "{$cmUrl}";
             var baseUrl = "{$baseUrl}";
-            var cookieForumLogoutToken = "{$cookieForumLogoutToken}";   
-            var authtokenStr = "?authtoken="+cookieForumLogoutToken;
-            var forumHref = forumUrl+authtokenStr;            
+            var token = "{$token}";
+            var cookieForumLogoutToken = "{$cookieForumLogoutToken}";
+            var authtokenStr = "?authtoken=" + (token ? cookieForumLogoutToken : 0);
+            var forumHref = forumUrl+authtokenStr;
             var forumLink = baseUrl+cmUrl;
             if(baseUrl.match('index.php')){
                 forumLink = baseUrl+"?p="+cmUrl;
@@ -267,10 +268,11 @@ class Sso extends Component{
                 if(document.getElementById('wtLoadingIcon')){
                     document.getElementById('wtLoadingIcon').remove();
                 }
+                window.location.href = forumUrl;
             }
         })();
 JS;
         return $js ;
     
-  }   
+  }
 }

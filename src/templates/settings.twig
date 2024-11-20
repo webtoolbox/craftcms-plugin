@@ -22,6 +22,7 @@
 </script>
 <table class='wt_setting_table'>
     {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('communitySettingOption') == 1)  %}     
+        {% set afterSettingSavedPage = 0 %}
         <tr>
             <td>                
                 <b>Please log in to your Website Toolbox account.</b>
@@ -82,8 +83,9 @@
                 {% else %}
                     {% set communityDomain = cmHost|join('.') %}
                 {% endif %}
+                {% set afterSettingSavedPage = 1 %}
                 {% if (communityDomain != websiteDomain) %} 
-                    <ul id="alerts" class="wt_alert">
+                    <ul id="alerts" class="wt_alert {{ settings.forumEmbedded ? '' : 'hidden' }}" >
                         <li class="wt_li">
                             Your forum needs to <a href= "https://www.websitetoolbox.com/tool/members/domain?tool=mb" target="_blank">use a subdomain</a> for it to appear as embedded instead of full-screen in the Safari browser.
                         </li>
@@ -92,11 +94,11 @@
             </td>
         </tr>
         <tr>
-            <td class='form_label pt_20'>
+            <td class='form_label'>
                 <b class="pull_right">Account</b> 
             </td>
-            <td class='pt_20'>                
-                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}<a href="{{ craft.app.request.absoluteUrl }}&communitySettingOption=1" class="edit_setting">Change</a>
+            <td>                
+                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}<a href="{{ craft.app.request.absoluteUrl }}&communitySettingOption=1" class="change_link">Change</a>
             </td>
         </tr>
         <tr>
@@ -114,28 +116,25 @@
             }} 
             </td>
         </tr>
-        <tr>
-            <td></td>
-            <td>
-                <div>Enable this option to have your community embedded in a page of your website.        
-                <br />Disable this option to have your community load in a full-sized window. You can use the Layout section in your Website Toolbox account to         
-                <a href="https://www.websitetoolbox.com/support/making-your-forum-layout-match-your-website-148" target="_blank">customize your community layout to match your website</a> or         
-                <a href="https://www.websitetoolbox.com/contact?subject=Customize+Forum+Layout" target="_blank">contact Website Toolbox support to customize it for you</a>            
-            </div>
-            </td>
-        </tr>
-        <tr id='cmInstruction' class='d_none'>
-            <td></td>
-            <td>
-                <p>Copy the community url and add a link to it in the website’s navigation menu: <strong>{{settings.forumUrl}}</strong> <a href="javascript:void(0)" onClick="wtbx.setting.copyUrl(this, '{{settings.forumUrl}}')" class="copyLink">Copy URL</a></p>
-            </td>
-        </tr>
-        <tr id='cmUrl' class='d_none'>
-            <td class='form_label pt_20'><b class="pull_right valign">Embedded Page</b></td>
+        <tr id='cmUrl'>
+            <td class='form_label pt_20'><b class="pull_right valign">Community Address</b></td>
             <td class="pt_20">
-                {% if('index.php?' in craft.app.request.absoluteUrl) %}                        
+                {% set hideCommunityAddress = "" %}
+                {% set hideCommunityWebAddress = "" %}
+
+                {% if settings.forumEmbedded %}
+                    {% set hideCommunityAddress = "hidden" %}
+                {% else %}
+                    {% set hideCommunityWebAddress = "hidden" %}
+                {% endif %}
+
+                {% if('index.php?' in craft.app.request.absoluteUrl) %}
                     {% set index = 'index.php?p=' %}
                     {% set baseUrl = baseUrl ~ index %}
+                    {% set backwardSlashVisibility = "hidden" %}
+                {% else %}
+                    {% set baseUrl = baseUrl|slice(0, -1) %}
+                    {% set backwardSlashVisibility = "" %}
                 {% endif %}
                 
                 {% if settings.communityUrl %}
@@ -144,10 +143,11 @@
                     {% set cmUrl = 'community' %}
                 {% endif %}
                 
-                <div class='input-communityUrl'>
-                    <div class="inputUrl text" title='{{ baseUrl }}'>
+                <div class='input-communityUrl {{ hideCommunityWebAddress }}' id="communityWebAddress">
+                    <div class="inputUrl text {{ backwardSlashVisibility ? '' : 'inputWithBorder' }}">
                         <p>{{ baseUrl }}</p>
                     </div>
+                    <span class="forwardSlash {{ backwardSlashVisibility }}">/</span>
                     {{ 
                         forms.textField({
                         "id": "community-url",
@@ -155,16 +155,34 @@
                         "value": cmUrl,
                         "required": true
                         })
-                    }} 
+                    }}
                     <div class="urlCopy text">
-                        <a href='javascript:void(0);' class="copyLink" onClick="wtbx.setting.copyUrl(this)">Copy URL</a>
+                        <a class="copyLink" onClick="wtbx.setting.copyUrl(this)"><span class="hide-on-mobile">Copy</span><span class="hide-on-desktop copy-icon">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 111.07 122.88" style="enable-background:new 0 0 111.07 122.88" xml:space="preserve"><style type="text/css"><![CDATA[
+	.st0{fill-rule:evenodd;clip-rule:evenodd;}
+]]></style><g><path class="st0" d="M97.67,20.81L97.67,20.81l0.01,0.02c3.7,0.01,7.04,1.51,9.46,3.93c2.4,2.41,3.9,5.74,3.9,9.42h0.02v0.02v75.28 v0.01h-0.02c-0.01,3.68-1.51,7.03-3.93,9.46c-2.41,2.4-5.74,3.9-9.42,3.9v0.02h-0.02H38.48h-0.01v-0.02 c-3.69-0.01-7.04-1.5-9.46-3.93c-2.4-2.41-3.9-5.74-3.91-9.42H25.1c0-25.96,0-49.34,0-75.3v-0.01h0.02 c0.01-3.69,1.52-7.04,3.94-9.46c2.41-2.4,5.73-3.9,9.42-3.91v-0.02h0.02C58.22,20.81,77.95,20.81,97.67,20.81L97.67,20.81z M0.02,75.38L0,13.39v-0.01h0.02c0.01-3.69,1.52-7.04,3.93-9.46c2.41-2.4,5.74-3.9,9.42-3.91V0h0.02h59.19 c7.69,0,8.9,9.96,0.01,10.16H13.4h-0.02v-0.02c-0.88,0-1.68,0.37-2.27,0.97c-0.59,0.58-0.96,1.4-0.96,2.27h0.02v0.01v3.17 c0,19.61,0,39.21,0,58.81C10.17,83.63,0.02,84.09,0.02,75.38L0.02,75.38z M100.91,109.49V34.2v-0.02h0.02 c0-0.87-0.37-1.68-0.97-2.27c-0.59-0.58-1.4-0.96-2.28-0.96v0.02h-0.01H38.48h-0.02v-0.02c-0.88,0-1.68,0.38-2.27,0.97 c-0.59,0.58-0.96,1.4-0.96,2.27h0.02v0.01v75.28v0.02h-0.02c0,0.88,0.38,1.68,0.97,2.27c0.59,0.59,1.4,0.96,2.27,0.96v-0.02h0.01 h59.19h0.02v0.02c0.87,0,1.68-0.38,2.27-0.97c0.59-0.58,0.96-1.4,0.96-2.27L100.91,109.49L100.91,109.49L100.91,109.49 L100.91,109.49z"/></g></svg>
+                        </span></a>
+                    </div> 
+                </div>
+                <div class='input-communityUrl {{ hideCommunityAddress }}' id="forumAddress">
+                    <div class="inputUrl text border-right">
+                        <p>{{ settings.forumUrl }}</p>
                     </div>
-                </div>                    
+                
+                    <div class="urlCopy text">
+                        <a class="copyLink" onClick="wtbx.setting.copyUrl(this, '{{settings.forumUrl}}')"><span class="hide-on-mobile">Copy</span><span class="hide-on-desktop copy-icon">
+                            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 111.07 122.88" style="enable-background:new 0 0 111.07 122.88" xml:space="preserve"><style type="text/css"><![CDATA[
+	.st0{fill-rule:evenodd;clip-rule:evenodd;}
+]]></style><g><path class="st0" d="M97.67,20.81L97.67,20.81l0.01,0.02c3.7,0.01,7.04,1.51,9.46,3.93c2.4,2.41,3.9,5.74,3.9,9.42h0.02v0.02v75.28 v0.01h-0.02c-0.01,3.68-1.51,7.03-3.93,9.46c-2.41,2.4-5.74,3.9-9.42,3.9v0.02h-0.02H38.48h-0.01v-0.02 c-3.69-0.01-7.04-1.5-9.46-3.93c-2.4-2.41-3.9-5.74-3.91-9.42H25.1c0-25.96,0-49.34,0-75.3v-0.01h0.02 c0.01-3.69,1.52-7.04,3.94-9.46c2.41-2.4,5.73-3.9,9.42-3.91v-0.02h0.02C58.22,20.81,77.95,20.81,97.67,20.81L97.67,20.81z M0.02,75.38L0,13.39v-0.01h0.02c0.01-3.69,1.52-7.04,3.93-9.46c2.41-2.4,5.74-3.9,9.42-3.91V0h0.02h59.19 c7.69,0,8.9,9.96,0.01,10.16H13.4h-0.02v-0.02c-0.88,0-1.68,0.37-2.27,0.97c-0.59,0.58-0.96,1.4-0.96,2.27h0.02v0.01v3.17 c0,19.61,0,39.21,0,58.81C10.17,83.63,0.02,84.09,0.02,75.38L0.02,75.38z M100.91,109.49V34.2v-0.02h0.02 c0-0.87-0.37-1.68-0.97-2.27c-0.59-0.58-1.4-0.96-2.28-0.96v0.02h-0.01H38.48h-0.02v-0.02c-0.88,0-1.68,0.38-2.27,0.97 c-0.59,0.58-0.96,1.4-0.96,2.27h0.02v0.01v75.28v0.02h-0.02c0,0.88,0.38,1.68,0.97,2.27c0.59,0.59,1.4,0.96,2.27,0.96v-0.02h0.01 h59.19h0.02v0.02c0.87,0,1.68-0.38,2.27-0.97c0.59-0.58,0.96-1.4,0.96-2.27L100.91,109.49L100.91,109.49L100.91,109.49 L100.91,109.49z"/></g></svg>
+                        </span></a>
+                    </div>
+                    <a href="{{ settings.forumUrl }}/tool/members/domain?tool=mb" class="change_link mt_5">Change</a> 
+                </div>
                 {{ _self.errorList(settings.getErrors('communityUrl')) }}
-                <span>Copy the address above and add a link to it in the website’s navigation menu.<a id='frmUrl' href="#" class="d_none">{{ baseUrl }}{{ settings.communityUrl }}</a></span>
+                <span><a id="copyLinkText">Copy the address</a> above and add a link to it in the website’s navigation menu.<a id="frmUrl" href="#" class="d_none">{{ baseUrl }}{% if backwardSlashVisibility == '' %}/{% endif %}{{ settings.communityUrl }}</a></span>
             </td>
         </tr>
-        {% if userGroups|length > 0 %} 
+        {% if userGroups|length > 0 %}
             <tr>            
                 <td class='form_label pt_20'><b class="pull_right valign sso">Single Sign On</b></td>
                 <td>
@@ -174,7 +192,7 @@
                     {% set display_status = 'd_none' %}
 
                     {% if settings.ssoSetting %}
-                        {% if settings.ssoSetting == 'all_users' %}                         
+                        {% if settings.ssoSetting == 'all_users' %}
                             {% set select_all_user = 'checked' %}
                         {% elseif settings.ssoSetting == 'no_users' %} 
                             {% set select_no_users = 'checked' %}
@@ -194,9 +212,8 @@
                     </div>
                 </td>
             </tr>
-            <tr>
-                <td>
-                </td>
+            <tr id="user-group-row" class='{{ display_status }}'>
+                <td></td>
                 <td>
                     <div id="user-group-list" class='{{ display_status }}' >
                         {% set key = 0 %}
@@ -224,7 +241,7 @@
                                 {% endfor %}
                             </ul>
                         </fieldset>
-                    </div> 
+                    </div>
                 </td>
             </tr>
         {% endif %}
@@ -256,7 +273,9 @@
                     class: "d_none"
                 })
             }}
-            <b>Be sure to specify your sign up, log in, and log out page addresses in the <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single Sign On"> Single Sign On section </a>of Website Toolbox.</b>
+            {% if (afterSettingSavedPage)  %}
+                <b>Be sure to specify your sign up, log in, and log out page addresses in the <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single Sign On"> Single Sign On section </a>of Website Toolbox.</b>
+            {% endif %}
         </td>
     </tr>
 </table>

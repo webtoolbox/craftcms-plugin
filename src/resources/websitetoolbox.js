@@ -1,7 +1,7 @@
 wtbx.setting = {
-
     checkAllGroups: function(e){
         document.getElementById('settings-user-group-list').classList.add('d_none');
+        document.getElementById('settings-user-group-row').classList.add('d_none');
         document.getElementById('settings-all-users').checked = true;
         var checkboxes = document.getElementsByName('settings[user_roles][]');
         if (e.checked) {
@@ -18,6 +18,7 @@ wtbx.setting = {
 
     unCheckAllGroups: function(e){
         document.getElementById('settings-user-group-list').classList.add('d_none');
+        document.getElementById('settings-user-group-row').classList.add('d_none');
         var checkboxes = document.getElementsByName('settings[user_roles][]');
         if (e.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
@@ -38,6 +39,7 @@ wtbx.setting = {
             }
         }        
         document.getElementById('settings-user-group-list').classList.remove('d_none');
+        document.getElementById('settings-user-group-row').classList.remove('d_none');
     },
 
     copyUrl: function(element, textToCopy='') {
@@ -53,33 +55,35 @@ wtbx.setting = {
             }
         }
         navigator.clipboard.writeText(copyText);
-        element.text = '';
         element.removeAttribute('data-icon');
+        var displayStatus = element ? window.getComputedStyle(element.querySelector(".hide-on-desktop")).display : null;
+        if(element.querySelector(".hide-on-desktop") && displayStatus == 'none'){
+            const childElement = element.querySelector(".hide-on-mobile");
+            childElement.textContent = ' Copied';
+        } else{
+            const childElement = element.querySelector(".hide-on-desktop"); 
+            childElement.classList.add("hidden");
+        }
+        element.classList.add('success');
+        element.setAttribute('data-icon', 'check');
         setTimeout(function(){
-            element.text = ' Copied'
-            element.classList.add('success');
-            element.setAttribute('data-icon', 'check');
-        }, 200);
+            wtbx.setting.resetCopyButtons();
+        }, 1500);
     },
 
     resetCopyButtons: function() {
-        var cp = document.getElementsByClassName('copyLink');
-        cp[0].innerHTML = cp[1].innerHTML = 'Copy URL';
-        cp[0].classList.remove('success'); 
-        cp[1].classList.remove('success');
-        cp[0].removeAttribute('data-icon'); 
-        cp[1].removeAttribute('data-icon'); 
-    },
-
-    visibilityOfEmbeddedOption: function() {
-        var checkbox = document.getElementById('settings-forumEmbedded');
-        if (checkbox) {
-            if (!checkbox.checked) {
-                document.getElementById('settings-cmUrl').style.display = 'none';
-            } else {
-                document.getElementById('settings-cmInstruction').style.display = 'none';
+        var cp = document.querySelectorAll('.copyLink');
+        cp.forEach(function(element) {
+            if(window.screen.width < 575){
+                const childElement = element.querySelector(".hide-on-desktop"); 
+                childElement.classList.remove("hidden");
+            } else{
+                const childElement = element.querySelector(".hide-on-mobile");
+                childElement.textContent = 'Copy';
             }
-        }
+            element.classList.remove('success');
+            element.removeAttribute('data-icon');
+        });
     },
 
     sanitizeCommunityURLInput: function() {
@@ -93,28 +97,41 @@ wtbx.setting = {
     },
 
     toggleCommunityUrl: function() {
-        var checkbox = document.getElementById('settings-forumEmbedded');
-        if (checkbox) {
-            if (!checkbox.checked) {
-                document.getElementById('settings-cmInstruction').style.display = 'table-row';
-            } else {
-                document.getElementById('settings-cmUrl').style.display = 'table-row';
-                
-            }
-            checkbox.addEventListener('change', (event) => {
-                var chk = event.target;
+        var embedCheckbox = document.getElementById("settings-forumEmbedded");
+        if (embedCheckbox) {
+            var subDomainMsg = document.getElementById("settings-alerts");
+            var forumAddressElement = document.getElementById("settings-forumAddress");
+            var communityWebAddressElement = document.getElementById("settings-communityWebAddress");
+            embedCheckbox.addEventListener("change", function() {
                 wtbx.setting.resetCopyButtons();
-                if (chk.checked) {
-                    document.getElementById('settings-cmInstruction').style.display = 'none';
-                    document.getElementById('settings-cmUrl').style.display = 'table-row'; 
-                } else {
-                    document.getElementById('settings-cmUrl').style.display = 'none';
-                    document.getElementById('settings-cmInstruction').style.display = 'table-row';
+                if(embedCheckbox.checked) {
+                    if(subDomainMsg) subDomainMsg.classList.remove('hidden');
+                    if(forumAddressElement) forumAddressElement.classList.add("hidden");
+                    if(communityWebAddressElement) communityWebAddressElement.classList.remove("hidden");
+                }else{
+                    if(subDomainMsg) subDomainMsg.classList.add('hidden');
+                    if(forumAddressElement) forumAddressElement.classList.remove("hidden");
+                    if(communityWebAddressElement) communityWebAddressElement.classList.add("hidden");
+                }
+            });
+        }
+    },
+
+    bindCopyTextClick: function() {
+        var copyLinkText = document.getElementById("settings-copyLinkText");
+        var embedCheckbox = document.getElementById("settings-forumEmbedded");        
+        if(copyLinkText) {
+            copyLinkText.addEventListener('click', function() {
+                var copyLinkButton = document.querySelectorAll('.copyLink');
+                if (embedCheckbox && embedCheckbox.checked) {
+                    copyLinkButton[0].click();
+                } else{
+                    copyLinkButton[1].click();
                 }
             });
         }
     }
 };
-
 wtbx.setting.toggleCommunityUrl();
 wtbx.setting.sanitizeCommunityURLInput();
+wtbx.setting.bindCopyTextClick();
