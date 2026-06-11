@@ -23,6 +23,10 @@
 <table class='wt_setting_table'>
     {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('communitySettingOption') == 1)  %}     
         {% set afterSettingSavedPage = 0 %}
+        <input type="hidden" name="forumEmbedded" value="{{ settings.forumEmbedded }}">
+        <input type="hidden" name="communityUrl" value="{{ settings.communityUrl }}">
+        <input type="hidden" name="sso_setting" value="{{ settings.ssoSetting }}">
+        <input type="hidden" name="userGroupsId" value="{{ settings.userGroupsId }}">
         <tr>
             <td>                
                 <b>Please log in to your Website Toolbox account.</b>
@@ -98,7 +102,7 @@
                 <b class="pull_right">Account</b> 
             </td>
             <td>                
-                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}<a href="{{ craft.app.request.absoluteUrl }}&communitySettingOption=1" class="change_link">Change</a>
+                {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}<a href="{{ craft.app.request.absoluteUrl }}{{ '?' in craft.app.request.absoluteUrl ? '&' : '?' }}communitySettingOption=1" class="change_link">Change</a>
             </td>
         </tr>
         <tr>

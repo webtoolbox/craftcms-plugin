@@ -203,9 +203,7 @@ class Websitetoolboxcommunity extends Plugin{
             $webhookUrl = $siteUrl.'?'.$pageTrigger.'='.$webHookPage;
         }
         if(isset($_POST['settings']['forumUsername'])){ 
-            $forumType  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
-            $forumUrl  = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl',false);
-            $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting',false);
+            $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey','');
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
             $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl);           
@@ -222,24 +220,31 @@ class Websitetoolboxcommunity extends Plugin{
             }
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');            
+            $deleteForumUsernameRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUsername');
+            $deleteForumPasswordRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumPassword');
 
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
-            $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);            
+            $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
+            $affectedForumUsernameRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUsername', $userName);
+            $affectedForumPasswordRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumPassword', $userPassword);            
             if(isset($result->secretKey)){
                 $deleteSecretKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.secretKey');
                 $affectedSecretKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.secretKey', $result->secretKey);
             }
-            if($forumUrl !='' && $forumType ==''){
-                $embeddedPage = '';
-            }else{
+            if($forumApiKey == ''){
                 $embeddedPage = 'community';
-            }
-            if($ssoSetting == ''){                
                 $this->setUserGroupAccess('all_users');
+                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumEmbedded', 1);
+                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.communityUrl', $embeddedPage);
+            }else{
+                $embeddedPage = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.communityUrl','');
+                if(isset($_POST['settings']['forumEmbedded'])){
+                    Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumEmbedded', $_POST['settings']['forumEmbedded']);
+                }
             }
         } else{
-            $userName = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername',false);
-            $userPassword = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword',false);
+            $userName = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername', '') ?: Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum')["settings"]["forumUsername"] ?? '';
+            $userPassword = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumPassword', '') ?: Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum')["settings"]["forumPassword"] ?? '';
             $embedOption = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
             if(isset($_POST['settings']['sso_setting'])){
                 $ssoSetting = trim($_POST['settings']['sso_setting']);
@@ -256,7 +261,7 @@ class Websitetoolboxcommunity extends Plugin{
             }else{
                 $embeddedPage = '';
             }
-            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl);            
+            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl);
             $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -269,10 +274,14 @@ class Websitetoolboxcommunity extends Plugin{
                 exit;
             }
             $deleteForumUrlRows     = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUrl');
-            $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');                  
+            $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumApiKey');
+            $deleteForumUsernameRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumUsername');
+            $deleteForumPasswordRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.forumPassword');
 
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUrl',$result->forumAddress); 
             $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumApiKey',$result->forumApiKey);
+            $affectedForumUsernameRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumUsername', $userName);
+            $affectedForumPasswordRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumPassword', $userPassword);
             if(isset($result->secretKey)){                
                 $deleteSecretKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxforum.settings.secretKey');
                 $affectedSecretKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.secretKey', $result->secretKey);
