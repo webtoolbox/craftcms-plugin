@@ -41,7 +41,7 @@ define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settin
  */
 class Websitetoolboxcommunity extends Plugin{
     public static $plugin;
-    public static $craft31 = false;    
+    public static $craft31 = false;
     public $connection; 
     
     // Public Methods
@@ -116,11 +116,20 @@ class Websitetoolboxcommunity extends Plugin{
                         }else{                        
                             $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptEmbedded($forumUrl,'loggedout');
                         }
-                    }else{                    
+                    }else{
                         $jsRender = Websitetoolboxcommunity::getInstance()->sso->renderJsScriptUnEmbedded();
                     }                                
                     $view = Craft::$app->getView();
                     $view->registerJs($jsRender);
+                });
+                // A case when web page redirect before dologin img loads
+                Event::on(\yii\web\Response::class, \yii\web\Response::EVENT_BEFORE_SEND, function($event) {
+                    $response = $event->sender;
+                    if($response->statusCode === 302 && isset($_COOKIE['forumLogoutToken']) && Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam) && !isset($_COOKIE['ssoCompletedAfterPageRedirect'])){
+                        $this->printLogoutImgTag($_COOKIE['forumLogoutToken']);
+                        setcookie('ssoCompletedAfterPageRedirect', 1, time() + (86400 * 365),"/");    
+                        $_COOKIE['ssoCompletedAfterPageRedirect'] = 1;
+                    }
                 });
                 if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"])){
                     // Register site url route for community
