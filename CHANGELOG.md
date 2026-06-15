@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.7 - 2026-06-20
+### Added
+- To let the forum embed default when user login into plugin first time.
+
 ## 2.0.6 - 2024-09-03
 ### Added
 - Revise the plugin settings page to enhance user-friendliness.
