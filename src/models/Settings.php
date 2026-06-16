@@ -20,7 +20,6 @@ use craft\helpers\UrlHelper;
 class Settings extends Model{
     // Public Properties    
     public $forumUsername         = '';
-    public $forumPassword         = '';
     public $forumEmbedded         = 1;
     public $forumApiKey           = '';
     public $forumUrl              = '';  
@@ -59,7 +58,7 @@ class Settings extends Model{
     /**   * @inheritdoc     */
     public function rules(): array{
         return [
-            [['forumUsername', 'forumPassword'], 'required'],
+            [['forumUsername'], 'required'],
             [['forumApiKey','forumUrl'], 'string'],
             ['communityUrl', 'validateUrl']
         ];
@@ -78,7 +77,6 @@ class Settings extends Model{
                 'class' => EnvAttributeParserBehavior::class,
                 'attributes' => [
                     'forumUsername',
-                    'forumPassword',
                     'forumApiKey',
                     'forumUrl',
                     'communityUrl'

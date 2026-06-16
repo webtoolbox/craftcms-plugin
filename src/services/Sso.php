@@ -170,7 +170,8 @@ class Sso extends Component{
       setcookie('forumLoginUserid', '', time() - (86400 * 365), "/");
       setcookie('forumAddress', '', time() - (86400 * 365), "/");
       setcookie('logInForum', '', time() - 3600, "/");
-   } 
+      setcookie('ssoCompletedAfterPageRedirect', '', time() - 3600, "/");
+   }
    /**
     * @uses function to get user groups ids of logged in user.
     */

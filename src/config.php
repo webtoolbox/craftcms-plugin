@@ -17,8 +17,6 @@
 return [
         // Websitetoolbox Forums Username
         'forumUsername' => '',
-        // Websitetoolbox Forums Password
-        'forumPassword' => '',
         //Embedded Forum or Non-Embedded Forum
         'forumEmbedded' => '',
 ];
