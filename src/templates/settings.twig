@@ -23,10 +23,6 @@
 <table class='wt_setting_table'>
     {% if (craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"] is  not defined) or (craft.app.request.getParam('communitySettingOption') == 1)  %}     
         {% set afterSettingSavedPage = 0 %}
-        <input type="hidden" name="forumEmbedded" value="{{ settings.forumEmbedded }}">
-        <input type="hidden" name="communityUrl" value="{{ settings.communityUrl }}">
-        <input type="hidden" name="sso_setting" value="{{ settings.ssoSetting }}">
-        <input type="hidden" name="userGroupsId" value="{{ settings.userGroupsId }}">
         <tr>
             <td>                
                 <b>Please log in to your Website Toolbox account.</b>
@@ -103,7 +99,6 @@
             </td>
             <td>                
                 {{craft.app.getPlugins.getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUsername"]}}<a href="{{ craft.app.request.absoluteUrl }}{{ '?' in craft.app.request.absoluteUrl ? '&' : '?' }}communitySettingOption=1" class="change_link">Change</a>
-                <input type="hidden" name="savedForumUsername" value="{{ settings.forumUsername }}">
             </td>
         </tr>
         <tr>
@@ -249,9 +244,6 @@
                     </div>
                 </td>
             </tr>
-        {% else %}
-            <input type="hidden" name="sso_setting" value="{{ settings.ssoSetting ? settings.ssoSetting : "all_users"  }}">
-            <input type="hidden" name="userGroupsId" value="{{ settings.userGroupsId }}">
         {% endif %}
     {% endif %}
     <tr>
@@ -281,7 +273,6 @@
                     class: "d_none"
                 })
             }}
-            <input type="hidden" name="secretKey" value="{{ craft.app.projectConfig.get('plugins.websitetoolboxforum.settings.secretKey') }}">
             {% if (afterSettingSavedPage)  %}
                 <b>Be sure to specify your sign up, log in, and log out page addresses in the <a href="https://www.websitetoolbox.com/tool/members/mb/settings?tab=Single Sign On"> Single Sign On section </a>of Website Toolbox.</b>
             {% endif %}

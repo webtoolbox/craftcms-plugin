@@ -125,7 +125,7 @@ class Websitetoolboxcommunity extends Plugin{
                 // A case when web page redirect before dologin img loads
                 Event::on(\yii\web\Response::class, \yii\web\Response::EVENT_BEFORE_SEND, function($event) {
                     $response = $event->sender;
-                    if($response->statusCode === 302 && isset($_COOKIE['forumLogoutToken']) && Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam) && !isset($_COOKIE['ssoCompletedAfterPageRedirect'])){
+                    if($response->statusCode === 302 && $this->checkGroupPermission() && isset($_COOKIE['forumLogoutToken']) && Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam) && !isset($_COOKIE['ssoCompletedAfterPageRedirect'])){
                         $this->printLogoutImgTag($_COOKIE['forumLogoutToken']);
                         setcookie('ssoCompletedAfterPageRedirect', 1, time() + (86400 * 365),"/");    
                         $_COOKIE['ssoCompletedAfterPageRedirect'] = 1;
@@ -243,27 +243,16 @@ class Websitetoolboxcommunity extends Plugin{
                 Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumEmbedded', 1);
                 Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.communityUrl', $embeddedPage);
             }else{
-                $embeddedPage = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.communityUrl','');
-                if(isset($_POST['settings']['forumEmbedded'])){
-                    Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.forumEmbedded', $_POST['settings']['forumEmbedded']);
-                }
+                $configFields = ['forumEmbedded', 'communityUrl', 'ssoSetting', 'userGroupsId'];
+                $pluginSettings = $this->preserveConfigFields($configFields); 
+                $embeddedPage = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.communityUrl', '') ?: $pluginSettings["communityUrl"] ?? '';                
             }
             $forumAddress = $result->forumAddress;
             $forumApiKey = $result->forumApiKey;
         } else{
-            $preserveFields = [
-                'savedForumUsername' => 'forumUsername',
-                'secretKey'          => 'secretKey',
-                'ssoSetting'         => 'ssoSetting',
-                'userGroupsId'       => 'userGroupsId',
-            ];
-            foreach($preserveFields as $postKey => $configKey){
-                $value = $_POST['settings'][$postKey] ?? '';
-                if($value){
-                    Craft::$app->getProjectConfig()->set("plugins.websitetoolboxforum.settings.{$configKey}", $value);
-                }
-            }
-            $userName = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername', '') ?: Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum')["settings"]["forumUsername"] ?? '';
+            $configFields = ['ssoSetting', 'userGroupsId', 'forumUsername', 'secretKey'];
+            $pluginSettings = $this->preserveConfigFields($configFields);
+            $userName = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUsername', '') ?: $pluginSettings["forumUsername"] ?? '';
             $embedOption = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumEmbedded',false);
             if(isset($_POST['settings']['sso_setting'])){
                 $ssoSetting = trim($_POST['settings']['sso_setting']);
@@ -448,5 +437,17 @@ class Websitetoolboxcommunity extends Plugin{
         $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
         echo '<img src='.$forumUrl.'/register/logout?authtoken='.$token.'" border="0" width="1" height="1" alt="" id="logout_img">';
         Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
+    }
+    public function preserveConfigFields(array $configFields): array
+    {
+        $pluginSettings = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum')["settings"];
+        foreach($configFields as $configKey){
+            $value = Craft::$app->getProjectConfig()->get("plugins.websitetoolboxforum.settings.{$configKey}", '') ?: $pluginSettings[$configKey] ?? '';
+            if ($configKey == 'ssoSetting' && $value == "") {
+                $value = "all_users";
+            }
+            Craft::$app->getProjectConfig()->set("plugins.websitetoolboxforum.settings.{$configKey}", $value);
+        }
+        return $pluginSettings;
     }
 }
