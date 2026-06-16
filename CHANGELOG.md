@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 2.0.7 - 2026-06-20
 ### Added
-- To let the forum embed default when user login into plugin first time.
+- Enable the forum embed by default for users when they log into the plugin for the first time.
 
 ## 2.0.6 - 2024-09-03
 ### Added
