@@ -62,9 +62,9 @@ class Websitetoolboxcommunity extends Plugin{
         self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
         Event::on(Plugins::class, Plugins::EVENT_AFTER_ENABLE_PLUGIN,
             function (PluginEvent $event) {
-                $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
-                $forumApiKey = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumApiKey"];
-                if(isset(Craft::$app->getUser()->getIdentity()->id)){                    
+                $forumUrl = self::getPluginSetting("forumUrl");
+                $forumApiKey = self::getPluginSetting("forumApiKey");
+                if(isset(Craft::$app->getUser()->getIdentity()->id) && $forumApiKey){                    
                     Websitetoolboxcommunity::getInstance()->sso->resetCookieOnLogout();
                     $this->setAuthToken($forumUrl, $forumApiKey);
                     $this->printLoginImgTag(@$_COOKIE['forumLogoutToken']);
@@ -102,6 +102,7 @@ class Websitetoolboxcommunity extends Plugin{
             }
         
             if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
+				self::udpateForumAddress();
                 Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
                     $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
                     if(!$token){
@@ -383,7 +384,7 @@ class Websitetoolboxcommunity extends Plugin{
     }
     public function printLoginImgTag($authToken){
         if($this->checkGroupPermission()){
-            $forumUrl = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
+            $forumUrl = self::getPluginSetting("forumUrl");
             ob_start();
             echo '<img src='.$forumUrl.'/register/dologin?authtoken='.$authToken.'  width="1" height="1" border="0" alt="">';
         }
@@ -450,4 +451,64 @@ class Websitetoolboxcommunity extends Plugin{
         }
         return $pluginSettings;
     }
+
+    public function validateAPIKeyCall() {
+        $apiKey = self::getPluginSetting('forumApiKey');
+        $userName = self::getPluginSetting('forumUsername');
+        if (!$apiKey || !$userName) {
+            return false;
+        }
+        $postData = array(
+            'action' => 'validateAPIKey',
+            'type' => 'json',
+            'forumUsername' => $userName,
+            'forumApikey' => $apiKey
+        );
+        $response = $this->sso->sendApiRequest('POST', WT_SETTINGS_URL, $postData, 'json');
+        return $response;
+    }
+
+	public static function setPluginSettings(array $settings): void {
+        $prefix = 'plugins.websitetoolboxforum.settings.';
+        foreach ($settings as $key => $value) {
+            Craft::$app->getProjectConfig()->remove($prefix . $key);
+            Craft::$app->getProjectConfig()->set($prefix . $key, $value);
+        }
+    }
+
+	public static function getPluginSetting(string $key, string $default = '') {
+        $value = Craft::$app->getProjectConfig()->get("plugins.websitetoolboxforum.settings.{$key}");
+        return $value !== null ? $value : $default;
+    }
+
+    public static function setCookie(string $name, string $value, int $expiry = 0): void
+    {
+        if ($expiry === 0) {
+            $expiry = time() + (86400 * 365);
+        }
+        $isSecure = Craft::$app->getRequest()->getIsSecureConnection();
+        $sameSite = $isSecure ? 'None' : 'Lax';
+        $cookie = sprintf(
+            '%s=%s; expires=%s; path=/; SameSite=%s%s',
+            $name,
+            $value,
+            gmdate('D, d M Y H:i:s', $expiry) . ' GMT',
+            $sameSite,
+            $isSecure ? '; Secure' : ''
+        );
+        header("Set-Cookie: {$cookie}", false);
+        $_COOKIE[$name] = $value;
+    }
+
+	public function udpateForumAddress() {
+		$response = self::validateAPIKeyCall();
+		
+		// In case domain changed from forum - update plugin settings forumUrl.	
+		if (isset($response->forum_address) && $response->forum_address != self::getPluginSetting("forumUrl")) {
+			self::setPluginSettings(["forumUrl" => $response->forum_address]);
+			self::setCookie("forumAddress", $response->forum_address);
+			return $response->forum_address;
+		}
+		return;
+	}
 }
