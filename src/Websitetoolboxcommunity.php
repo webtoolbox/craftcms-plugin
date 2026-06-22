@@ -45,7 +45,7 @@ class Websitetoolboxcommunity extends Plugin{
     public $connection; 
     
     // Public Methods
-    public function init(){ 
+    public function init(){
         parent::init();
         Craft::info(
             Craft::t(
@@ -128,7 +128,7 @@ class Websitetoolboxcommunity extends Plugin{
                     $response = $event->sender;
                     if($response->statusCode === 302 && $this->checkGroupPermission() && isset($_COOKIE['forumLogoutToken']) && Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam) && !isset($_COOKIE['ssoCompletedAfterPageRedirect'])){
                         $this->printLogoutImgTag($_COOKIE['forumLogoutToken']);
-                        setcookie('ssoCompletedAfterPageRedirect', 1, time() + (86400 * 365),"/");    
+                        setcookie('ssoCompletedAfterPageRedirect', 1, 0, "/");
                         $_COOKIE['ssoCompletedAfterPageRedirect'] = 1;
                     }
                 });
@@ -481,32 +481,13 @@ class Websitetoolboxcommunity extends Plugin{
         return $value !== null ? $value : $default;
     }
 
-    public static function setCookie(string $name, string $value, int $expiry = 0): void
-    {
-        if ($expiry === 0) {
-            $expiry = time() + (86400 * 365);
-        }
-        $isSecure = Craft::$app->getRequest()->getIsSecureConnection();
-        $sameSite = $isSecure ? 'None' : 'Lax';
-        $cookie = sprintf(
-            '%s=%s; expires=%s; path=/; SameSite=%s%s',
-            $name,
-            $value,
-            gmdate('D, d M Y H:i:s', $expiry) . ' GMT',
-            $sameSite,
-            $isSecure ? '; Secure' : ''
-        );
-        header("Set-Cookie: {$cookie}", false);
-        $_COOKIE[$name] = $value;
-    }
-
 	public function udpateForumAddress() {
 		$response = self::validateAPIKeyCall();
 		
 		// In case domain changed from forum - update plugin settings forumUrl.	
 		if (isset($response->forum_address) && $response->forum_address != self::getPluginSetting("forumUrl")) {
 			self::setPluginSettings(["forumUrl" => $response->forum_address]);
-			self::setCookie("forumAddress", $response->forum_address);
+			$this->sso->setForumCookie("forumAddress", $response->forum_address);
 			return $response->forum_address;
 		}
 		return;
