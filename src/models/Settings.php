@@ -23,7 +23,8 @@ class Settings extends Model{
     public $forumEmbedded         = 1;
     public $forumApiKey           = '';
     public $forumUrl              = '';  
-    public $communityUrl          = 'community';  
+    public $communityUrl          = 'community';
+    public $secretKey             = '';
     public $ssoSetting            = '';
     public $userGroupsId          = '';
     // Public Methods
