@@ -20,6 +20,19 @@ define('WT_API_URL', 'https://api.websitetoolbox.com/v1/api');
  * @since     4.0.0
  */
 class Sso extends Component{   
+    /**
+     * Whether forum user creation via SSO is allowed for the given username.
+     * Mirrors the forum's force_username_selection + email-username gating.
+     */
+    function getForceUsernameSelection(){
+        return ((int) Craft::$app->getProjectConfig()->get('plugins.websitetoolboxcommunity.settings.forceUsernameSelection', 0) === 1) ? 1 : 0;
+    }
+    function isForumUserCreationAllowedThroughSso($username){
+        if($this->getForceUsernameSelection() === 1){
+            return false;
+        }
+        return !filter_var($username, FILTER_VALIDATE_EMAIL);
+    }
     function afterLogin(){            
           $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam);           
           if($token){                 
@@ -70,8 +83,13 @@ class Sso extends Component{
             if(isset($user->user->lastName)){
                $postData['name'] .=  " ".$user->user->lastName;
             }        
-            $RequestUrl           = $forumUrl . "/register/create_account/";
-            $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');                  
+            // Only create the forum account during signup when SSO settings allow it.
+            // If force_username_selection is on, or the username is an email address, skip
+            // auto-creation — the forum will present the choose-username page instead.
+            if($this->isForumUserCreationAllowedThroughSso($userName)){
+                $RequestUrl           = $forumUrl . "/register/create_account/";
+                $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
+            }
             $RequestUrl           = $forumUrl."/register/setauthtoken";
             $postData             = array('type'=>'json','apikey' => $forumApiKey, 'user' => $userName,'email'=>$userEmail,'externalUserid'=>$userId);
             $result               = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');

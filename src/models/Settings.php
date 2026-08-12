@@ -25,6 +25,7 @@ class Settings extends Model{
     public $forumApiKey           = '';
     public $forumUrl              = '';  
     public $communityUrl          = 'community';  
+    public $forceUsernameSelection = 0;
   
     // Public Methods
     protected function makeUrl($page){
