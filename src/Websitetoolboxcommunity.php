@@ -178,6 +178,9 @@ class Websitetoolboxcommunity extends Plugin{
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxcommunity.settings.forumUrl',$result->forumAddress); 
 
             $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxcommunity.settings.forumApiKey',$result->forumApiKey);
+            if(isset($result->forceUsernameSelection)){
+                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxcommunity.settings.forceUsernameSelection', ((int)$result->forceUsernameSelection === 1) ? 1 : 0);
+            }
             if($forumUrl !='' && $forumType ==''){
                 $embeddedPage = '';
             }else{
@@ -211,6 +214,9 @@ class Websitetoolboxcommunity extends Plugin{
             $deleteForumApiKeyRows  = Craft::$app->getProjectConfig()->remove('plugins.websitetoolboxcommunity.settings.forumApiKey');      
             $affectedForumUrlRows   = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxcommunity.settings.forumUrl',$result->forumAddress); 
             $affectedForumApiKeyRows = Craft::$app->getProjectConfig()->set('plugins.websitetoolboxcommunity.settings.forumApiKey',$result->forumApiKey);
+            if(isset($result->forceUsernameSelection)){
+                Craft::$app->getProjectConfig()->set('plugins.websitetoolboxcommunity.settings.forceUsernameSelection', ((int)$result->forceUsernameSelection === 1) ? 1 : 0);
+            }
         }        
         $RequestUrl   = $result->forumAddress."/register/setauthtoken";
         $myUserQuery  = \craft\elements\User::find();
