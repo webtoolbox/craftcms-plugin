@@ -276,4 +276,21 @@ JS;
         return $js ;
     
   }
+   /**
+     * @param string $name   Cookie name
+     * @param mixed  $value  Cookie value
+     * @param string|int $type 'session' for session cookie, 'persistent' for 1 year, or int for custom seconds
+     * @param string $path   Cookie path
+     */
+    function setForumCookie($name, $value, $type = 'persistent', $path = '/'){
+        if($type === 'session'){
+            $expire = 0;
+        } elseif($type === 'persistent'){
+            $expire = time() + (86400 * 365);
+        } else {
+            $expire = time() + (int)$type;
+        }
+        setcookie($name, $value, $expire, $path);
+        $_COOKIE[$name] = $value;
+    }
 }
