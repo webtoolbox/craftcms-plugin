@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.9 - 2026-10-09
+### Added
+- Backoff for setauthtoken failures: transient forum errors are retried after 60 seconds, permanent errors (invalid API key, closed registrations, account conflicts) are not retried until the apikey or user changes (12-hour safety window).
+- Connect (3s) and response (10s) timeouts on forum API requests so a slow forum cannot stall page requests.
+### Changed
+- Forum address updates now arrive only through the signed webhook endpoint instead of a validateAPIKey request on every page view; the webhook route is registered whether or not the community is embedded.
+- The embed URL is sent with the checkPluginLogin settings save, and the separate modifySSOURLs request only fires when the embed URL actually changed.
+- The SSO group permission check is memoized per request and cached per user for 15 minutes instead of querying user groups on every check.
+### Fixed
+- After-login handler is registered on craft\web\User instead of every component.
+
 ## 2.0.8 - 2026-07-10
 ### Added
 - AUto update plugin settings on related detail change by forum admin.

@@ -42,7 +42,9 @@ define('WT_SETTINGS_URL', 'https://www.websitetoolbox.com/tool/members/mb/settin
 class Websitetoolboxcommunity extends Plugin{
     public static $plugin;
     public static $craft31 = false;
-    public $connection; 
+    public $connection;
+    /** @var bool|null per-request memo for checkGroupPermission() */
+    private $groupPermissionMemo = null;
     
     // Public Methods
     public function init(){
@@ -102,7 +104,8 @@ class Websitetoolboxcommunity extends Plugin{
             }
         
             if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"])){
-				self::udpateForumAddress();
+                // Forum-address changes now arrive via the signed /webhook endpoint
+                // (registered below) instead of a validateAPIKey POST on every request.
                 Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,function (Event $event) {
                     $token = Craft::$app->getSession()->get(Craft::$app->getUser()->tokenParam); 
                     if(!$token){
@@ -132,18 +135,20 @@ class Websitetoolboxcommunity extends Plugin{
                         $_COOKIE['ssoCompletedAfterPageRedirect'] = 1;
                     }
                 });
-                if(!empty(Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"])){
-                    // Register site url route for community
-                    Event::on(
-                        \craft\web\UrlManager::class,
-                        \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-                        function(RegisterUrlRulesEvent $event) {
-                            $segement = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"];
+                // Register site url routes: the webhook endpoint always (it receives signed
+                // forum-address updates whether or not the community is embedded), the
+                // community segment only when embedded.
+                Event::on(
+                    \craft\web\UrlManager::class,
+                    \craft\web\UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+                    function(RegisterUrlRulesEvent $event) {
+                        $event->rules['webhook'] = 'websitetoolboxforum/default/webhook';
+                        $segement = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["communityUrl"] ?? '';
+                        if($segement != ''){
                             $event->rules[$segement] = 'websitetoolboxforum/default/index';
-                            $event->rules['webhook'] = 'websitetoolboxforum/default/webhook';
                         }
-                    );
-                }
+                    }
+                );
                 if(!isset($_COOKIE['forumAddress'])){
                     setcookie("forumAddress", Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"], time() + (86400 * 365),"/");
                     $_COOKIE['forumAddress'] = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum') ["settings"]["forumUrl"];
@@ -181,7 +186,7 @@ class Websitetoolboxcommunity extends Plugin{
             }
         });
           
-        Event::on( \yii\base\Component::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {
+        Event::on( \craft\web\User::class, \craft\web\User::EVENT_AFTER_LOGIN, function(Event $event) {
             if($this->checkGroupPermission()){
                 Websitetoolboxcommunity::getInstance()->sso->afterLogin();
             }            
@@ -216,7 +221,18 @@ class Websitetoolboxcommunity extends Plugin{
             $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey','');
             $userName               = $_POST['settings']['forumUsername'];
             $userPassword           = $_POST['settings']['forumPassword'];
-            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl);
+            // Resolve the embed URL before the request so it rides along on the same
+            // checkPluginLogin call: one forum call per save instead of two. (The forum
+            // only persists it when the field is present, and only after the posted
+            // credentials validate.)
+            if($forumApiKey == ''){
+                $embeddedPage = 'community';
+            }else{
+                $storedSettings = Craft::$app->getPlugins()->getStoredPluginInfo('websitetoolboxforum')["settings"] ?? [];
+                $embeddedPage = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.communityUrl', '') ?: ($storedSettings["communityUrl"] ?? '');
+            }
+            $embedUrl = $this->buildEmbedUrl($embeddedPage);
+            $postData = array('action' => 'checkPluginLogin', 'username' => $userName,'password'=>$userPassword, 'plugin' => 'craft', 'websiteBuilder' => 'craftcms', 'pluginWebhookUrl' => $webhookUrl, 'embed_page_url' => $embedUrl, 'altEmbedParam' => 1);
             $result = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$postData,'json');
             if(empty($result) || (isset($result->errorMessage) && $result->errorMessage != '')){
                 if(empty($result)){
@@ -276,9 +292,25 @@ class Websitetoolboxcommunity extends Plugin{
             $forumAddress = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumUrl', '');
             $forumApiKey = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.forumApiKey', '');
         }
+        // Settings changed: drop the per-request permission memo before the
+        // token/URL sync below so they run against the freshly saved values.
+        $this->resetGroupPermissionMemo();
         $this->setAuthToken($forumAddress, $forumApiKey);
-        // to set embedded url
-        $this->updateEmbeddedUrl($userName, $forumApiKey, $embeddedPage);
+        // Embed URL sync. The credentials branch already sent it with checkPluginLogin
+        // (one forum call per save); every other save only pushes it when the value
+        // actually changed since the last successful sync.
+        if(isset($_POST['settings']['forumUsername'])){
+            $this->recordSentEmbedUrl($embedUrl);
+        }else{
+            $newEmbedUrl = $this->buildEmbedUrl($embeddedPage);
+            $lastSentEmbedUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.lastSentEmbedUrl');
+            if($lastSentEmbedUrl === null || (string)$lastSentEmbedUrl !== (string)$newEmbedUrl){
+                $response = $this->updateEmbeddedUrl($userName, $forumApiKey, $embeddedPage);
+                if(!empty($response) && (!isset($response->errorMessage) || $response->errorMessage == '')){
+                    $this->recordSentEmbedUrl($newEmbedUrl);
+                }
+            }
+        }
         Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/websitetoolboxforum'))->send();
     }
     /**
@@ -287,6 +319,22 @@ class Websitetoolboxcommunity extends Plugin{
      * @param forumApiKey - string
      */
     public function updateEmbeddedUrl($forumUserName, $forumApiKey, $embeddedPage){
+        $embedUrl = $this->buildEmbedUrl($embeddedPage);
+        $fields = array(
+            'action' => 'modifySSOURLs',
+            'forumUsername' => $forumUserName,
+            'forumApikey' => $forumApiKey,
+            'embed_page_url' => $embedUrl,
+            'altEmbedParam' => 1,
+            'plugin' => 'craft'
+        );  
+        $response = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$fields,'json');
+        return $response;
+    }
+    /**
+     * @uses build the absolute embed/community URL for a given embed page slug
+     */
+    public function buildEmbedUrl($embeddedPage){
         if($embeddedPage != ''){
             $siteUrl = UrlHelper::siteUrl();
             if (substr($siteUrl, -1) !== '/' && strpos($siteUrl, 'index.php') == -1) {
@@ -300,16 +348,16 @@ class Websitetoolboxcommunity extends Plugin{
         }else{
             $embedUrl = '';
         }
-        $fields = array(
-            'action' => 'modifySSOURLs',
-            'forumUsername' => $forumUserName,
-            'forumApikey' => $forumApiKey,
-            'embed_page_url' => $embedUrl,
-            'altEmbedParam' => 1,
-            'plugin' => 'craft'
-        );  
-        $response = $this->sso->sendApiRequest('POST',WT_SETTINGS_URL,$fields,'json');
-        return $response;
+        return $embedUrl;
+    }
+    /**
+     * @uses remember the embed URL the forum last accepted so unchanged saves skip the push
+     */
+    public function recordSentEmbedUrl($embedUrl){
+        $lastSentEmbedUrl = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.lastSentEmbedUrl');
+        if($lastSentEmbedUrl === null || (string)$lastSentEmbedUrl !== (string)$embedUrl){
+            Craft::$app->getProjectConfig()->set('plugins.websitetoolboxforum.settings.lastSentEmbedUrl', $embedUrl);
+        }
     }
     /**
     * @uses function to create/register user on community and return authtoken to login into community
@@ -318,11 +366,24 @@ class Websitetoolboxcommunity extends Plugin{
     */
     public function setAuthToken($forumUrl, $forumApiKey, array $userData = null){
         if($this->checkGroupPermission()){
+            if(!$forumUrl || !$forumApiKey){
+                return;
+            }
             $RequestUrl        = $forumUrl."/register/setauthtoken";
             $myUserQuery       = \craft\elements\User::find();
             $loggedinUserEmail = isset($userData['email']) ? $userData['email'] : Craft::$app->getUser()->getIdentity()->email;
             $loggedinUserId    = isset($userData['externalUserid']) ? $userData['externalUserid'] : Craft::$app->getUser()->getIdentity()->id;
             $loggediUserName   = isset($userData['user']) ? $userData['user'] : Craft::$app->getUser()->getIdentity()->username;
+            // Backoff: don't hammer the forum with a call that is known to fail.
+            // The key includes the apikey + user identity, so a changed apikey or a
+            // different user retries immediately; 'permanent' errors wait 12h,
+            // transient ones 60s (the forum's SSO mutex timeout is 1s, so a retry
+            // within that window cannot succeed anyway).
+            $stateKey = 'wtSsoAuthToken:'.md5($forumUrl.'|'.$forumApiKey.'|'.$loggedinUserId.'|'.$loggedinUserEmail.'|'.$loggediUserName);
+            $failureState = Craft::$app->getCache()->get($stateKey);
+            if($failureState === 'permanent' || $failureState === 'retry'){
+                return;
+            }
             $postData = array(
                 'type'=>'json',
                 'apikey' => $forumApiKey,
@@ -332,18 +393,54 @@ class Websitetoolboxcommunity extends Plugin{
             );
             $response = Websitetoolboxcommunity::getInstance()->sso->sendApiRequest('POST',$RequestUrl,$postData,'json');
             if(isset($response->authtoken) && $response->authtoken !=''){
+                Craft::$app->getCache()->delete($stateKey);
                 setcookie("forumLogInToken", $response->authtoken, time() + (86400 * 365),"/");
                 setcookie("forumLogoutToken", $response->authtoken, time() + (86400 * 365),"/");
-                setcookie("forumLoginUserid", $response->userid, time() + (86400 * 365),"/");    
+                setcookie("forumLoginUserid", $response->userid, time() + (86400 * 365),"/");
                 $_COOKIE['forumLogInToken'] = $response->authtoken;
                 $_COOKIE['forumLogoutToken'] = $response->authtoken;
                 $_COOKIE['forumLoginUserid'] = $response->userid;
             }else{
-                if(isset($response->message)){
-                    Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $response->message));    
+                $errorMessage = isset($response->message) ? $response->message : '';
+                if($errorMessage != ''){
+                    $isPermanent = $this->isPermanentSetAuthTokenError($errorMessage);
+                    Craft::$app->getCache()->set($stateKey, $isPermanent ? 'permanent' : 'retry', $isPermanent ? 43200 : 60);
+                    Craft::$app->getSession()->setError(Craft::t('websitetoolboxforum', $errorMessage));
+                }else{
+                    Craft::$app->getCache()->set($stateKey, 'retry', 60);
                 }
             }
         }
+    }
+    /**
+     * @uses decide whether a setauthtoken error can ever succeed again without an
+     * operator/config change (wrong apikey, closed registrations, data conflicts...)
+     * versus one worth retrying (SSO mutex timeout, maintenance, DB hiccup).
+     * Unknown messages default to retrying so new conditions never block SSO forever.
+     */
+    private function isPermanentSetAuthTokenError($message){
+        $permanentErrorPatterns = [
+            'Invalid API Key',
+            'The Pro plan is required',
+            'not currently accepting new registrations',
+            'maximum number of members',
+            'do not have permission to perform this action',
+            'already have a forum account',
+            'has already been taken',
+            'already signed up with that email address',
+            'EBN100',
+            'violates community guidelines',
+            'remove any emojis',
+            'Specified usergroupid does not exist',
+            'No userid or user provided',
+            'invalid email address',
+        ];
+        foreach($permanentErrorPatterns as $pattern){
+            if(stripos($message, $pattern) !== false){
+                return true;
+            }
+        }
+        return false;
     }
     /**
      * Function to get all usergroup ids
@@ -391,43 +488,68 @@ class Websitetoolboxcommunity extends Plugin{
     }
     /**
      * @uses function to check if user group allow to do sso or not
-     */    
+     *
+     * Semantics are unchanged from the original implementation, but the result is:
+     *   - memoized once per request (it is queried by several hooks per request)
+     *   - cached per user for 15 minutes (only 'selected_groups' mode needs a
+     *     per-user query; 'all_users'/'no_users'/unset are pure config reads)
+     *   - the "does this site have any user groups" guard is cached too, so a
+     *     page view never runs the all-groups query in the hot path.
+     * Cache keys include the setting values, so a settings save takes effect
+     * immediately (new key); group-membership edits propagate within 15 minutes.
+     */
      public function checkGroupPermission(){
-        if($this->getAllUserGroups()){
-            $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting');
-            $allowedGroupsId = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.userGroupsId');
+        if($this->groupPermissionMemo !== null){
+            return $this->groupPermissionMemo;
+        }
+        $ssoSetting = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.ssoSetting');
+        $allowedGroupsId = Craft::$app->getProjectConfig()->get('plugins.websitetoolboxforum.settings.userGroupsId');
 
-            switch ($ssoSetting) {
-                case 'all_users':
-                    return true;
-                case 'no_users':
-                    return false;
-                case 'selected_groups':
-                    // get identity of logged in user
-                    $user = Craft::$app->getUser()->getIdentity();
-                    if ($user) {
-                        $groups = $user->getGroups();
-                        $groupIds = [];
-                        foreach ($groups as $group) {
-                            $groupIds[] = $group->id;
-                        }
-                        $allowedGroupsIdArray = explode(',', $allowedGroupsId);
-                        $commonGroup = array_intersect($allowedGroupsIdArray, $groupIds);
-                        if (empty($commonGroup)) {
-                            return false;
-                        } else {
-                            return true;
-                        }
+        // Original guard: sites without any user group always allow SSO.
+        // Stored as 1/0 because a Yii cache miss also reads back as false.
+        $siteHasGroups = Craft::$app->getCache()->get('wtSsoSiteHasGroups');
+        if($siteHasGroups === false){
+            $siteHasGroups = $this->getAllUserGroups() != '';
+            Craft::$app->getCache()->set('wtSsoSiteHasGroups', $siteHasGroups ? 1 : 0, 900);
+        }
+        if(!$siteHasGroups){
+            return $this->groupPermissionMemo = true;
+        }
+
+        switch ($ssoSetting) {
+            case 'all_users':
+                return $this->groupPermissionMemo = true;
+            case 'no_users':
+                return $this->groupPermissionMemo = false;
+            case 'selected_groups':
+                // get identity of logged in user
+                $user = Craft::$app->getUser()->getIdentity();
+                if (!$user) {
+                    return $this->groupPermissionMemo = false;
+                }
+                $cacheKey = 'wtSsoPermission:'.$user->id.':'.md5((string)$ssoSetting.'|'.(string)$allowedGroupsId);
+                $allowed = Craft::$app->getCache()->get($cacheKey);
+                if ($allowed === false) {
+                    $groups = $user->getGroups();
+                    $groupIds = [];
+                    foreach ($groups as $group) {
+                        $groupIds[] = $group->id;
                     }
-                    break;
-                default:
-                    // if admin defined user groups but not sso setting option is not set yet
-                    return true;
-            }
-        }else{
-            //in case admin didn't set user group for website user.
-            return true;
-        }       
+                    $allowedGroupsIdArray = explode(',', (string)$allowedGroupsId);
+                    $allowed = !empty(array_intersect($allowedGroupsIdArray, $groupIds));
+                    Craft::$app->getCache()->set($cacheKey, $allowed ? 1 : 0, 900);
+                }
+                return $this->groupPermissionMemo = (bool)$allowed;
+            default:
+                // if admin defined user groups but not sso setting option is not set yet
+                return $this->groupPermissionMemo = true;
+        }
+    }
+    /**
+     * @uses forget the per-request permission memo after plugin settings change
+     */
+    public function resetGroupPermissionMemo(){
+        $this->groupPermissionMemo = null;
     }
     /**
      * @uses function to print logout image tag

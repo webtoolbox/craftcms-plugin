@@ -72,8 +72,11 @@ class Sso extends Component{
         }
     }
     function afterUpdateUser(){
-      $emailToVerify  = $_SESSION['userEmailBeforeUpdate'];            
+      $emailToVerify  = $_SESSION['userEmailBeforeUpdate'];
       $userId         = Websitetoolboxcommunity::getInstance()->sso->getUserid($emailToVerify);
+      if(!$userId){
+        return;
+      }
       $userName       = $_POST['username'];
       $externalUserid = $_POST['userId'];
       $email          = $_POST['email'];
@@ -87,7 +90,7 @@ class Sso extends Component{
          $fullName =  $_POST['fullName'];
       }
         
-       $_SESSION['isUserUpdated'] = true; 
+       $_SESSION['isUserUpdated'] = true;
       $userDetails    = array(
                           "type"           => "json",
                           "email"          => $email,
@@ -133,6 +136,10 @@ class Sso extends Component{
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);    
         }        
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        // Never let a slow/unreachable forum stall the page request:
+        // these calls run inline in the request lifecycle.
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 10);
         if ($method == "POST") {
             curl_setopt($curl, CURLOPT_POST, true);
             if($postType == 'json'){                
